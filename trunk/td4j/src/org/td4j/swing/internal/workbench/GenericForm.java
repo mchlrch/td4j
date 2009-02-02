@@ -1,0 +1,117 @@
+/*********************************************************************
+  This file is part of td4j, see <http://td4j.org/>
+
+  Copyright (C) 2008, 2009 Michael Rauch
+
+  td4j is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  td4j is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with td4j.  If not, see <http://www.gnu.org/licenses/>.
+ *********************************************************************/
+
+package org.td4j.swing.internal.workbench;
+
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.AbstractButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+
+import org.td4j.core.binding.model.ICollectionDataConnector;
+import org.td4j.core.binding.model.IDataConnector;
+import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.reflect.ModelInspector;
+import org.td4j.core.tk.IFilter;
+import org.td4j.core.tk.ObjectTK;
+import org.td4j.swing.binding.ButtonController;
+import org.td4j.swing.binding.LinkController;
+import org.td4j.swing.binding.TableController;
+import org.td4j.swing.binding.TextController;
+import org.td4j.swing.binding.WidgetBuilder;
+import org.td4j.swing.workbench.Editor;
+import org.td4j.swing.workbench.Form;
+
+
+public class GenericForm<T> extends Form<T> {
+
+	private static final IFilter<IDataConnector> scalarPlugFilter = new IFilter<IDataConnector>() {
+		public boolean accept(IDataConnector element) {
+			return IScalarDataConnector.class.isAssignableFrom(element.getClass());
+		}
+	};
+
+	private static final IFilter<IDataConnector> collectionPlugFilter = new IFilter<IDataConnector>() {
+		public boolean accept(IDataConnector element) {
+			return ICollectionDataConnector.class.isAssignableFrom(element.getClass());
+		}
+	};
+
+	private final ModelInspector modelInspector;
+
+	GenericForm(Editor editor, Class<T> modelType, ModelInspector modelInspector) {
+		super(editor, modelType);
+		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");
+	}
+
+	@Override
+	protected JPanel createForm() {
+		final JPanel panel = new JPanel(new GridBagLayout());
+
+		// scalar plugs
+		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), getEditor().getWorkbench().getNavigator());
+		for (IDataConnector connector : modelInspector.getConnectors(getModelType(), scalarPlugFilter)) {
+			final Class<?> type = connector.getType();
+
+			// PEND: das kreieren der widgets (+controller) muss auch pluggable sein,
+			// damit neue controller typen unterstütz werden können
+			final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
+
+			final JLabel label = new JLabel();
+			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+			if (type == Boolean.class) {
+				final ButtonController btnController = wBuilder.caption(label).button().bindConnector(scalarConnector);
+				final AbstractButton btn = btnController.getWidget();
+				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+			} else if (type == String.class) {
+				final TextController textController = wBuilder.caption(label).text().bindConnector(scalarConnector);
+				final JTextField text = textController.getWidget();
+				panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+			} else {
+				final LinkController linkController = wBuilder.caption(label).link().bindConnector(scalarConnector);
+				final JLabel link = linkController.getWidget();
+				panel.add(link, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+			}
+		}
+
+		// collection plugs
+		for (IDataConnector connector : modelInspector.getConnectors(getModelType(), collectionPlugFilter)) {
+			final ICollectionDataConnector collectionConnector = (ICollectionDataConnector) connector;
+
+			final JLabel label = new JLabel();
+			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+
+			final TableController tableController = wBuilder.caption(label).table().bindConnector(collectionConnector);
+			final JTable table = tableController.getWidget();
+			final JScrollPane scrollPane = new JScrollPane(table);
+			scrollPane.setPreferredSize(new Dimension(100, 100));
+			panel.add(scrollPane, new GridBagConstraints(1, - 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		}
+
+		return panel;
+	}
+
+}
