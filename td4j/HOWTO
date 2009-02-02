@@ -1,0 +1,3 @@
+- input validation:
+  accessors mit typ string, validation in BO lösen,
+  exception werfen, top-level exception dialog (auf event-queue)
