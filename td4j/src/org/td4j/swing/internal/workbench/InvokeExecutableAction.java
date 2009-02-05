@@ -33,7 +33,6 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.examples.Address;
 import org.td4j.swing.workbench.Workbench;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
@@ -101,7 +100,9 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 				// PEND: bevor methode überhaupt als executable akzeptiert wird, muss
 				// auf annotation für typ geprüft werden, damit wir auch richtige
 				// navigation durchführen können
-				final EditorContent content = new EditorContent(Address.class, (Collection) result);
+			  
+			    final Class<?> itemType = executable.getReturnItemType();
+				final EditorContent content = new EditorContent(itemType, (Collection) result);
 				Workbench.getInstance().seek(content);
 
 				// PEND: handle arrays -> make ArrayList

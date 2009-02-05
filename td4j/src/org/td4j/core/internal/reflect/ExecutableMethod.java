@@ -22,8 +22,10 @@ package org.td4j.core.internal.reflect;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
+import org.td4j.core.reflect.ItemType;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
@@ -31,6 +33,7 @@ import org.td4j.core.tk.StringTK;
 public class ExecutableMethod extends AbstractExecutable {
 
 	private final Method method;
+	private final Class<?> itemType;
 	private final boolean statik;
 	private final List<InvokationParameter> parameters;
 
@@ -38,6 +41,14 @@ public class ExecutableMethod extends AbstractExecutable {
 		this.method = ObjectTK.enforceNotNull(method, "method");
 		if ( ! method.isAccessible()) {
 			method.setAccessible(true);
+		}
+		
+		final ItemType itemTypeSpec = method.getAnnotation(ItemType.class);
+		if (itemTypeSpec != null) {
+		  itemType = itemTypeSpec.value();
+		} else {
+		  final Class<?> returnType = method.getReturnType();
+		  itemType = Collection.class.isAssignableFrom(returnType) ? Object.class : returnType;
 		}
 
 		statik = Modifier.isStatic(method.getModifiers());
@@ -72,6 +83,11 @@ public class ExecutableMethod extends AbstractExecutable {
 	@Override
 	public List<InvokationParameter> getParameters() {
 		return parameters;
+	}
+	
+	@Override
+	public Class getReturnItemType() {
+	  return itemType;
 	}
 
 	@Override
