@@ -63,6 +63,11 @@ public class ExecutableConstructor extends AbstractExecutable {
 	public List<InvokationParameter> getParameters() {
 		return parameters;
 	}
+	
+	@Override
+	public Class getReturnItemType() {
+	  return constructor.getDeclaringClass();
+	}
 
 	@Override
 	public String toString() {

@@ -58,5 +58,7 @@ public abstract class AbstractExecutable {
 	public abstract boolean isStatic();
 
 	public abstract List<InvokationParameter> getParameters();
+	
+	public abstract Class getReturnItemType();
 
 }
