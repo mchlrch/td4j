@@ -157,7 +157,7 @@ public class DefaultModelInspector extends ModelInspector {
 			final List<IDataConnector> fieldConnectors = new ArrayList<IDataConnector>();
 			for (Field f : allFields) {
 				final String pName = fieldToPropertyName(f, level);
-				if (pName != null && ! propertyNames.contains(pName) && scalar(f)) {
+				if (pName != null && ! propertyNames.contains(pName)) {
 					f.setAccessible(true);
 					final IDataConnector con = connectorFactory.createFieldConnector(cls, pName);
 					ObjectTK.enforceNotNull(con, "con");
