@@ -25,8 +25,6 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.reflect.Executable;
 import org.td4j.core.reflect.ExposeProperties;
-import org.td4j.core.reflect.ItemType;
-
 
 
 @ExposeProperties
@@ -38,11 +36,10 @@ public class Address extends Observable {
 	public String city;
 
 	@Executable
-	@ItemType(Address.class)
 	public static List<Address> findAddresses() {
 		return Person.addressChoice;
 	}
-	
+
 	Address(Person person, String street, String zip, String city) {
 		if (person == null) throw new NullPointerException("person");
 		if (street == null) throw new NullPointerException("street");
@@ -54,15 +51,15 @@ public class Address extends Observable {
 		this.zip = zip;
 		this.city = city;
 	}
-	
+
 	public String getStreet() {
 		return street;
 	}
-	
+
 	public void setStreet(String street) {
 		final ChangeEvent event = changeSupport.preparePropertyChange("street", this.street, street);
 		if (event == null) return;
-		
+
 		this.street = street;
 		changeSupport.fire(event);
 	}
@@ -75,12 +72,12 @@ public class Address extends Observable {
 	public String getFoo() {
 		return "bar";
 	}
-	
+
 	@Executable
 	public void printPerson() {
 		System.out.println(person);
 	}
-	
+
 	@Executable
 	public static void printClass() {
 		System.out.println(Address.class.getName());
