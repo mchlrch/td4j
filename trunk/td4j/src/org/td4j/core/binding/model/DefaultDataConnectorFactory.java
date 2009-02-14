@@ -19,7 +19,6 @@
 
 package org.td4j.core.binding.model;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -29,7 +28,6 @@ import org.td4j.core.internal.binding.model.CollectionFieldConnector;
 import org.td4j.core.internal.binding.model.CollectionMethodConnector;
 import org.td4j.core.internal.binding.model.ScalarFieldConnector;
 import org.td4j.core.internal.binding.model.ScalarMethodConnector;
-import org.td4j.core.reflect.ItemType;
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.UnknownPropertyException;
 
@@ -82,7 +80,7 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 		}
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
-			final Class<?> itemType = findCollectionItemType(field);
+			final Class<?> itemType = ReflectionTK.getItemType(field);
 			return new CollectionFieldConnector(cls, field, itemType);
 		} else {
 			return new ScalarFieldConnector(cls, field);
@@ -135,7 +133,7 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 		if (setter != null && ! Modifier.isPublic(setter.getModifiers())) setter.setAccessible(true);
 
 		if (Collection.class.isAssignableFrom(valueType)) {
-			final Class<?> itemType = findCollectionItemType(getter);
+			final Class<?> itemType = ReflectionTK.getItemType(getter);
 			return new CollectionMethodConnector(cls, name, getter, itemType, argumentValues);
 
 		} else {
@@ -163,13 +161,6 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 		} catch (Exception e) {
 		}
 		return null;
-	}
-	
-	
-	private static Class<?> findCollectionItemType(AccessibleObject ao) {
-		final ItemType iType = ao.getAnnotation(ItemType.class);
-		final Class<?> itemType = iType != null ? iType.value() : Object.class;
-		return itemType;
 	}
 
 }

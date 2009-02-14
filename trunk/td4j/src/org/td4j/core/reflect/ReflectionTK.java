@@ -20,15 +20,18 @@
 package org.td4j.core.reflect;
 
 import java.beans.Introspector;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.td4j.core.tk.IFilter;
-
 
 
 public class ReflectionTK {
@@ -70,7 +73,7 @@ public class ReflectionTK {
 		return result;
 	}
 
-	//PEND: testcase
+	// PEND: testcase
 	public static List<Method> getMethods(Class<?> cls, IFilter<Method> filter) {
 		final List<Method> result = new ArrayList<Method>();
 		for (Method m : getAllMethods(cls)) {
@@ -78,7 +81,7 @@ public class ReflectionTK {
 		}
 		return result;
 	}
-	
+
 	// PEND: testcase
 	public static List<Method> getAllMethods(Class<?> cls) {
 		final List<Method> allMethods = new ArrayList<Method>();
@@ -97,6 +100,43 @@ public class ReflectionTK {
 			if ( ! allFields.contains(f)) allFields.add(f);
 		}
 		return allFields;
+	}
+
+	public static Class<?> getItemType(AccessibleObject ao) {
+		Type genType = null;
+		if (ao instanceof Field) {
+			genType = ((Field) ao).getGenericType();
+		} else if (ao instanceof Method) {
+			genType = ((Method) ao).getGenericReturnType();
+		}
+
+		// get parameterized type
+		if (genType instanceof ParameterizedType) {
+			final ParameterizedType type = (ParameterizedType) genType;
+			final Type[] typeArgs = type.getActualTypeArguments();
+			if (typeArgs.length == 1) {
+				if (typeArgs[0] instanceof Class) {
+					return (Class<?>) typeArgs[0];
+				} else if (typeArgs[0] instanceof ParameterizedType) {
+					final ParameterizedType paramTypeArg = (ParameterizedType) typeArgs[0];
+					final Type rawType = paramTypeArg.getRawType();
+					if (rawType instanceof Class) {
+						return (Class<?>) rawType;
+					}
+				}
+			}
+
+			// Without generic type declaration, genType = type
+		} else if (genType instanceof Class) {
+			final Class<?> type = (Class<?>) genType;
+			if (Collection.class.isAssignableFrom(type)) {
+				return Object.class;
+			} else {
+				return type;
+			}
+		}
+
+		return null;
 	}
 
 }

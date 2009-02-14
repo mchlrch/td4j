@@ -27,7 +27,7 @@ import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableList;
 import org.td4j.core.reflect.Executable;
 import org.td4j.core.reflect.ExposeProperties;
-import org.td4j.core.reflect.ItemType;
+import org.td4j.swing.workbench.Workbench;
 
 
 
@@ -69,7 +69,6 @@ public class Person extends Observable {
 		addressChoice.add(BART.at("Werkgasse 11", "3002", "Bern"));
 	}
 
-	@ItemType(Order.class)
 	private final List<Order> orders = new ObservableList<Order>(new ArrayList<Order>(), changeSupport, "orders");
 
 	@Executable(paramNames={"firstname", "lastName"})
@@ -141,4 +140,13 @@ public class Person extends Observable {
 		changeSupport.fire(event);
 	}	
 
+
+	
+	public static void main(String[] args) {
+		// PEND: nur testmodel
+		final Person homer = new Person("Homer", "Simpson");
+		homer.at("742 Evergreen Terrace", "99001", "Springfield");
+
+		Workbench.start(homer, Person.class, Address.class);
+	}
 }
