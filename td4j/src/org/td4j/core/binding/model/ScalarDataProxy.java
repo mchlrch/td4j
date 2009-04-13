@@ -20,29 +20,46 @@
 package org.td4j.core.binding.model;
 
 import org.td4j.core.internal.binding.model.DataProxy;
+import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.internal.binding.model.converter.IConverterRepository;
+import org.td4j.core.tk.ObjectTK;
 
 public class ScalarDataProxy extends DataProxy<IScalarDataConnector> {
 
-	public ScalarDataProxy(IScalarDataConnector connector, String propertyName) {
-		super(connector, propertyName);
+    private final IConverter converter;
+  
+	public ScalarDataProxy(IScalarDataConnector connector, String name, IConverter converter) {
+		super(connector, name);
+		this.converter = converter;
 	}
 
 	public boolean canRead() {
-		return connector.canRead(getModel());
+		return connector.canRead(getModel()) && (converter == null || converter.canConvert());
 	}
 
 	public boolean canWrite() {
-		return connector.canWrite(getModel());
+		return connector.canWrite(getModel()) && (converter == null || converter.canUnconvert());
 	}
 
 	// PEND: use converter
 	public Object readValue() {
-		return connector.readValue(getModel());
+	    final Object val = connector.readValue(getModel());
+	    if (converter == null) {
+	      return val;
+	    } else {
+	      final Object convertedVal = converter.convert(val);
+	      return convertedVal;
+	    }
 	}
 
 	// PEND: use converter
 	public void writeValue(Object val) {
-		connector.writeValue(getModel(), val);
+	  if (converter != null) {
+	    val = converter.unconvert(val);
+	  }
+	  
+	  connector.writeValue(getModel(), val);
+		
 		valueModified();
 	}
 

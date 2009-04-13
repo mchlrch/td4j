@@ -24,5 +24,13 @@ public interface IDataConnector {
 	public Class<?> getModelType();
 
 	public Class<?> getType();
+	
+	/**
+	 * Optional name. Client code can choose to use or ignore this name.
+	 * This is necessary to pass name information from the model to the dataProxy
+	 * 
+	 * @return the name or <code>null</code
+	 */
+	public String getName();
 
 }
