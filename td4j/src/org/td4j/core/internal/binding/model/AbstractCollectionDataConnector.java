@@ -52,12 +52,10 @@ public abstract class AbstractCollectionDataConnector extends AbstractDataConnec
 	}
 
 	protected abstract Collection<?> readValue0(Object model) throws Exception;
-
-	protected abstract String getPropertyName();
 	
 	
 	public CollectionDataProxy createProxy() {
-		return new CollectionDataProxy(this, getPropertyName());
+		return new CollectionDataProxy(this, getName());
 	}
 
 }
