@@ -39,7 +39,7 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 	public TableControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, JTable widget, ICaption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.connectorFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
-		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
+		this.navigator = navigator;
 	}
 
 	@Override

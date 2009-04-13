@@ -34,10 +34,13 @@ import javax.swing.JTextField;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
+import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
+import org.td4j.swing.binding.LabelController;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.TextController;
@@ -80,20 +83,32 @@ public class GenericForm<T> extends Form<T> {
 			// damit neue controller typen unterstütz werden können
 			final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
 
+			// PEND: fix this, code duplication with AbstractScalarDataConnector
+			// PEND: fix this, temporary only conversion to String supported !!
+		      final Class<?> fromType = type;
+		      final Class<?> toType = String.class;
+		      final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
+			final boolean convertableToString = converter != null;
+			
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 			if (type == Boolean.class) {
 				final ButtonController btnController = wBuilder.caption(label).button().bindConnector(scalarConnector);
 				final AbstractButton btn = btnController.getWidget();
 				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-			} else if (type == String.class) {
+//			} else if (type == String.class) {
+			} else if (convertableToString) {
 				final TextController textController = wBuilder.caption(label).text().bindConnector(scalarConnector);
 				final JTextField text = textController.getWidget();
 				panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-			} else {
+			} else if (wBuilder.getNavigator().isTypeNavigatable(type)) {
 				final LinkController linkController = wBuilder.caption(label).link().bindConnector(scalarConnector);
 				final JLabel link = linkController.getWidget();
 				panel.add(link, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+			} else {
+			  final LabelController<JLabel> labelController = wBuilder.caption(label).label().bindConnector(scalarConnector);
+              final JLabel valueLabel = labelController.getWidget();
+              panel.add(valueLabel, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			}
 		}
 

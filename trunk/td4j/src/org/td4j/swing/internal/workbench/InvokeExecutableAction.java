@@ -95,7 +95,12 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 
 		// PEND: no navigation if primitive class
 		if (result != null) {
-			if (Collection.class.isAssignableFrom(result.getClass())) {
+		  final Class<?> resultType = result.getClass();
+		  if (! Workbench.getInstance().getNavigator().isTypeNavigatable(resultType)) {
+		    return;
+		  }
+		  
+			if (Collection.class.isAssignableFrom(resultType)) {
 
 				// PEND: bevor methode überhaupt als executable akzeptiert wird, muss
 				// auf annotation für typ geprüft werden, damit wir auch richtige

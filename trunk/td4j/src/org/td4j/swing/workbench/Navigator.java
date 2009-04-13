@@ -40,6 +40,25 @@ public class Navigator {
 	
 	public void seek(EditorContent editorContent) {
 		workbench.show(editorContent);
-	}	
+	}
+
+  public boolean isTypeNavigatable(Class<?> type) {
+    return ! isTypePrimitive(type);
+  }
+  
+  protected boolean isTypePrimitive(Class<?> type) {
+    return type.isPrimitive()
+    || type == Boolean.class 
+    || type == Byte.class
+    || type == Character.class
+    || type == Short.class
+    || type == Integer.class
+    || type == Long.class
+    || type == Float.class
+    || type == Double.class
+    
+    || type == String.class
+    || type == Class.class;
+  }
 
 }
