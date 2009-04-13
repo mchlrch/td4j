@@ -26,8 +26,8 @@ import org.td4j.core.internal.binding.model.DataProxy;
 
 public class CollectionDataProxy extends DataProxy<ICollectionDataConnector> {
 
-	public CollectionDataProxy(ICollectionDataConnector connector, String propertyName) {
-		super(connector, propertyName);
+	public CollectionDataProxy(ICollectionDataConnector connector, String name) {
+		super(connector, name);
 	}
 
 	public boolean canRead() {
