@@ -71,9 +71,9 @@ public class ExecutableConstructor extends AbstractExecutable {
 
 	@Override
 	public String toString() {
-		final String name = constructor.getName();
+		final String name = constructor.getDeclaringClass().getSimpleName();
 		final String paramNames = paramNamesToString(parameters);
-		return StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
+		return "+ " + (StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames));
 	}
 
 }

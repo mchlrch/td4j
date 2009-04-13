@@ -20,6 +20,7 @@
 package org.td4j.swing.binding;
 
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
@@ -28,6 +29,7 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import org.td4j.core.binding.Mediator;
@@ -45,6 +47,8 @@ import org.td4j.swing.internal.binding.TableControllerFactory;
 import org.td4j.swing.internal.binding.TableModelAdapter;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
+
+import sun.swing.table.DefaultTableCellHeaderRenderer;
 
 
 
@@ -122,6 +126,7 @@ public class WidgetBuilder<T> {
 	public LinkControllerFactory link() {
 		widgetPreCreate();
 		final JLabel widget = new JLabel();
+		adjustLabelFont(widget);
 		return link(widget);
 	}
 
@@ -165,14 +170,15 @@ public class WidgetBuilder<T> {
 
 	// ========================================
 	// ==== Label ============================
-	public LabelControllerFactory label() {
+	public LabelControllerFactory<JLabel> label() {
 		widgetPreCreate();
 		final JLabel widget = new JLabel();
+		adjustLabelFont(widget);
 		return label(widget);
 	}
 
-	public LabelControllerFactory label(Component widget) {
-		final LabelControllerFactory factory = new LabelControllerFactory(mediator, connectorFactory, widget, useCurrentCaption());
+	public <L extends Component> LabelControllerFactory<L> label(L widget) {
+		final LabelControllerFactory<L> factory = new LabelControllerFactory<L>(mediator, connectorFactory, widget, useCurrentCaption());
 		return factory;
 	}
 
@@ -202,10 +208,21 @@ public class WidgetBuilder<T> {
 		widgetPreCreate();
 		final JTable widget = new JTable();
 		widget.setRowHeight(22);
+        widget.getTableHeader().setDefaultRenderer(getDefaultTableHeaderRenderer());
+        
 		return table(widget);
 	}
 
-	public TableControllerFactory table(JTable widget) {
+	private static DefaultTableCellHeaderRenderer headerRenderer;
+	protected TableCellRenderer getDefaultTableHeaderRenderer() {
+	  if (headerRenderer == null) {
+	    headerRenderer = new DefaultTableCellHeaderRenderer();
+	    headerRenderer.setHorizontalAlignment(JLabel.LEFT);
+	  }
+	  return headerRenderer;
+    }
+
+    public TableControllerFactory table(JTable widget) {
 		final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
 		return factory;
 	}
@@ -235,6 +252,14 @@ public class WidgetBuilder<T> {
 		final ICaption result = currentCaption;
 		currentCaption = null;
 		return result;
+	}
+	
+	private static Font plainLabelFont;
+	protected JLabel adjustLabelFont(JLabel label) {
+	  if (plainLabelFont == null) plainLabelFont = label.getFont().deriveFont(Font.PLAIN);
+	  
+	  label.setFont(plainLabelFont);
+	  return label;
 	}
 
 }

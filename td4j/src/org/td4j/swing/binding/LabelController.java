@@ -27,12 +27,12 @@ import org.td4j.core.binding.model.ScalarDataProxy;
 
 
 // PEND: refactor into common superclass with swt.LabelAdapter
-public class LabelController extends ScalarSwingWidgetController<Component> {
+public class LabelController<T extends Component> extends ScalarSwingWidgetController<T> {
 
-	private final Component widget;
+	private final T widget;
 	private Method setTextMethod;
 
-	public LabelController(Component widget, ScalarDataProxy proxy) {
+	public LabelController(T widget, ScalarDataProxy proxy) {
 		super(proxy);
 		if (widget == null) throw new NullPointerException("widget");
 
@@ -66,7 +66,7 @@ public class LabelController extends ScalarSwingWidgetController<Component> {
 	}
 
 	@Override
-	public Component getWidget() {
+	public T getWidget() {
 		return widget;
 	}
 

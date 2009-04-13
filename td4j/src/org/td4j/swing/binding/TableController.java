@@ -35,6 +35,7 @@ import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.internal.binding.model.ToStringConnector;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
@@ -75,7 +76,7 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 				}
 			});
 		}
-
+		
 		setAccess();
 		updateView();
 	}
@@ -139,13 +140,11 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			return rowObjects.get(rowIndex);
 		}
 
-		// PEND: column names: problem ist, dass connectors kein getPropertyName()
-		// im API haben, nur dataProxies
-		// @Override
-		// public String getColumnName(int columnIndex) {
-		// final IScalarDataConnector connector = columnConnectors[columnIndex];
-		// return connector.toString();
-		// }
+		@Override
+	    public String getColumnName(int columnIndex) {
+		    final IScalarDataConnector connector = columnConnectors[columnIndex];
+		    return connector.getName();
+		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
@@ -154,7 +153,6 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			return value;
 		}
 
-		// PEND: handle primitive rowTypes properly -> toString-Connector
 		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory) {
 
 			// PEND: inject modelInspector
@@ -164,6 +162,11 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			final List<IScalarDataConnector> columnConnectors = new ArrayList<IScalarDataConnector>(connectors.size());
 			for (IDataConnector con : connectors) {
 				columnConnectors.add((IScalarDataConnector) con);
+			}
+			
+			// primitive rowTypes have no connectors by default, so we use toString connector to make sure the table is not blank
+			if (columnConnectors.isEmpty()) {
+			  columnConnectors.add(new ToStringConnector(rowType));
 			}
 
 			return columnConnectors.toArray(new IScalarDataConnector[columnConnectors.size()]);
