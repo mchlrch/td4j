@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,14 +17,11 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
+
 package org.td4j.core.internal.binding.model.converter;
 
-public interface IConverter<A,B> {
-
-	public B convert(A from);
-	public boolean canConvert();
-	
-	public A unconvert(B from);
-	public boolean canUnconvert();
+public interface IConverterRepository {
+  
+  public <A,B> IConverter<A, B> getConverter(Class<A> fromType, Class<B> toType);
 
 }

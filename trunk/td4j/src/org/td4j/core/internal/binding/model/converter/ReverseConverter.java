@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,12 +19,32 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public interface IConverter<A,B> {
+import org.td4j.core.tk.ObjectTK;
 
-	public B convert(A from);
-	public boolean canConvert();
-	
-	public A unconvert(B from);
-	public boolean canUnconvert();
+class ReverseConverter<A, B> implements IConverter<A, B> {
+
+  private final IConverter<B, A> delegate;
+
+  ReverseConverter(IConverter<B, A> delegate) {
+    this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
+  }
+
+  @Override
+  public boolean canConvert() {
+    return delegate.canUnconvert();
+  }
+
+  @Override
+  public boolean canUnconvert() {
+    return delegate.canConvert();
+  }
+
+  public B convert(A from) {
+    return delegate.unconvert(from);
+  };
+
+  public A unconvert(B from) {
+    return delegate.convert(from);
+  };
 
 }
