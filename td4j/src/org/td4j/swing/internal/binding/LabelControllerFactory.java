@@ -29,15 +29,15 @@ import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
 import org.td4j.swing.binding.LabelController;
 
 
-public class LabelControllerFactory extends ScalarWidgetControllerFactory<LabelController, Component> {
+public class LabelControllerFactory<T extends Component> extends ScalarWidgetControllerFactory<LabelController<T>, T> {
 
-	public LabelControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, Component widget, ICaption caption) {
+	public LabelControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, T widget, ICaption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 
 	@Override
-	protected LabelController createController(ScalarDataProxy dataProxy, Component widget) {
-		return new LabelController(widget, dataProxy);
+	protected LabelController<T> createController(ScalarDataProxy dataProxy, T widget) {
+		return new LabelController<T>(widget, dataProxy);
 	}
 
 }

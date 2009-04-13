@@ -47,6 +47,7 @@ import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
+import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableModelAdapter;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
@@ -66,6 +67,8 @@ public class GenericEditor extends Editor<Object> {
 	private final JSplitPane splitPane;
 	private final TableController listTableController;
 	private final Form<?> form;
+	
+	// PEND: muss die connectorFactory in der Signatur sein - jetzt wird WidgetBuilder gebraucht um die Tabelle zu erzeugen
 
 	GenericEditor(Workbench workbench, Class<?> modelType, ModelInspector modelInspector, IFormFactory formFactory, IDataConnectorFactory connectorFactory) {
 		
@@ -93,10 +96,12 @@ public class GenericEditor extends Editor<Object> {
 		
 		// list table
 		listDataContainer = new CollectionDataContainer(modelType, "listData");
-		final JTable listTable = new JTable();
-		listTable.setRowHeight(22);
-		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTableController = new TableController(listTable, listDataContainer.createProxy(), connectorFactory, null);
+		
+		final WidgetBuilder wb = new WidgetBuilder(modelType);
+		listTableController = wb.table().bind(listDataContainer.createProxy());
+		final JTable listTable = listTableController.getWidget();
+		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		
 		final JScrollPane listTableScrollPane = new JScrollPane(listTable);
 		listTableScrollPane.setPreferredSize(new Dimension(100, 120));
 		listTableScrollPane.setMinimumSize(new Dimension(0, 0));
