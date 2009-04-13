@@ -68,7 +68,7 @@ public class ScalarMethodConnector extends AbstractScalarDataConnector {
 	}
 
 	@Override
-	protected String getPropertyName() {
+	public String getName() {
 		return propertyName;
 	}
 

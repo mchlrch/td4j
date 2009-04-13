@@ -27,12 +27,12 @@ import org.td4j.core.tk.StringTK;
 
 public class CollectionDataContainerConnector extends AbstractCollectionDataConnector {
 
-	private final String propertyName;
+	private final String name;
 
-	public CollectionDataContainerConnector(Class<?> type, Class<?> collectionType, String propertyName) {
+	public CollectionDataContainerConnector(Class<?> type, Class<?> collectionType, String name) {
 		super(CollectionDataContainer.class, collectionType, type);
 
-		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
+		this.name = StringTK.enforceNotEmpty(name, "name");
 	}
 
 	public boolean canRead(Object model) {
@@ -49,13 +49,13 @@ public class CollectionDataContainerConnector extends AbstractCollectionDataConn
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return propertyName;
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public String toString() {
-		return getPropertyName();
+		return getName();
 	}
 
 	protected CollectionDataContainer<Object> modelAsContainer(Object model) {

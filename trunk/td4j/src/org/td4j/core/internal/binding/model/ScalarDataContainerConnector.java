@@ -25,12 +25,12 @@ import org.td4j.core.tk.StringTK;
 
 public class ScalarDataContainerConnector extends AbstractScalarDataConnector {
 
-	private final String propertyName;
+	private final String name;
 
-	public ScalarDataContainerConnector(Class<?> type, String propertyName) {
+	public ScalarDataContainerConnector(Class<?> type, String name) {
 		super(ScalarDataContainer.class, type);
 
-		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
+		this.name = StringTK.enforceNotEmpty(name, "name");
 	}
 
 	public boolean canRead(Object model) {
@@ -52,13 +52,13 @@ public class ScalarDataContainerConnector extends AbstractScalarDataConnector {
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return propertyName;
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public String toString() {
-		return getPropertyName();
+		return getName();
 	}
 
 	protected ScalarDataContainer<Object> modelAsContainer(Object model) {

@@ -53,7 +53,7 @@ public class ScalarFieldConnector extends AbstractScalarDataConnector {
 	}
 
 	@Override
-	protected String getPropertyName() {
+	public String getName() {
 		return field.getName();
 	}
 

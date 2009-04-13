@@ -33,18 +33,18 @@ import org.td4j.core.tk.ObjectTK;
 public abstract class DataProxy<T extends IDataConnector> extends Observable implements IModelSocket, IObserver {
 
 	protected final T connector;
-	private final String propertyName;
+	private final String name;
 	private Object model;
 
 	/**
-	 * @param propertyName
+	 * @param name
 	 *          may be null
 	 */
-	protected DataProxy(T connector, String propertyName) {
+	protected DataProxy(T connector, String name) {
 		if (connector == null) throw new NullPointerException("connector");
 
 		this.connector = connector;
-		this.propertyName = propertyName;
+		this.name = name;
 	}
 
 	public Object getModel() {
@@ -108,7 +108,7 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 			break;
 		case LazyPropertyChange: // fallthrough
 		case PropertyChange:
-			if (event.contains(propertyName)) changeSupport.fireStateChange();
+			if (event.contains(name)) changeSupport.fireStateChange();
 			break;
 		}
 	}
@@ -119,7 +119,7 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 	}
 
 	public String getName() {
-		return propertyName;
+		return name;
 	}
 
 

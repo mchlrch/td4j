@@ -54,7 +54,7 @@ public class CollectionMethodConnector extends AbstractCollectionDataConnector {
 	}
 	
 	@Override
-	protected String getPropertyName() {
+	public String getName() {
 		return propertyName;
 	}
 

@@ -44,7 +44,7 @@ public class CollectionFieldConnector extends AbstractCollectionDataConnector {
 	}
 
 	@Override
-	protected String getPropertyName() {
+	public String getName() {
 		return field.getName();
 	}
 	

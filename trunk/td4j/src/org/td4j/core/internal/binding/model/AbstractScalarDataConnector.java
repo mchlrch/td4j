@@ -21,6 +21,9 @@ package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
+import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.internal.binding.model.converter.IConverterRepository;
 
 public abstract class AbstractScalarDataConnector extends AbstractDataConnector implements IScalarDataConnector {
 
@@ -53,10 +56,16 @@ public abstract class AbstractScalarDataConnector extends AbstractDataConnector 
 
 	protected abstract void writeValue0(Object model, Object val) throws Exception;
 
-	protected abstract String getPropertyName();
+	
 
 	public ScalarDataProxy createProxy() {
-		return new ScalarDataProxy(this, getPropertyName());
+	  
+	  // PEND: fix this, temporary only conversion to String supported !!
+	  final Class<?> fromType = getType();
+	  final Class<?> toType = String.class;
+	  final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
+	  
+		return new ScalarDataProxy(this, getName(), converter);
 	}
 
 }
