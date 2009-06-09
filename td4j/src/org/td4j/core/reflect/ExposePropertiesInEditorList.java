@@ -26,9 +26,7 @@ import java.lang.annotation.Target;
 
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface ExposeProperties {
+@Target(ElementType.TYPE)
+public @interface ExposePropertiesInEditorList {
 	String[] value() default {};
-
-	DefaultModelInspector.Level level() default DefaultModelInspector.Level.XRAY;
 }

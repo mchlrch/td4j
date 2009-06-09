@@ -98,7 +98,10 @@ public class GenericEditor extends Editor<Object> {
 		listDataContainer = new CollectionDataContainer(modelType, "listData");
 		
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
-		listTableController = wb.table().bind(listDataContainer.createProxy());
+		
+		// TODO: columnFilter uses ExposePropertiesInEditorList
+		
+		listTableController = wb.table(columnFilter).bind(listDataContainer.createProxy());
 		final JTable listTable = listTableController.getWidget();
 		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		

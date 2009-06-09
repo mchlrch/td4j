@@ -17,18 +17,25 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.reflect;
+package org.td4j.core.tk.filter;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.td4j.core.tk.ArrayTK;
+import org.td4j.core.tk.IFilter;
 
+public class CompositeFilter<T> implements IFilter<T> {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface ExposeProperties {
-	String[] value() default {};
+    private final IFilter<T>[] delegates;
+  
+    public CompositeFilter(IFilter<T>... delegates) {
+      this.delegates = ArrayTK.enforceNotEmpty(delegates, "delegates");      
+    }
+  
+	public boolean accept(T element) {
+	  boolean accepted = true;
+	  for (int i=0, n=delegates.length; accepted && i<n; i++) {
+	    accepted = delegates[i].accept(element);
+	  }
+	  return accepted;
+	}
 
-	DefaultModelInspector.Level level() default DefaultModelInspector.Level.XRAY;
 }

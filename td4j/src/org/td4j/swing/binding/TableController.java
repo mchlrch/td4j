@@ -43,20 +43,21 @@ import org.td4j.core.reflect.DefaultModelInspector;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.filter.CompositeFilter;
 import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
 
 // PEND: typisierung mit rowType
 public class TableController extends CollectionSwingWidgetController<JTable> {
-
+  
 	private final JTable table;
 	private final MyTableModel model;
-
-	public TableController(final JTable table, final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory, final Navigator navigator) {
+	
+	public TableController(final JTable table, final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
-		this.model = new MyTableModel(proxy.getType(), connectorFactory);
+		this.model = new MyTableModel(proxy.getType(), connectorFactory, columnFilter);
 
 		table.setModel(model);
 
@@ -117,9 +118,9 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(Class<?> rowType, IDataConnectorFactory connectorFactory) {
+		private MyTableModel(Class<?> rowType, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter) {
 			this.rowType = ObjectTK.enforceNotNull(rowType, "rowType");
-			this.columnConnectors = createColumnConnectors(rowType, connectorFactory);
+			this.columnConnectors = createColumnConnectors(rowType, connectorFactory, columnFilter);
 		}
 
 		@Override
@@ -153,12 +154,14 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			return value;
 		}
 
-		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory) {
+		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter) {
 
 			// PEND: inject modelInspector
 			final ModelInspector inspector = new DefaultModelInspector(connectorFactory);
 
-			final List<IDataConnector> connectors = inspector.getConnectors(rowType, columnConnectorFilter);
+			final IFilter<IDataConnector> colConnFilter = new CompositeFilter(columnFilter, columnConnectorFilter);
+			
+			final List<IDataConnector> connectors = inspector.getConnectors(rowType, colConnFilter);
 			final List<IScalarDataConnector> columnConnectors = new ArrayList<IScalarDataConnector>(connectors.size());
 			for (IDataConnector con : connectors) {
 				columnConnectors.add((IScalarDataConnector) con);
