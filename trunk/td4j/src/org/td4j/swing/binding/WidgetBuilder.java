@@ -35,8 +35,11 @@ import javax.swing.table.TableModel;
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.filter.AcceptAllFilter;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
 import org.td4j.swing.internal.binding.LinkControllerFactory;
@@ -204,14 +207,21 @@ public class WidgetBuilder<T> {
 	
 	// ========================================
 	// ==== Table =============================
+	private static final IFilter<IDataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
+
 	public TableControllerFactory table() {
+	  return table(acceptAllColumnsFilter);
+	}
+	
+	public TableControllerFactory table(IFilter<IDataConnector> columnFilter) {
 		widgetPreCreate();
 		final JTable widget = new JTable();
 		widget.setRowHeight(22);
         widget.getTableHeader().setDefaultRenderer(getDefaultTableHeaderRenderer());
         
 		return table(widget);
-	}
+	}	
+	
 
 	private static DefaultTableCellHeaderRenderer headerRenderer;
 	protected TableCellRenderer getDefaultTableHeaderRenderer() {
@@ -222,8 +232,12 @@ public class WidgetBuilder<T> {
 	  return headerRenderer;
     }
 
-    public TableControllerFactory table(JTable widget) {
-		final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
+	public TableControllerFactory table(JTable widget) {
+	  return table(widget, acceptAllColumnsFilter);
+	}	
+	
+    public TableControllerFactory table(JTable widget, IFilter<IDataConnector> columnFilter) {
+		final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, columnFilter, widget, useCurrentCaption(), navigator);
 		return factory;
 	}
 

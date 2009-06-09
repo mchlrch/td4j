@@ -17,18 +17,31 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.reflect;
+package org.td4j.core.tk.filter;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.td4j.core.tk.IFilter;
 
+public class AcceptAllFilter<T> implements IFilter<T> {
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface ExposeProperties {
-	String[] value() default {};
+  private static AcceptAllFilter<Object> INSTANCE;
 
-	DefaultModelInspector.Level level() default DefaultModelInspector.Level.XRAY;
+  public static <T> AcceptAllFilter<T> getInstance() {
+    if (INSTANCE == null) {
+      synchronized (AcceptAllFilter.class) {
+        if (INSTANCE == null) {
+          INSTANCE = new AcceptAllFilter<Object>();
+        }
+      }
+    }
+
+    return (AcceptAllFilter<T>) INSTANCE;
+  }
+
+  private AcceptAllFilter() {
+  }
+
+  public boolean accept(T element) {
+    return true;
+  }
+
 }
