@@ -32,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import org.td4j.core.binding.model.CollectionDataProxy;
+import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
@@ -43,7 +44,6 @@ import org.td4j.core.reflect.DefaultModelInspector;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.filter.CompositeFilter;
 import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
@@ -54,10 +54,10 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter, final Navigator navigator) {
+	public TableController(final JTable table, final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
-		this.model = new MyTableModel(proxy.getType(), connectorFactory, columnFilter);
+		this.model = new MyTableModel(proxy, connectorFactory);
 
 		table.setModel(model);
 
@@ -118,9 +118,9 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(Class<?> rowType, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter) {
-			this.rowType = ObjectTK.enforceNotNull(rowType, "rowType");
-			this.columnConnectors = createColumnConnectors(rowType, connectorFactory, columnFilter);
+		private MyTableModel(final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory) {			
+			this.rowType = ObjectTK.enforceNotNull(proxy.getType(), "proxy.getType()");
+			this.columnConnectors = createColumnConnectors(rowType, connectorFactory, proxy.getConnectorInfo());
 		}
 
 		@Override
@@ -154,25 +154,30 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			return value;
 		}
 
-		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter) {
+		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory, ConnectorInfo connectorInfo) {
 
 			// PEND: inject modelInspector
 			final ModelInspector inspector = new DefaultModelInspector(connectorFactory);
 
-			final IFilter<IDataConnector> colConnFilter = new CompositeFilter(columnFilter, columnConnectorFilter);
-			
-			final List<IDataConnector> connectors = inspector.getConnectors(rowType, colConnFilter);
-			final List<IScalarDataConnector> columnConnectors = new ArrayList<IScalarDataConnector>(connectors.size());
-			for (IDataConnector con : connectors) {
-				columnConnectors.add((IScalarDataConnector) con);
+			// use available info about nestedProperties
+			final IScalarDataConnector[] nestedProperties = connectorInfo.getNestedProperties();
+			if (nestedProperties != null && nestedProperties.length > 0) {
+				return nestedProperties;
+				
+			} else {
+				final List<IDataConnector> connectors = inspector.getConnectors(rowType, columnConnectorFilter);
+				final List<IScalarDataConnector> columnConnectors = new ArrayList<IScalarDataConnector>(connectors.size());
+				for (IDataConnector con : connectors) {
+					columnConnectors.add((IScalarDataConnector) con);
+				}
+				
+				// primitive rowTypes have no connectors by default, so we use toString connector to make sure the table is not blank
+				if (columnConnectors.isEmpty()) {
+				  columnConnectors.add(new ToStringConnector(rowType));
+				}
+	
+				return columnConnectors.toArray(new IScalarDataConnector[columnConnectors.size()]);
 			}
-			
-			// primitive rowTypes have no connectors by default, so we use toString connector to make sure the table is not blank
-			if (columnConnectors.isEmpty()) {
-			  columnConnectors.add(new ToStringConnector(rowType));
-			}
-
-			return columnConnectors.toArray(new IScalarDataConnector[columnConnectors.size()]);
 		}
 
 		private void setCollection(Collection<?> newValue) {

@@ -210,19 +210,14 @@ public class WidgetBuilder<T> {
 	private static final IFilter<IDataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
 
 	public TableControllerFactory table() {
-	  return table(acceptAllColumnsFilter);
-	}
-	
-	public TableControllerFactory table(IFilter<IDataConnector> columnFilter) {
 		widgetPreCreate();
 		final JTable widget = new JTable();
 		widget.setRowHeight(22);
         widget.getTableHeader().setDefaultRenderer(getDefaultTableHeaderRenderer());
         
 		return table(widget);
-	}	
+	}
 	
-
 	private static DefaultTableCellHeaderRenderer headerRenderer;
 	protected TableCellRenderer getDefaultTableHeaderRenderer() {
 	  if (headerRenderer == null) {
@@ -233,13 +228,9 @@ public class WidgetBuilder<T> {
     }
 
 	public TableControllerFactory table(JTable widget) {
-	  return table(widget, acceptAllColumnsFilter);
+	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
+	  return factory;
 	}	
-	
-    public TableControllerFactory table(JTable widget, IFilter<IDataConnector> columnFilter) {
-		final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, columnFilter, widget, useCurrentCaption(), navigator);
-		return factory;
-	}
 
 	public SelectionControllerFactory selection(JTable table) {
 		final TableModel tableModel = table.getModel();

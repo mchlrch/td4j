@@ -256,15 +256,9 @@ public class Workbench extends JFrame {
       editorPanel.add(editorComponent, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
           GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
-      // editorPanel.add(editorComponent, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-      // GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-      // editorPanel.add(new JLabel(), new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-      // GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
       splitPane.setRightComponent(editorPanel);
 
-    }
-    else {
+    } else {
 
       final Container editorPanel = editor.getComponent().getParent();
       splitPane.setRightComponent(editorPanel);

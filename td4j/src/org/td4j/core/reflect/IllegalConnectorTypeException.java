@@ -23,16 +23,18 @@ import org.td4j.core.tk.ArrayTK;
 import org.td4j.core.tk.StringTK;
 
 
-public class UnknownPropertyException extends RuntimeException {
+public class IllegalConnectorTypeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
-	private static String prepareSinglePropertyMsg(Class<?> cls, String propertyName) {
-		return String.format("Property not found: %1$s#%2$s", cls.getName(), StringTK.enforceNotEmpty(propertyName, "propertyName"));
+	private static String prepareSinglePropertyMsg(Class<?> expectedType, Class<?> cls, String propertyName) {
+		StringTK.enforceNotEmpty(propertyName, "propertyName");
+		return String.format("Illegal connector type, %1$s expected: %2$s#%3$s", expectedType.getName(), cls.getName(), propertyName);
 	}
 	
-	private static String prepareMultiPropertiesMsg(Class<?> cls, String... propertyNames) {
+	private static String prepareMultiPropertiesMsg(Class<?> expectedType, Class<?> cls, String... propertyNames) {
 		ArrayTK.enforceNotEmpty(propertyNames, "propertyNames");
-		final StringBuilder sb = new StringBuilder("Properties not found: ");
+		final StringBuilder sb = new StringBuilder("Illegal connector type, ");
+		sb.append(expectedType.getName()).append(" expected: ");
 		boolean firstElement = true;
 		for (String pName : propertyNames) {
 			if ( ! firstElement) {
@@ -45,8 +47,8 @@ public class UnknownPropertyException extends RuntimeException {
 		return sb.toString();
 	}
 	
-	public UnknownPropertyException(Class<?> cls, String... propertyNames) {
-		super(propertyNames.length > 1 ? prepareMultiPropertiesMsg(cls, propertyNames) : prepareSinglePropertyMsg(cls, propertyNames[0]));
+	public IllegalConnectorTypeException(Class<?> expectedType, Class<?> cls, String... propertyNames) {
+		super(propertyNames.length > 1 ? prepareMultiPropertiesMsg(expectedType, cls, propertyNames) : prepareSinglePropertyMsg(expectedType, cls, propertyNames[0]));
 	}
 	
 }

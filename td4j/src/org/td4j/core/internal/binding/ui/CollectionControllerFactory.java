@@ -19,10 +19,14 @@
 
 package org.td4j.core.internal.binding.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.reflect.PendingConnectorInfo;
 import org.td4j.core.tk.ObjectTK;
 
 
@@ -49,12 +53,20 @@ public abstract class CollectionControllerFactory<T> {
 	}
 
 	public T bindField(String fieldName) {
-		final ICollectionDataConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName);
+		
+		// TODO: handle infoQueue correctly
+		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
+		
+		final ICollectionDataConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName, infoQueue);
 		return bindConnector(connector);
 	}
 
 	public T bindMethods(String name) {
-		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name);
+		
+		// TODO: handle infoQueue correctly
+		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
+		
+		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, infoQueue);
 		return bindConnector(connector);
 	}
 
@@ -63,7 +75,11 @@ public abstract class CollectionControllerFactory<T> {
 	}
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
+		
+		// TODO: handle infoQueue correctly
+		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();		
+
+		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues, infoQueue);
 		return bindConnector(connector);
 	}
 

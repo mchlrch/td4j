@@ -38,7 +38,9 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.CollectionDataContainer;
+import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataContainer;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.binding.model.ScalarDataRelay;
@@ -99,9 +101,13 @@ public class GenericEditor extends Editor<Object> {
 		
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
 		
-		// TODO: columnFilter uses ExposePropertiesInEditorList
+		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, modelInspector);
+		final IScalarDataConnector[] nestedProperties = nestedPropsFactory.createNestedProperties();
 		
-		listTableController = wb.table(columnFilter).bind(listDataContainer.createProxy());
+		final CollectionDataProxy collectionProxy = listDataContainer.createProxy();
+		collectionProxy.getConnectorInfo().setNestedProperties(nestedProperties);
+		
+		listTableController = wb.table().bind(collectionProxy);
 		final JTable listTable = listTableController.getWidget();
 		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		

@@ -20,8 +20,12 @@
 package org.td4j.swing.binding;
 
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 
 import javax.swing.JLabel;
 
@@ -37,26 +41,59 @@ import org.td4j.swing.workbench.Navigator;
 public class LinkController extends ScalarSwingWidgetController<JLabel> {
 
 	private final JLabel widget;
-
+	private final Navigator navigator;
 	private final LinkTargetObserver linkTargetObserver = new LinkTargetObserver(this);
 	
 	public LinkController(JLabel widget, ScalarDataProxy proxy, final Navigator navigator) {
 		super(proxy);
-		if (widget == null) throw new NullPointerException("widget");
-		if (navigator == null) throw new NullPointerException("navigator");
-
-		this.widget = widget;
+		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
 
 		widget.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				navigator.seek(getDataProxy().readValue());
+				doNavigate();
 			}
 		});
 
 		setAccess();
 		updateView();
 	}
+	
+	protected void doNavigate() {
+		final ScalarDataProxy dataProxy = getDataProxy();
+		final Class<?> valueType = dataProxy.getType();
+		final Object value = dataProxy.readValue();
+		
+		if (URL.class.isAssignableFrom(valueType)) {
+			try {
+				final URI uri = ((URL)value).toURI();
+				Desktop.getDesktop().browse(uri);
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+			
+		} else if (URI.class.isAssignableFrom(valueType)) {
+			try {
+				final URI uri = (URI)value;
+				Desktop.getDesktop().browse(uri);
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+			
+		} else if (File.class.isAssignableFrom(valueType)) {
+			try {
+				final File file = (File)value;
+				Desktop.getDesktop().open(file);
+			} catch (Exception ex) {
+				throw new RuntimeException(ex);
+			}
+			
+		} else {
+			navigator.seek(getDataProxy().readValue());
+		}
+	}
+	
 
 	protected void updateView0(Object newTarget) {
 		updateLinkTargetChanged(newTarget);
