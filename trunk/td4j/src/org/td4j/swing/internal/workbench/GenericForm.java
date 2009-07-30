@@ -45,6 +45,7 @@ import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
+import org.td4j.swing.internal.binding.TableControllerFactory;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 
@@ -96,8 +97,7 @@ public class GenericForm<T> extends Form<T> {
 				final ButtonController btnController = wBuilder.caption(label).button().bindConnector(scalarConnector);
 				final AbstractButton btn = btnController.getWidget();
 				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-//			} else if (type == String.class) {
-			} else if (convertableToString) {
+			} else if (type == String.class || convertableToString) {
 				final TextController textController = wBuilder.caption(label).text().bindConnector(scalarConnector);
 				final JTextField text = textController.getWidget();
 				panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
@@ -119,7 +119,8 @@ public class GenericForm<T> extends Form<T> {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 
-			final TableController tableController = wBuilder.caption(label).table().bindConnector(collectionConnector);
+			final TableControllerFactory tableCtrlFactory = wBuilder.caption(label).table();
+			final TableController tableController = tableCtrlFactory.bindConnector(collectionConnector);
 			final JTable table = tableController.getWidget();
 			final JScrollPane scrollPane = new JScrollPane(table);
 			scrollPane.setPreferredSize(new Dimension(100, 100));
@@ -128,5 +129,4 @@ public class GenericForm<T> extends Form<T> {
 
 		return panel;
 	}
-
 }

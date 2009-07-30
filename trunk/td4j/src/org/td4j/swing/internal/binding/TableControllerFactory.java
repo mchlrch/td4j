@@ -24,10 +24,8 @@ import javax.swing.JTable;
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
-import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.workbench.Navigator;
@@ -36,19 +34,17 @@ import org.td4j.swing.workbench.Navigator;
 public class TableControllerFactory extends CollectionWidgetControllerFactory<TableController, JTable> {
 
 	private final IDataConnectorFactory connectorFactory;
-	private final IFilter<IDataConnector> columnFilter;
 	private final Navigator navigator;
 
-	public TableControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, IFilter<IDataConnector> columnFilter, JTable widget, ICaption caption, Navigator navigator) {
+	public TableControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, JTable widget, ICaption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.connectorFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
-		this.columnFilter = ObjectTK.enforceNotNull(columnFilter, "columnFilter");
 		this.navigator = navigator;
 	}
 
 	@Override
 	protected TableController createController(CollectionDataProxy dataProxy, JTable widget) {
-		return new TableController(widget, dataProxy, connectorFactory, columnFilter, navigator);
+		return new TableController(widget, dataProxy, connectorFactory, navigator);
 	}
 
 }

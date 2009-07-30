@@ -31,9 +31,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.internal.reflect.ExecutableConstructor;
 import org.td4j.core.internal.reflect.ExecutableMethod;
@@ -91,9 +94,55 @@ public class DefaultModelInspector extends ModelInspector {
 		if (connectorCache.containsKey(cls)) {
 			return connectorCache.get(cls);
 
-		} else {
-			final List<IDataConnector> connectors = createConnectors(cls);
+		} else {			
+			final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
+			final List<IDataConnector> connectors = createConnectors(cls, infoQueue);
 			connectorCache.put(cls, connectors);
+			
+			// We populate the connectorInfo in a second phase to avoid infinite recursions
+			for (PendingConnectorInfo pendInfo : infoQueue) {
+				ExposeProperties exposeAnnotation = null;
+				if (pendInfo.isFieldConnector()) {
+					exposeAnnotation = pendInfo.getField().getAnnotation(ExposeProperties.class);
+				} else {
+					exposeAnnotation = pendInfo.getGetter().getAnnotation(ExposeProperties.class);
+				}
+				if (exposeAnnotation != null) {
+					
+					// build map for connector lookup by-name
+					final Class<?> valueType = pendInfo.getConnector().getType();
+					final Map<String, IDataConnector> connectorMap = new HashMap<String, IDataConnector>();
+					for (IDataConnector connector : getConnectors(valueType)) {
+						connectorMap.put(connector.getName(), connector);
+					}
+					
+					final List<IScalarDataConnector> nestedProperties = new ArrayList<IScalarDataConnector>();
+					final List<String> unknownProperties = new ArrayList<String>();
+					final List<String> illegalProperties = new ArrayList<String>();
+					for (String pName : exposeAnnotation.value()) {
+						final IDataConnector connector = connectorMap.get(pName);
+						if (connector == null) {
+							unknownProperties.add(pName);
+						} else if ( ! (connector instanceof IScalarDataConnector)) {
+							illegalProperties.add(pName);
+						} else {
+							final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
+							nestedProperties.add(scalarConnector);
+						}
+					}
+					
+					if ( ! unknownProperties.isEmpty()) {
+						throw new UnknownPropertyException(valueType, unknownProperties.toArray(new String[unknownProperties.size()]));						
+					} else if ( ! illegalProperties.isEmpty()) {
+						throw new IllegalConnectorTypeException(IScalarDataConnector.class, valueType, illegalProperties.toArray(new String[unknownProperties.size()]));
+					} else if ( ! nestedProperties.isEmpty()) {
+						final IScalarDataConnector[] nestedProps = nestedProperties.toArray(new IScalarDataConnector[nestedProperties.size()]);
+						final ConnectorInfo info = pendInfo.getConnector().getConnectorInfo(); 
+						info.setNestedProperties(nestedProps);
+					}
+				}
+			}
+			
 			return connectors;
 		}
 	}
@@ -122,7 +171,7 @@ public class DefaultModelInspector extends ModelInspector {
 		return result;
 	}
 	
-	protected List<IDataConnector> createConnectors(Class<?> cls) {
+	protected List<IDataConnector> createConnectors(final Class<?> cls, final List<PendingConnectorInfo> infoQueue) {
 		final List<IDataConnector> result = new ArrayList<IDataConnector>();
 		final ExposeProperties exposeProps = cls.getAnnotation(ExposeProperties.class);
 		final Level level = exposeProps != null ? exposeProps.level() : DEFAULT_LEVEL;
@@ -130,7 +179,7 @@ public class DefaultModelInspector extends ModelInspector {
 		// explicit specification of properties and their order via annotations
 		if (exposeProps != null && exposeProps.value() != null && exposeProps.value().length > 0) {
 			for (String name : exposeProps.value()) {
-				final IDataConnector con = connectorFactory.createConnector(cls, name);
+				final IDataConnector con = connectorFactory.createConnector(cls, name, infoQueue);
 				ObjectTK.enforceNotNull(con, "con");
 				result.add(con);
 			}
@@ -145,7 +194,7 @@ public class DefaultModelInspector extends ModelInspector {
 				if ( ! defaultMethodFilter.accept(m)) continue;
 				final String pName = getterToPropertyName(m, level);
 				if (pName != null && ! propertyNames.contains(pName)) {
-					final IDataConnector con = connectorFactory.createMethodConnector(cls, pName);
+					final IDataConnector con = connectorFactory.createMethodConnector(cls, pName, infoQueue);
 					ObjectTK.enforceNotNull(con, "con");
 					methodConnectors.add(con);
 					propertyNames.add(pName);
@@ -159,7 +208,7 @@ public class DefaultModelInspector extends ModelInspector {
 				final String pName = fieldToPropertyName(f, level);
 				if (pName != null && ! propertyNames.contains(pName)) {
 					f.setAccessible(true);
-					final IDataConnector con = connectorFactory.createFieldConnector(cls, pName);
+					final IDataConnector con = connectorFactory.createFieldConnector(cls, pName, infoQueue);
 					ObjectTK.enforceNotNull(con, "con");
 					fieldConnectors.add(con);
 					propertyNames.add(pName);

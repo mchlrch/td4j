@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,25 +17,30 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.binding.model;
+package org.td4j.swing.binding;
 
-public interface IDataConnector {
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-	public Class<?> getModelType();
+import org.td4j.core.binding.model.IDataConnector;
+import org.td4j.core.tk.ArrayTK;
+import org.td4j.core.tk.IFilter;
 
-	public Class<?> getType();
+public class TableColumnPropertyFilter implements IFilter<IDataConnector> {
+		
+	private final Set<String> propertyNames;
 	
-	/**
-	 * Optional name. Client code can choose to use or ignore this name.
-	 * This is necessary to pass name information from the model to the dataProxy
-	 * 
-	 * @return the name or <code>null</code
-	 */
-	public String getName();
+	protected TableColumnPropertyFilter(String... columnPropertyNames) {
+		ArrayTK.enforceNotEmpty(columnPropertyNames, "columnPropertyNames");
+		
+		propertyNames = new HashSet<String>();
+		propertyNames.addAll(Arrays.asList(columnPropertyNames));
+	}
 	
-	// TODO: diese methoden werden in DataProxy durchgereicht, ev. nur dort anbieten
-	// TODO: was ist besser, die methoden  von connector gleich hier direkt anzubieten oder so
-	// --> der contract bleibt in beiden varianten derselbe
-	public ConnectorInfo getConnectorInfo(); 
-	
+	@Override
+	public boolean accept(IDataConnector connector) {
+		return propertyNames.contains(connector.getName());
+	}
+
 }

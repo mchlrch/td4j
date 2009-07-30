@@ -23,45 +23,60 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.List;
 
 import org.td4j.core.internal.binding.model.CollectionFieldConnector;
 import org.td4j.core.internal.binding.model.CollectionMethodConnector;
 import org.td4j.core.internal.binding.model.ScalarFieldConnector;
 import org.td4j.core.internal.binding.model.ScalarMethodConnector;
+import org.td4j.core.reflect.PendingConnectorInfo;
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.UnknownPropertyException;
 
 
 public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 
-	@Override
 	public IDataConnector createConnector(Class<?> cls, String name) {
+		return createConnector(cls, name, null);
+	}	
+	@Override
+	public IDataConnector createConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
 		
 		// 1) try methods
 		try {
-			return createMethodConnector(cls, name);
+			return createMethodConnector(cls, name, infoQueue);
 		} catch (Exception ex) {
 			// try fields instead ...
 		}
 
 		// 2) try fields
 		// this possibly throws exception
-		return createFieldConnector(cls, name);
+		return createFieldConnector(cls, name, infoQueue);
 	}
 	
-	@Override
+	
 	public IScalarDataConnector createScalarFieldConnector(Class<?> cls, String name) {
-		return (IScalarDataConnector) createFieldConnector(cls, name);
+		return createScalarFieldConnector(cls, name, null);
+	}
+	@Override
+	public IScalarDataConnector createScalarFieldConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+		return (IScalarDataConnector) createFieldConnector(cls, name, infoQueue);
 	}
 	
-	@Override
 	public ICollectionDataConnector createCollectionFieldConnector(Class<?> cls, String name) {
-		return (ICollectionDataConnector) createFieldConnector(cls, name);
+		return createCollectionFieldConnector(cls, name, null);
+	}
+	@Override
+	public ICollectionDataConnector createCollectionFieldConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+		return (ICollectionDataConnector) createFieldConnector(cls, name, infoQueue);
 	}
 	
-	@Override
 	public IDataConnector createFieldConnector(Class<?> cls, String name) {
-		Field field = null;
+		return createFieldConnector(cls, name, null);
+	}
+	@Override
+	public IDataConnector createFieldConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+	 	Field field = null;
 		try {
 			field = cls.getField(name);
 		} catch (Exception ex) {
@@ -81,39 +96,73 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			final Class<?> itemType = ReflectionTK.getItemType(field);
-			return new CollectionFieldConnector(cls, field, itemType);
+			final CollectionFieldConnector connector = new CollectionFieldConnector(cls, field, itemType);
+			enqueueConnectorInfo(infoQueue, connector, field);
+			return connector;
 		} else {
 			return new ScalarFieldConnector(cls, field);
 		}
 	}
 	
-	@Override
+	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, Field field) {
+		if (infoQueue == null) return;
+		
+		final PendingConnectorInfo info = new PendingConnectorInfo(connector, field);
+		infoQueue.add(info);
+	}
+	
+	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, Method getter) {
+		if (infoQueue == null) return;
+		
+		final PendingConnectorInfo info = new PendingConnectorInfo(connector, getter);
+		infoQueue.add(info);
+	}
+
 	public IScalarDataConnector createScalarMethodConnector(Class<?> cls, String name) {
-		return (IScalarDataConnector) createMethodConnector(cls, name);
+		return createScalarMethodConnector(cls, name, null);
+	}
+	@Override
+	public IScalarDataConnector createScalarMethodConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+		return (IScalarDataConnector) createMethodConnector(cls, name, infoQueue);
 	}
 
-	@Override
 	public IScalarDataConnector createScalarMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		return (IScalarDataConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
+		return createScalarMethodConnector(cls, name, argumentTypes, argumentValues, null);
+	}
+	@Override
+	public IScalarDataConnector createScalarMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues, List<PendingConnectorInfo> infoQueue) {
+		return (IScalarDataConnector) createMethodConnector(cls, name, argumentTypes, argumentValues, infoQueue);
 	}
 	
-	@Override
 	public ICollectionDataConnector createCollectionMethodConnector(Class<?> cls, String name) {
-		return (ICollectionDataConnector) createMethodConnector(cls, name);
+		return createCollectionMethodConnector(cls, name, null);
+	}
+	@Override
+	public ICollectionDataConnector createCollectionMethodConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+		return (ICollectionDataConnector) createMethodConnector(cls, name, infoQueue);
 	}
 
-	@Override
 	public ICollectionDataConnector createCollectionMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		return (ICollectionDataConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
+		return createCollectionMethodConnector(cls, name, argumentTypes, argumentValues, null);
+	}
+	@Override
+	public ICollectionDataConnector createCollectionMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues, List<PendingConnectorInfo> infoQueue) {
+		return (ICollectionDataConnector) createMethodConnector(cls, name, argumentTypes, argumentValues, infoQueue);
 	}
 	
-	@Override
 	public IDataConnector createMethodConnector(Class<?> cls, String name) {
-		return createMethodConnector(cls, name, new Class[0], new Object[0]);
+		return createMethodConnector(cls, name);
+	}
+	@Override
+	public IDataConnector createMethodConnector(Class<?> cls, String name, List<PendingConnectorInfo> infoQueue) {
+		return createMethodConnector(cls, name, new Class[0], new Object[0], infoQueue);
 	}
 
-	@Override
 	public IDataConnector createMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
+		return createMethodConnector(cls, name, argumentTypes, argumentValues, null);
+	}
+	@Override
+	public IDataConnector createMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues, List<PendingConnectorInfo> infoQueue) {
 		final Method getter = findReadMethod(cls, name, argumentTypes);
 		if (getter == null) throw new UnknownPropertyException(cls, name);
 		
@@ -134,7 +183,9 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 
 		if (Collection.class.isAssignableFrom(valueType)) {
 			final Class<?> itemType = ReflectionTK.getItemType(getter);
-			return new CollectionMethodConnector(cls, name, getter, itemType, argumentValues);
+			final CollectionMethodConnector connector = new CollectionMethodConnector(cls, name, getter, itemType, argumentValues); 
+			enqueueConnectorInfo(infoQueue, connector, getter);
+			return connector;
 
 		} else {
 			return new ScalarMethodConnector(cls, name, getter, setter, argumentValues);

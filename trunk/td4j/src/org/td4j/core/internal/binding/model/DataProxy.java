@@ -20,6 +20,7 @@
 package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.IModelSocket;
+import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.internal.model.ChangeEventImpl;
 import org.td4j.core.model.ChangeEvent;
@@ -113,6 +114,11 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 		}
 	}
 
+	// TODO: refactor this
+	public ConnectorInfo getConnectorInfo() {
+		return connector.getConnectorInfo();
+	}
+	
 	@Override
 	public String toString() {
 		return connector.toString();
