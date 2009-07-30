@@ -10,8 +10,12 @@
 - ant buildfile fur core: build.xml
 - ant buildfile fur examples: build-examples.xml
 
+:: Examples
+- finish currency converter
+
 ::Publish
 - godaddy: redirect td4j.org -> sf.net
+
 
 ## backlog
 ----------
@@ -47,7 +51,6 @@ x URL & File als Links anzeigen und via Desktop.browse() bzw. open() oeffnen
 X @ExposeProperties auf getter-Methoden und Feldern für table columns auswahl
 - @HideProperties auf getter-Methoden und Feldern für table columns auswahl
 - TableColumn Auswahl in handmade panels
-
 
 
 ## cleanup pending
