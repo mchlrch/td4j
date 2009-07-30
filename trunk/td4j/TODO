@@ -1,0 +1,107 @@
+## release 9.08
+---------------
+::ExecuteDialog:
+- trigger form update after executable actions
+- request focus on buttons: <executables>, btns in executable dialogs
+- Basic Choice / ComboBox support
+
+::Build/Deploy:
+- testcases wieder fit machen
+- ant buildfile fur core: build.xml
+- ant buildfile fur examples: build-examples.xml
+
+::Publish
+- godaddy: redirect td4j.org -> sf.net
+
+## backlog
+----------
+::Choice/Combobox
+- ChoiceUISwing
+- support fuer selectable properties
+
+
+::ExecuteDialog:
+- wenn namen in @Expose auf properties zeigen, dann edit mode - also felder mit property werten befullen
+- erweiterter execute dialog (fluentFeed)
+
+
+::Types/Converters
+x URL & File als Links anzeigen und via Desktop.browse() bzw. open() oeffnen
+- converter repository
+- Prio. 1 haben Typen von String geparsed werden koennen
+- boolean VS. Boolean // aka primitive types
+- ModelInspector.isPrimitive(Class) : boolean
+
+
+::DataConnector
+- equals und hashCode in connectors sauber implementieren
+- clean-up IDataConnectorFactory und DefaultDataConnectorFactory (infoQueue)
+- rethink ConnectorInfo
+
+::Workbench
+- navigator.back()
+
+
+::Table
+- entities in table mit ctrl+click navigierbar machen
+X @ExposeProperties auf getter-Methoden und Feldern für table columns auswahl
+- @HideProperties auf getter-Methoden und Feldern für table columns auswahl
+- TableColumn Auswahl in handmade panels
+
+
+
+## cleanup pending
+------------------ 
+- beispiel mit DDD kompatiblem Modell (Repository und Factory als Teile des Domain Models)
+
+- scenarios for iterative domain driven model refinement
+  - read/write -> read-only
+    public field -> private field & public getter
+  - immutable & read-only
+    public final field (and optional public getter)
+  - virtual property (derive age from birthdate)
+    public getter
+  - aggregates
+    nur aggregates in der sidebar als navigations startpunkt verfügbar
+
+
+- How can Factory und Repository be supported as First-Class objects ?
+
+- Property Identifikation via Enumerations, Beispiel für sf wiki documentation
+
+- cleanup interface names (Handler instead of IHandler)
+
+
+Typisierung von IModelSocket ausprobieren
+hyperlink in JList, damit 1:n beziehungen angezeigt und navigiert werden können
+package dependencies analysieren
+
+
+
+combobox
+
+search/replace NullPointerException/ObjectTK.enforceNotNull()
+
+
+IvokationParameterDialog mit Objektauswahl: person.order().addItem(foo, 2)
+
+
+Caption
+
+testcases für dataProxy refresh/reload
+X 1) model ist observable, stateChange
+X 2) model ist observable, propertyChange
+
+3) model ist NICHT observable, loopbackUpdate via Mediator
+
+
+
+- getter only plugs richtig handhaben, Acess Rules beachten in writeValue0()
+- graceful handling of getXY() ohne setXY() methode (Access)
+
+- Choice / ComboBox
+  getXYChoice() - Methode unterstützen
+
+- fluent methods, dialog, IFluentFeed support
+
+- getXYAccess() : Access specification (read/write)
