@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="td4j" default="build">
+
+	<property name="base.dir" value="." />
+	<property name="src.dir" value="${base.dir}/src" />
+	<property name="lib.dir" value="${base.dir}/lib" />
+	<property name="classes.dir" value="${base.dir}/classes" />
+	<property name="release.dir" value="${base.dir}/release" />
+
+	<tstamp>
+		<!-- 'y.MM' gets two-digit year ... so we use hardcoded year for the next five months -->
+		<format property="version" pattern="9.M" />
+	</tstamp>
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${classes.dir}" />
+	</path>
+	
+	<target name="showenv">
+		<echo message="-----------[ env ]---------------" />  
+		<echo message="os.arch                   = ${os.arch}" />  
+		<echo message="os.name                   = ${os.name}" />  
+		<echo message="os.version                = ${os.version}" />
+		<echo message="java.vm.vendor            = ${java.vm.vendor}" />  
+		<echo message="java.vm.version           = ${java.vm.version}" />  
+		<echo message="ant.version               = ${ant.version}" />		
+	</target>
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+	</target>
+	
+	<target name="build" depends="showenv,clean" >
+		<mkdir dir="${classes.dir}" />			
+		<javac destdir="${classes.dir}" classpathref="classpath" debug="on" fork="true" >	
+			<src path="${src.dir}" />
+		</javac>
+	</target>
+
+
+	<target name="release" depends="build" >
+		<mkdir dir="${release.dir}" />
+		<jar destfile="${release.dir}/td4j-${version}.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+		<jar destfile="${release.dir}/td4j-${version}-src.jar">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</jar>
+	</target>
+
+</project>

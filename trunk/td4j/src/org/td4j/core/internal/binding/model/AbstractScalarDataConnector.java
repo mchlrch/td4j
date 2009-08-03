@@ -67,7 +67,7 @@ public abstract class AbstractScalarDataConnector extends AbstractDataConnector 
 	  return createProxy(converter);
 	}
 	
-	public ScalarDataProxy createProxy(IConverter converter) {	      
+	public ScalarDataProxy createProxy(IConverter converter) {
 	  return new ScalarDataProxy(this, getName(), converter);
 	}
 

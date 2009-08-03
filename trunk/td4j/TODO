@@ -9,14 +9,11 @@
 
 ::Build/Deploy:
 - testcases wieder fit machen
-- ant buildfile fur core: build.xml
+x ant buildfile fur core: build.xml
 - ant buildfile fur examples: build-examples.xml
 
 :: Examples
 - finish currency converter
-
-::Publish
-- godaddy: redirect td4j.org -> sf.net
 
 
 ## backlog

@@ -21,11 +21,11 @@ package org.td4j.core.internal.binding.model.converter;
 
 import org.td4j.core.tk.ObjectTK;
 
-class ReverseConverter<A, B> implements IConverter<A, B> {
+class ReverseConverter implements IConverter {
 
-  private final IConverter<B, A> delegate;
+  private final IConverter delegate;
 
-  ReverseConverter(IConverter<B, A> delegate) {
+  ReverseConverter(IConverter delegate) {
     this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
   }
 
@@ -39,11 +39,11 @@ class ReverseConverter<A, B> implements IConverter<A, B> {
     return delegate.canConvert();
   }
 
-  public B convert(A from) {
+  public Object convert(Object from) {
     return delegate.unconvert(from);
   };
 
-  public A unconvert(B from) {
+  public Object unconvert(Object from) {
     return delegate.convert(from);
   };
 

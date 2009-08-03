@@ -19,11 +19,16 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public class String2IntConverter implements IConverter<String, Integer> {
+public class String2IntConverter implements IConverter {
 
   @Override
-  public Integer convert(String from) {
-    return from != null && ! from.trim().isEmpty() ? Integer.parseInt(from) : null;
+  public Object convert(Object from) {
+  	if (from instanceof String) {
+  		final String s = (String)from;
+  		if ( ! s.trim().isEmpty()) return Integer.parseInt(s);
+  	}
+  	
+    return null;
   }
 
   @Override
@@ -32,8 +37,10 @@ public class String2IntConverter implements IConverter<String, Integer> {
   }
 
   @Override
-  public String unconvert(Integer from) {
-    return from != null ? Integer.toString(from) : null;
+  public Object unconvert(Object from) {
+  	if (from instanceof Integer) return Integer.toString( (Integer)from );
+  	
+    return null;
   }
 
   @Override

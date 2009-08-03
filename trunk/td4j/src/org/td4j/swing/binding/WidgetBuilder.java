@@ -29,6 +29,7 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
@@ -50,8 +51,6 @@ import org.td4j.swing.internal.binding.TableControllerFactory;
 import org.td4j.swing.internal.binding.TableModelAdapter;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
-
-import sun.swing.table.DefaultTableCellHeaderRenderer;
 
 
 
@@ -213,20 +212,15 @@ public class WidgetBuilder<T> {
 		widgetPreCreate();
 		final JTable widget = new JTable();
 		widget.setRowHeight(22);
-        widget.getTableHeader().setDefaultRenderer(getDefaultTableHeaderRenderer());
+		
+		final TableCellRenderer headerRenderer = widget.getTableHeader().getDefaultRenderer();
+		if (headerRenderer instanceof DefaultTableCellRenderer) {
+			((DefaultTableCellRenderer)headerRenderer).setHorizontalAlignment(JLabel.LEFT);
+		}
         
 		return table(widget);
 	}
 	
-	private static DefaultTableCellHeaderRenderer headerRenderer;
-	protected TableCellRenderer getDefaultTableHeaderRenderer() {
-	  if (headerRenderer == null) {
-	    headerRenderer = new DefaultTableCellHeaderRenderer();
-	    headerRenderer.setHorizontalAlignment(JLabel.LEFT);
-	  }
-	  return headerRenderer;
-    }
-
 	public TableControllerFactory table(JTable widget) {
 	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
 	  return factory;
