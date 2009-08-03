@@ -4,6 +4,8 @@
 - trigger form update after executable actions
 - request focus on buttons: <executables>, btns in executable dialogs
 - Basic Choice / ComboBox support
+- primitive Typen in execute Signaturen unterstützen (int)
+- anzahl gelistete instanzen im 'execute' header (oberhalb listPanel, hinter Classname) anzeigen
 
 ::Build/Deploy:
 - testcases wieder fit machen

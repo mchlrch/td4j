@@ -19,6 +19,8 @@
 
 package org.td4j.core.binding.model;
 
+import org.td4j.core.internal.binding.model.converter.IConverter;
+
 public interface IScalarDataConnector extends IDataConnector {
 
 	// TODO: implementation shall throw NPE if model==null -> check all subclasses
@@ -33,5 +35,7 @@ public interface IScalarDataConnector extends IDataConnector {
 	public boolean canWrite(Object model);
 
 	public ScalarDataProxy createProxy();
+	
+	public ScalarDataProxy createProxy(IConverter converter);
 
 }

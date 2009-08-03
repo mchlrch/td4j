@@ -84,7 +84,7 @@ public class GenericForm<T> extends Form<T> {
 			// damit neue controller typen unterstütz werden können
 			final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
 
-			// PEND: fix this, code duplication with AbstractScalarDataConnector
+			// PEND: fix this, code duplication with AbstractScalarDataConnector, InvokationParameterDialog
 			// PEND: fix this, temporary only conversion to String supported !!
 		      final Class<?> fromType = type;
 		      final Class<?> toType = String.class;

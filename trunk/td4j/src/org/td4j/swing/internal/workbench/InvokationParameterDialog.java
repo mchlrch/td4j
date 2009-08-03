@@ -40,6 +40,9 @@ import javax.swing.JTextField;
 
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
+import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.tk.ListTK;
 import org.td4j.swing.binding.ButtonController;
@@ -119,7 +122,14 @@ public class InvokationParameterDialog extends JDialog {
 		contentPane.setLayout(new GridBagLayout());
 		for (InvokationParameter param : parameterList) {
 			final IScalarDataConnector connector = connectorFactory.createScalarMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
-
+			
+            // PEND: fix this, temporary only conversion to String supported !!
+            final Class<?> fromType = param.getType();
+            final Class<?> toType = String.class;
+            final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
+			final ScalarDataProxy dataProxy = connector.createProxy(converter);
+			wBuilder.getMediator().addModelSocket(dataProxy);
+			
 			final JLabel caption = new JLabel(param.getName());
 			caption.setToolTipText(String.format("%1$s : %2$s", param.getType().getSimpleName(), param.getName()));
 			contentPane.add(caption, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0));
@@ -134,7 +144,7 @@ public class InvokationParameterDialog extends JDialog {
 				// PEND: combobox
 
 				// if (param.getType() == String.class) {
-				final TextController textController = wBuilder.text().bindConnector(connector);
+				final TextController textController = wBuilder.text().bind(dataProxy);
 				final JTextField text = textController.getWidget();
 				contentPane.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
 				// } else {
