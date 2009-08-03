@@ -23,7 +23,7 @@ public class String2IntConverter implements IConverter<String, Integer> {
 
   @Override
   public Integer convert(String from) {
-    return from != null ? Integer.parseInt(from) : null;
+    return from != null && ! from.trim().isEmpty() ? Integer.parseInt(from) : null;
   }
 
   @Override

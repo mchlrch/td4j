@@ -21,8 +21,6 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.converter.IConverter;
-import org.td4j.core.internal.binding.model.converter.IConverterRepository;
-import org.td4j.core.tk.ObjectTK;
 
 public class ScalarDataProxy extends DataProxy<IScalarDataConnector> {
 

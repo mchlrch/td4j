@@ -23,7 +23,6 @@ import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
-import org.td4j.core.internal.binding.model.converter.IConverterRepository;
 
 public abstract class AbstractScalarDataConnector extends AbstractDataConnector implements IScalarDataConnector {
 
@@ -65,7 +64,11 @@ public abstract class AbstractScalarDataConnector extends AbstractDataConnector 
 	  final Class<?> toType = String.class;
 	  final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
 	  
-		return new ScalarDataProxy(this, getName(), converter);
+	  return createProxy(converter);
+	}
+	
+	public ScalarDataProxy createProxy(IConverter converter) {	      
+	  return new ScalarDataProxy(this, getName(), converter);
 	}
 
 }
