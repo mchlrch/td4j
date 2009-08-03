@@ -22,6 +22,6 @@ package org.td4j.core.internal.binding.model.converter;
 
 public interface IConverterRepository {
   
-  public <A,B> IConverter<A, B> getConverter(Class<A> fromType, Class<B> toType);
+  public IConverter getConverter(Class<?> fromType, Class<?> toType);
 
 }

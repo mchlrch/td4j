@@ -38,16 +38,16 @@ public class DefaultConverterRepository implements IConverterRepository {
     addConverter(String.class, int.class, new String2IntConverter());
   }
 
-  private <A, B> void addConverter(Class<A> fromType, Class<B> toType, IConverter<A, B> converter) {
+  private void addConverter(Class<?> fromType, Class<?> toType, IConverter converter) {
     ObjectTK.enforceNotNull(converter, "converter");
     map.put(new ConverterKey(fromType, toType), converter);
 
-    final IConverter<B, A> reverseConverter = new ReverseConverter<B, A>(converter);
+    final IConverter reverseConverter = new ReverseConverter(converter);
     map.put(new ConverterKey(toType, fromType), reverseConverter);
   }
 
   @Override
-  public <A, B> IConverter<A, B> getConverter(Class<A> fromType, Class<B> toType) {
+  public IConverter getConverter(Class<?> fromType, Class<?> toType) {
     final ConverterKey key = new ConverterKey(fromType, toType);
     return map.get(key);
   }

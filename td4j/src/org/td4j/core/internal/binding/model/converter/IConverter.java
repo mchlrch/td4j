@@ -19,12 +19,12 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public interface IConverter<A,B> {
+public interface IConverter {
 
-	public B convert(A from);
+	public Object convert(Object from);
 	public boolean canConvert();
 	
-	public A unconvert(B from);
+	public Object unconvert(Object from);
 	public boolean canUnconvert();
 
 }

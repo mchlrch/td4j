@@ -33,7 +33,7 @@ public class DataProxyTest {
 	@Test
 	public void testModelChange() throws Exception {
 		final ScalarFieldConnector con = new ScalarFieldConnector(TestObservable.class, TestObservable.class.getDeclaredField("int1"));
-		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getPropertyName()) {
+		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getName()) {
 		};
 		final CountingObserver observer = new CountingObserver();
 		proxy.addObserver(observer);
@@ -67,7 +67,7 @@ public class DataProxyTest {
 
 	private void testModelStateOrPropertyChange(NotificationMode notificationMode) throws Exception {
 		final ScalarFieldConnector con = new ScalarFieldConnector(TestObservable.class, TestObservable.class.getDeclaredField("int1"));
-		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getPropertyName()) {
+		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getName()) {
 		};
 		final CountingObserver observer = new CountingObserver();
 		proxy.addObserver(observer);

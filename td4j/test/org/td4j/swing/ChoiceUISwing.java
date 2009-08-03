@@ -42,6 +42,7 @@ import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.model.CollectionDataProxy;
+import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
@@ -224,6 +225,18 @@ public class ChoiceUISwing extends JPanel {
 		@Override
 		public CollectionDataProxy createProxy() {
 			return new CollectionDataProxy(this, null);
+		}
+
+		@Override
+		public ConnectorInfo getConnectorInfo() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}
