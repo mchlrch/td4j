@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URL;
 
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.model.ChangeEvent;
@@ -44,7 +45,7 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 	private final Navigator navigator;
 	private final LinkTargetObserver linkTargetObserver = new LinkTargetObserver(this);
 	
-	public LinkController(JLabel widget, ScalarDataProxy proxy, final Navigator navigator) {
+	public LinkController(final JLabel widget, ScalarDataProxy proxy, final Navigator navigator) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
@@ -52,7 +53,16 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 		widget.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				doNavigate();
+			
+				// request focus to trigger pending writeModel() operations
+				widget.requestFocus();
+				
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						doNavigate();
+					}
+				});
 			}
 		});
 

@@ -65,17 +65,23 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 
 		} else {
 			if (dialog == null) {
-				dialog = createDialog(executable.getParameters());
+				dialog = createDialog(executable);
 			}
 			dialog.setVisible(true);
 			if (dialog.getOptionType() == JOptionPane.OK_OPTION) {
 				doInvoke(dialog.getParameterValues());
 			}
 		}
+		
+		// force form refresh to update data from models that are not Observable
+		editor.getForm().refreshFromModel();
 	}
 
-	private InvokationParameterDialog createDialog(List<InvokationParameter> params) {
-		return new InvokationParameterDialog(params);
+	private InvokationParameterDialog createDialog(AbstractExecutable executable) {
+		final List<InvokationParameter> params = executable.getParameters();
+		final InvokationParameterDialog dialog = new InvokationParameterDialog(params);
+		dialog.setTitle(executable.toString());
+		return dialog;
 	}
 
 	void doInvoke(Object... paramValues) {
