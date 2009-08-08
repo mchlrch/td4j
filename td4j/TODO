@@ -11,7 +11,6 @@ x primitive Typen in execute Signaturen unterstützen (int)
 ::Build/Deploy:
 - testcases wieder fit machen
 x ant buildfile fur core: build.xml
-- ant buildfile fur examples: build-examples.xml
 
 :: Examples
 - finish currency converter
