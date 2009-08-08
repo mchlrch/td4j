@@ -146,16 +146,17 @@ public class GenericEditor extends Editor<Object> {
 		return mediator.getModel();
 	}
 	
-	// PEND: obsolete, remove code ..
-//	private void setModel(Object model) {
-//		mediator.setModel(model);
-//		form.setModel(model);
-//	}
+	public Form<?> getForm() {
+		return form;
+	}
 	
 	@Override
 	public void setContent(EditorContent content) {
 		listDataContainer.setContent(new ArrayList<Object>(content.getInstances()));
 		listSelectionContainer.setContent(content.getMainObject());
+		
+	  // force form refresh to update data from models that are not Observable
+		form.refreshFromModel();
 		
 		if (content.getInstances().size() > 1) {
 			splitPane.setDividerLocation(-1);

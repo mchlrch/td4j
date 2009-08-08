@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ package org.td4j.swing.binding;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
@@ -114,6 +116,15 @@ public class WidgetBuilder<T> {
 	public TextControllerFactory text() {
 		widgetPreCreate();
 		final JTextField widget = new JTextField();
+		
+		final FocusAdapter selectTextOnFocusGained = new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				widget.selectAll();				
+			}
+		};
+		widget.addFocusListener(selectTextOnFocusGained);
+		
 		return text(widget);
 	}
 

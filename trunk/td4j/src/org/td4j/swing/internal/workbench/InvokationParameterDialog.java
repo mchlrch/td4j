@@ -19,11 +19,16 @@
 
 package org.td4j.swing.internal.workbench;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +37,14 @@ import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
@@ -45,6 +53,7 @@ import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.tk.ListTK;
+import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
@@ -73,8 +82,16 @@ public class InvokationParameterDialog extends JDialog {
 		private static final long serialVersionUID = 1L;
 
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			
+			// write widget value to model
+			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();			
+
 			optionType = JOptionPane.OK_OPTION;
-			setVisible0(false);
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					setVisible0(false);					
+				};
+			});
 		};
 	};
 
@@ -120,13 +137,15 @@ public class InvokationParameterDialog extends JDialog {
 		final Container contentPane = getContentPane();
 
 		contentPane.setLayout(new GridBagLayout());
+		
+		FocusRequester focusRequester = null;
 		for (InvokationParameter param : parameterList) {
 			final IScalarDataConnector connector = connectorFactory.createScalarMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
 			
-            // PEND: fix this, temporary only conversion to String supported !!
-            final Class<?> fromType = param.getType();
-            final Class<?> toType = String.class;
-            final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
+      // PEND: fix this, temporary only conversion to String supported !!
+      final Class<?> fromType = param.getType();
+      final Class<?> toType = String.class;
+      final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
 			final ScalarDataProxy dataProxy = connector.createProxy(converter);
 			wBuilder.getMediator().addModelSocket(dataProxy);
 			
@@ -139,6 +158,10 @@ public class InvokationParameterDialog extends JDialog {
 				final ButtonController btnController = wBuilder.button().bindConnector(connector);
 				final AbstractButton btn = btnController.getWidget();
 				contentPane.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
+				if (focusRequester == null) {
+					focusRequester = new FocusRequester(btn);
+					addHierarchyListener(focusRequester);
+				}
 			} else {
 
 				// PEND: combobox
@@ -147,6 +170,12 @@ public class InvokationParameterDialog extends JDialog {
 				final TextController textController = wBuilder.text().bind(dataProxy);
 				final JTextField text = textController.getWidget();
 				contentPane.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
+
+				if (focusRequester == null) {
+					focusRequester = new FocusRequester(text);
+					addHierarchyListener(focusRequester);
+				}
+				
 				// } else {
 				// final LinkController linkController =
 				// wBuilder.link().bindConnector(connector);
@@ -160,6 +189,9 @@ public class InvokationParameterDialog extends JDialog {
 		final JPanel buttons = new JPanel(new GridLayout(1, 3));
 		final JButton okButton = new JButton(okAction);
 		getRootPane().setDefaultButton(okButton);
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+		getRootPane().getActionMap().put("cancel", cancelAction);
 
 		buttons.add(new JButton(clearValuesAction));
 		buttons.add(okButton);
@@ -188,6 +220,27 @@ public class InvokationParameterDialog extends JDialog {
 			paramValues.add(paramValueMap.get(param));
 		}
 		return paramValues.toArray();
+	}
+	
+	
+	
+	private static class FocusRequester implements HierarchyListener {
+		
+		private final Component comp;
+		
+		private FocusRequester(Component comp) {
+			this.comp = ObjectTK.enforceNotNull(comp, "comp");
+		}		
+		
+		@Override
+		public void hierarchyChanged(HierarchyEvent e) {
+			final boolean showingChanged = (e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) == HierarchyEvent.SHOWING_CHANGED;
+			final boolean compVisible = e.getComponent().isVisible();
+			
+			if (showingChanged && compVisible) {
+				comp.requestFocusInWindow();				
+			}			
+		}
 	}
 
 }
