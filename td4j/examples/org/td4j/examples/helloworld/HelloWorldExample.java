@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -15,34 +15,26 @@
 
   You should have received a copy of the GNU General Public License
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
- *********************************************************************/
+*********************************************************************/
 
 package org.td4j.examples.helloworld;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import org.td4j.swing.workbench.Workbench;
 
-
-public class HelloModel {
-
-	private static final Map<Locale, String> messageMap = new HashMap<Locale, String>();
-
-	static {
-		messageMap.put(Locale.ENGLISH, "Hi %s! How are you?");
-		messageMap.put(Locale.GERMAN, "Hallo %s! Wie gehts?");
-		messageMap.put(Locale.FRENCH, "Salut %s! Ça va?");
-		messageMap.put(Locale.ITALIAN, "Ciao %s! Come stai?");
+public class HelloWorldExample {
+	
+	public static void main(String[] args) {
+		Workbench.start(new HelloWorld());
 	}
-
-	public String name;
-	public Locale locale;
-
-	public Set<Locale> localeChoice = messageMap.keySet();
-
-	public String getMessage() {
-		return String.format(locale != null ? messageMap.get(locale) : "%s", name != null ? name : "");
+	
+	
+	public static class HelloWorld {		
+		public String name = "world";
+		
+		public String getGreeting() {
+			return String.format("Hello %s!", name);
+		}
+		
 	}
 
 }
