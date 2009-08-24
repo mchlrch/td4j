@@ -1,20 +1,22 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Suite1" verbose="1" >
+<suite name="td4j" verbose="1" >
  <test name="binding.model"   >
     <packages>
-      <package name="ch.miranet.td4j.binding.model" />
+      <package name="org.td4j.core.binding.model" />
+      <package name="org.td4j.core.internal.binding.model" />
    </packages>
  </test>
 
   <test name="model"   >
     <packages>
-      <package name="ch.miranet.td4j.model.observable" />
+      <package name="org.td4j.core.model" />
    </packages>
  </test>
+ 
  <test name="reflect"   >
     <packages>
-      <package name="ch.miranet.td4j.reflect" />
+      <package name="org.td4j.core.reflect" />
    </packages>
  </test>
 
