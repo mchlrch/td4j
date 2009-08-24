@@ -67,7 +67,7 @@ public class PersonMultiAddressExample {
       @ExposeProperties({"humanReadableBackward", "backwardRole", "from"})
       public List<PersonRelation> relationsIn = new ArrayList<PersonRelation>();
 
-		@Executable(paramNames = { "firstname", "lastName" })
+		@Executable(paramNames = { "firstName", "lastName" })
 		public Person(String firstName, String lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;

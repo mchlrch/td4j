@@ -4,21 +4,22 @@
 x trigger form update after executable actions
 x trigger form update after navigation
 x request focus on buttons: <executables>, btns in executable dialogs
-- Basic Choice / ComboBox support
 x primitive Typen in execute Signaturen unterstützen (int)
-- anzahl gelistete instanzen im 'execute' header (oberhalb listPanel, hinter Classname) anzeigen
 
 ::Build/Deploy:
-- testcases wieder fit machen
+x testcases wieder fit machen
 x ant buildfile fur core: build.xml
-
-:: Examples
-- finish currency converter
 
 
 ## backlog
 ----------
+:: ModelInspector
+- Eigenes Metamodel
+- JavaMetaModel
+- MetaModel Layering: ab Modell VS. für widgets
+
 ::Choice/Combobox
+- Basic Choice / ComboBox support
 - ChoiceUISwing
 - support fuer selectable properties
 
@@ -26,6 +27,7 @@ x ant buildfile fur core: build.xml
 ::ExecuteDialog:
 - wenn namen in @Expose auf properties zeigen, dann edit mode - also felder mit property werten befullen
 - erweiterter execute dialog (fluentFeed)
+- anzahl gelistete instanzen im 'execute' header (oberhalb listPanel, hinter Classname) anzeigen
 
 
 ::Types/Converters
@@ -50,6 +52,12 @@ x URL & File als Links anzeigen und via Desktop.browse() bzw. open() oeffnen
 X @ExposeProperties auf getter-Methoden und Feldern für table columns auswahl
 - @HideProperties auf getter-Methoden und Feldern für table columns auswahl
 - TableColumn Auswahl in handmade panels
+- @SelectionContextExecutable("removeAddress") für table-actions
+
+
+:: Examples
+- finish currency converter
+- Fowlers state machine aus DSL buch
 
 
 ## cleanup pending

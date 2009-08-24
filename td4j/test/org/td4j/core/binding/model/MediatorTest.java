@@ -28,7 +28,7 @@ public class MediatorTest {
 
 	@DataProvider(name = "harness")
 	public Object[][] createHarness() {
-		final Mediator mediator = new Mediator(String.class);
+		final Mediator<String> mediator = new Mediator<String>(String.class);
 		final String model = "foo";
 		mediator.setModel(model);
 		final CountingModelSocket socket = new CountingModelSocket(String.class);

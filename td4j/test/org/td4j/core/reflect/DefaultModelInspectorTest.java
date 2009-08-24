@@ -19,17 +19,12 @@
 
 package org.td4j.core.reflect;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.IDataConnector;
-import org.td4j.core.reflect.DefaultModelInspector;
-import org.td4j.core.reflect.Expose;
-import org.td4j.core.reflect.ExposeProperties;
-import org.td4j.core.reflect.Hide;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -71,7 +66,7 @@ public class DefaultModelInspectorTest {
 		assertPlugList(inspector.getConnectors(ClsE.class), "int4", "int1", "integer3", "integer2");
 	}
 
-	@Test(expectedExceptions = { IllegalStateException.class })
+	@Test(expectedExceptions = { UnknownPropertyException.class })
 	public void testUnknownPlug() {
 		inspector.getConnectors(ClsF.class);
 	}
@@ -83,7 +78,8 @@ public class DefaultModelInspectorTest {
 
 		Set<String> nameSet = createStringSet(plugNames);
 		for (IDataConnector plug : plugs) {
-			assert nameSet.contains(nameOf(plug));
+			final String plugName = plug.getName();
+			assert nameSet.contains(plugName) : String.format("unexpected plug: %s", plugName);
 		}
 	}
 
@@ -99,19 +95,11 @@ public class DefaultModelInspectorTest {
 		assert plugs.size() == plugNames.length;
 
 		for (int i = 0, n = plugs.size(); i < n; i++) {
-			IDataConnector plug = plugs.get(i);
-			assert nameOf(plug).equals(plugNames[i]);
+			final IDataConnector plug = plugs.get(i);
+			final String expectedName = plugNames[i];
+			final String actualName = plug.getName();
+			assert actualName.equals(expectedName) : String.format("@[%d] expected: %s  actual: %s", i, expectedName, actualName);
 		}
-	}
-
-	private static String nameOf(IDataConnector con) {
-		try {
-			final Method propertyNameGetter = con.getClass().getDeclaredMethod("getPropertyName");
-			propertyNameGetter.setAccessible(true);
-			return (String) propertyNameGetter.invoke(con);
-		} catch (Exception ex) {
-		}
-		return null;
 	}
 
 
