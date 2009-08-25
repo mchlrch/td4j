@@ -1,3 +1,10 @@
+SF File Release System
+----------------------
+mira@apu:~/wdir/sf.net/td4j/release$ sftp miraman,td4j@frs.sourceforge.net
+sftp> cd  /home/frs/project/t/td/td4j
+sftp> put td4j-9.8.zip
+
+
 SF Project Upload - td4j
 ------------------------
 mira@apu:~/wdir/sf.net/td4j/htdocs$ sftp miraman,td4j@web.sourceforge.net
