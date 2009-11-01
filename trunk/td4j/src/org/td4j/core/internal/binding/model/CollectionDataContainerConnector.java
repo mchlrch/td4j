@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,17 +22,12 @@ package org.td4j.core.internal.binding.model;
 import java.util.Collection;
 
 import org.td4j.core.binding.model.CollectionDataContainer;
-import org.td4j.core.tk.StringTK;
 
 
 public class CollectionDataContainerConnector extends AbstractCollectionDataConnector {
 
-	private final String name;
-
-	public CollectionDataContainerConnector(Class<?> type, Class<?> collectionType, String name) {
+	public CollectionDataContainerConnector(Class<?> type, Class<?> collectionType) {
 		super(CollectionDataContainer.class, collectionType, type);
-
-		this.name = StringTK.enforceNotEmpty(name, "name");
 	}
 
 	public boolean canRead(Object model) {
@@ -49,13 +44,8 @@ public class CollectionDataContainerConnector extends AbstractCollectionDataConn
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
 	public String toString() {
-		return getName();
+		return getClass().getName() + ": valueType=" + getType();
 	}
 
 	protected CollectionDataContainer<Object> modelAsContainer(Object model) {

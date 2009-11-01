@@ -19,14 +19,12 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.IDataConnector;
 
 public abstract class AbstractDataConnector implements IDataConnector {
 
 	private final Class<?> modelType;
 	private final Class<?> valueType;
-	private final ConnectorInfo connectorInfo = new ConnectorInfo();
 
 	protected AbstractDataConnector(Class<?> modelType, Class<?> valueType) {
 		if (modelType == null) throw new NullPointerException("modelType");
@@ -44,9 +42,4 @@ public abstract class AbstractDataConnector implements IDataConnector {
 		return valueType;
 	}
 	
-	@Override
-	public ConnectorInfo getConnectorInfo() {
-		return connectorInfo;
-	}
-
 }

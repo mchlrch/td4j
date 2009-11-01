@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.metamodel.OpenClassRepository;
 import org.td4j.core.tk.ObjectTK;
 
 
@@ -31,25 +31,25 @@ public abstract class CollectionWidgetControllerFactory<T extends CollectionWidg
 	private final W widget;
 	private final ICaption caption;
 
-	protected CollectionWidgetControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, W widget, ICaption caption) {
-		super(mediator, connectorFactory);
+	protected CollectionWidgetControllerFactory(Mediator mediator, OpenClassRepository classRepository, W widget, ICaption caption) {
+		super(mediator, classRepository);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 		this.caption = caption;
 	}
 
 	@Override
-	public T bind(CollectionDataProxy dataProxy) {
+	public T bind(ListDataProxy dataProxy) {
 		final T adapter = super.bind(dataProxy);
 		adapter.setCaption(caption);
 		return adapter;
 	}
 
 	@Override
-	protected T createController(CollectionDataProxy dataProxy) {
+	protected T createController(ListDataProxy dataProxy) {
 		return createController(dataProxy, widget);
 	}
 
-	protected abstract T createController(CollectionDataProxy dataProxy, W widget);
+	protected abstract T createController(ListDataProxy dataProxy, W widget);
 
 }

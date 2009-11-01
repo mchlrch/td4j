@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -49,16 +49,6 @@ public abstract class ScalarWidgetController<W> implements IObserver {
 	public void observableChanged(ChangeEvent event) {
 		updateView();
 	}
-
-	// PEND: würde gebraucht, wenn VERBOSE PropertyChangeEvent empfangen würde ...
-	// ist aber glaub ich nicht der fall
-	// public void propertyChanged(PropertyChangeEvent evt) {
-	// if (evt.getType() == PropertyChangeEvent.Type.SHORT) {
-	// updateView();
-	// } else {
-	// updateView(evt.getNewValue());
-	// }
-	// }
 
 	protected void updateCaption() {
 		final String name = ReflectionTK.humanize(dataProxy.getName());

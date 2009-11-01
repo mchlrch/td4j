@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ package org.td4j.core.internal.binding.ui;
 
 import java.util.Collection;
 
-import org.td4j.core.binding.model.CollectionDataProxy;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
@@ -34,18 +34,18 @@ import org.td4j.core.reflect.ReflectionTK;
 // PEND: parts are common with scalar
 public abstract class CollectionWidgetController<W> implements IObserver {
 
-	private final CollectionDataProxy dataProxy;
+	private final ListDataProxy dataProxy;
 
 	private ICaption caption;
 
 	private boolean viewUpdateInProgress;
 
-	protected CollectionWidgetController(CollectionDataProxy proxy) {
+	protected CollectionWidgetController(ListDataProxy proxy) {
 		this.dataProxy = proxy;
 		proxy.addObserver(this, new ChangeEventFilter(dataProxy, ChangeEvent.Type.StateChange));
 	}
 
-	public CollectionDataProxy getDataProxy() {
+	public ListDataProxy getDataProxy() {
 		return dataProxy;
 	}
 

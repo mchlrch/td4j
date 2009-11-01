@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -106,9 +106,9 @@ public class CollectionDataContainer<T> extends Observable {
 		changeSupport.fireStateChange();
 	}
 
-	public CollectionDataProxy createProxy() {
+	public ListDataProxy createProxy() {
 		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType(), getPropertyName());
-		final CollectionDataProxy proxy = con.createProxy();
+		final ListDataProxy proxy = con.createProxy();
 		proxy.setModel(this);
 		return proxy;
 	}

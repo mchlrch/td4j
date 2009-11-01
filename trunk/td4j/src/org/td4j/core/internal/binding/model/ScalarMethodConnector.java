@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,23 +27,17 @@ import org.td4j.core.reflect.ReflectionTK;
 
 public class ScalarMethodConnector extends AbstractScalarDataConnector {
 
-	private final String propertyName;
 	private final Method getterMethod;
 	private final Method setterMethod;
 	private final Object[] argumentValues;
 
-	/**
-	 * @param propertyName
-	 *          may be null
-	 */
-	public ScalarMethodConnector(Class<?> modelType, String propertyName, Method getter, Method setter) {
-		this(modelType, propertyName, getter, setter, new Object[0]);
+	public ScalarMethodConnector(Class<?> modelType, Method getter, Method setter) {
+		this(modelType, getter, setter, new Object[0]);
 	}
 
-	public ScalarMethodConnector(Class<?> modelType, String propertyName, Method getter, Method setter, Object[] argumentValues) {
+	public ScalarMethodConnector(Class<?> modelType, Method getter, Method setter, Object[] argumentValues) {
 		super(modelType, getter.getReturnType());
 
-		this.propertyName = propertyName;
 		this.getterMethod = getter;
 		this.setterMethod = setter;
 		this.argumentValues = argumentValues;
@@ -65,11 +59,6 @@ public class ScalarMethodConnector extends AbstractScalarDataConnector {
 	@Override
 	protected void writeValue0(Object model, Object val) throws Exception {
 		setterMethod.invoke(model, ReflectionTK.composeArray(argumentValues, val));
-	}
-
-	@Override
-	public String getName() {
-		return propertyName;
 	}
 
 	@Override

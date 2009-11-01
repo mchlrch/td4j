@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.internal.binding.model.converter.IConverter;
 
 public interface IScalarDataConnector extends IDataConnector {
 
@@ -33,9 +32,5 @@ public interface IScalarDataConnector extends IDataConnector {
 	public boolean canRead(Object model);
 
 	public boolean canWrite(Object model);
-
-	public ScalarDataProxy createProxy();
-	
-	public ScalarDataProxy createProxy(IConverter converter);
 
 }

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,44 +21,61 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.internal.capability.ScalarDataAccess;
+import org.td4j.core.tk.ObjectTK;
 
-public class ScalarDataProxy extends DataProxy<IScalarDataConnector> {
 
-    private final IConverter converter;
-  
-	public ScalarDataProxy(IScalarDataConnector connector, String name, IConverter converter) {
-		super(connector, name);
+public class ScalarDataProxy extends DataProxy {
+
+	private final ScalarDataAccess dataAccess;
+	private final IConverter converter;
+
+	public ScalarDataProxy(ScalarDataAccess dataAccess, String name, IConverter converter) {
+		super(name);
+		this.dataAccess = ObjectTK.enforceNotNull(dataAccess, "dataAccess");
 		this.converter = converter;
 	}
 
+	@Override
+	public Class<?> getModelType() {
+		return dataAccess.getContextType();
+	}
+	
+	public Class<?> getValueType() {
+		return dataAccess.getValueType();
+	}
+
 	public boolean canRead() {
-		return connector.canRead(getModel()) && (converter == null || converter.canConvert());
+		return dataAccess.canRead(getModel()) && (converter == null || converter.canConvert());
 	}
 
 	public boolean canWrite() {
-		return connector.canWrite(getModel()) && (converter == null || converter.canUnconvert());
+		return dataAccess.canWrite(getModel()) && (converter == null || converter.canUnconvert());
 	}
 
-	// PEND: use converter
 	public Object readValue() {
-	    final Object val = connector.readValue(getModel());
-	    if (converter == null) {
-	      return val;
-	    } else {
-	      final Object convertedVal = converter.convert(val);
-	      return convertedVal;
-	    }
+		final Object val = dataAccess.readValue(getModel());
+		if (converter == null) {
+			return val;
+		} else {
+			final Object convertedVal = converter.convert(val);
+			return convertedVal;
+		}
 	}
 
-	// PEND: use converter
 	public void writeValue(Object val) {
-	  if (converter != null) {
-	    val = converter.unconvert(val);
-	  }
-	  
-	  connector.writeValue(getModel(), val);
-		
+		if (converter != null) {
+			val = converter.unconvert(val);
+		}
+
+		dataAccess.writeValue(getModel(), val);
+
 		valueModified();
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }
