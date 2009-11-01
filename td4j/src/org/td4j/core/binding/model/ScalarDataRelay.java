@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -35,8 +35,8 @@ public class ScalarDataRelay implements IObserver {
 		if (slave == null) throw new NullPointerException("slave");
 
 		final Class<?> slaveType = slave.getModelType();
-		if ( ! slaveType.isAssignableFrom(master.getType())) {
-			throw new IllegalArgumentException("type mismatch: " + master.getType().getName() + " cannot be cascaded with " + slave.getModelType().getName());
+		if ( ! slaveType.isAssignableFrom(master.getValueType())) {
+			throw new IllegalArgumentException("type mismatch: " + master.getValueType().getName() + " cannot be cascaded with " + slave.getModelType().getName());
 		}
 
 		master.addObserver(this, new ChangeEventFilter(master, ChangeEvent.Type.StateChange));

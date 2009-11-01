@@ -24,22 +24,16 @@ import java.util.Collection;
 
 public class CollectionMethodConnector extends AbstractCollectionDataConnector {
 
-	private final String propertyName;
 	private final Method getterMethod;
 	private final Object[] argumentValues;
 	
-	/**
-	 * @param propertyName
-	 *          may be null
-	 */
-	public CollectionMethodConnector(Class<?> modelType, String propertyName, Method getter, Class<?> valueType) {
-		this(modelType, propertyName, getter, valueType, new Object[0]);
+	public CollectionMethodConnector(Class<?> modelType, Method getter, Class<?> valueType) {
+		this(modelType, getter, valueType, new Object[0]);
 	}
 
-	public CollectionMethodConnector(Class<?> modelType, String propertyName, Method getter, Class<?> valueType, Object[] argumentValues) {
+	public CollectionMethodConnector(Class<?> modelType, Method getter, Class<?> valueType, Object[] argumentValues) {
 		super(modelType, getter.getReturnType(), valueType);
 
-		this.propertyName = propertyName;
 		this.getterMethod = getter;
 		this.argumentValues = argumentValues;
 	}
@@ -53,11 +47,6 @@ public class CollectionMethodConnector extends AbstractCollectionDataConnector {
 		return (Collection<?>) getterMethod.invoke(model, argumentValues);
 	}
 	
-	@Override
-	public String getName() {
-		return propertyName;
-	}
-
 	@Override
 	public String toString() {
 		return getModelType().getName() + "." + getterMethod.getName() + " : " + getCollectionType().getName() + "<" + getType() + ">";

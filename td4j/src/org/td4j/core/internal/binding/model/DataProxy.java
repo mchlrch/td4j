@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.IModelSocket;
-import org.td4j.core.binding.model.ConnectorInfo;
-import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.internal.model.ChangeEventImpl;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
@@ -30,10 +28,8 @@ import org.td4j.core.model.ObservableTK;
 import org.td4j.core.tk.ObjectTK;
 
 
+public abstract class DataProxy extends Observable implements IModelSocket, IObserver {
 
-public abstract class DataProxy<T extends IDataConnector> extends Observable implements IModelSocket, IObserver {
-
-	protected final T connector;
 	private final String name;
 	private Object model;
 
@@ -41,10 +37,7 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 	 * @param name
 	 *          may be null
 	 */
-	protected DataProxy(T connector, String name) {
-		if (connector == null) throw new NullPointerException("connector");
-
-		this.connector = connector;
+	protected DataProxy(String name) {
 		this.name = name;
 	}
 
@@ -78,20 +71,8 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 		}
 	}
 
-	public Class<?> getModelType() {
-		return connector.getModelType();
-	}
-
 	public void refreshFromModel() {
 		changeSupport.fireStateChange();
-	}
-
-	public Class<?> getType() {
-		return connector.getType();
-	}
-
-	protected T getConnector() {
-		return connector;
 	}
 
 	protected void valueModified() {
@@ -114,16 +95,6 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 		}
 	}
 
-	// TODO: refactor this
-	public ConnectorInfo getConnectorInfo() {
-		return connector.getConnectorInfo();
-	}
-	
-	@Override
-	public String toString() {
-		return connector.toString();
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -134,7 +105,7 @@ public abstract class DataProxy<T extends IDataConnector> extends Observable imp
 			ValueModified
 		}
 
-		private DataProxyChangeEvent(DataProxy<?> source) {
+		private DataProxyChangeEvent(DataProxy source) {
 			super(source, ChangeEvent.Type.Custom);
 		}
 	}

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,9 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.metamodel.OpenClassRepository;
 import org.td4j.core.reflect.PendingConnectorInfo;
 import org.td4j.core.tk.ObjectTK;
 
@@ -33,21 +34,21 @@ import org.td4j.core.tk.ObjectTK;
 
 public abstract class CollectionControllerFactory<T> {
 	private final Mediator mediator;
-	private final IDataConnectorFactory conFactory;
+	protected final OpenClassRepository classRepository;
 
-	protected CollectionControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory) {
+	protected CollectionControllerFactory(Mediator mediator, OpenClassRepository classRepository) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
+		this.classRepository = ObjectTK.enforceNotNull(classRepository, "classRepository");
 	}
 
-	public T bind(CollectionDataProxy dataProxy) {
+	public T bind(ListDataProxy dataProxy) {
 		ObjectTK.enforceNotNull(dataProxy, "dataProxy");
 		final T controller = createController(dataProxy);
 		return controller;
 	}
 
 	public T bindConnector(ICollectionDataConnector connector) {
-		final CollectionDataProxy proxy = connector.createProxy();
+		final ListDataProxy proxy = connector.createProxy();
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}
@@ -83,6 +84,6 @@ public abstract class CollectionControllerFactory<T> {
 		return bindConnector(connector);
 	}
 
-	protected abstract T createController(CollectionDataProxy proxy);
+	protected abstract T createController(ListDataProxy proxy);
 
 }

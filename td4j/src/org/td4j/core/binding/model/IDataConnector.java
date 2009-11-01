@@ -25,17 +25,4 @@ public interface IDataConnector {
 
 	public Class<?> getType();
 	
-	/**
-	 * Optional name. Client code can choose to use or ignore this name.
-	 * This is necessary to pass name information from the model to the dataProxy
-	 * 
-	 * @return the name or <code>null</code
-	 */
-	public String getName();
-	
-	// TODO: diese methoden werden in DataProxy durchgereicht, ev. nur dort anbieten
-	// TODO: was ist besser, die methoden  von connector gleich hier direkt anzubieten oder so
-	// --> der contract bleibt in beiden varianten derselbe
-	public ConnectorInfo getConnectorInfo(); 
-	
 }
