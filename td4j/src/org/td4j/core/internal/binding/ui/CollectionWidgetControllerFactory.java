@@ -21,8 +21,8 @@ package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.metamodel.OpenClassRepository;
 import org.td4j.core.tk.ObjectTK;
 
 
@@ -31,8 +31,8 @@ public abstract class CollectionWidgetControllerFactory<T extends CollectionWidg
 	private final W widget;
 	private final ICaption caption;
 
-	protected CollectionWidgetControllerFactory(Mediator mediator, OpenClassRepository classRepository, W widget, ICaption caption) {
-		super(mediator, classRepository);
+	protected CollectionWidgetControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, W widget, ICaption caption) {
+		super(mediator, connectorFactory);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 		this.caption = caption;

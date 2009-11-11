@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.tk.ObjectTK;
 
 
@@ -41,20 +42,20 @@ public abstract class ScalarControllerFactory<T> {
 		return controller;
 	}
 	
-	public T bindConnector(IScalarDataConnector connector) {
-		final ScalarDataProxy proxy = connector.createProxy();
+	public T bindConnector(IScalarDataConnector connector, String name) {
+		final ScalarDataProxy proxy = new ScalarDataProxy(new ScalarDataAccessAdapter(connector), name);
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}	
 	
 	public T bindField(String fieldName) {
 		final IScalarDataConnector connector = conFactory.createScalarFieldConnector(mediator.getModelType(), fieldName);
-		return bindConnector(connector);
+		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
 		final IScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name);
-		return bindConnector(connector);
+		return bindConnector(connector, name);
 	}
 
 	public T bindMethods(String name, Class<?> argumentType, Object argumentValue) {
@@ -63,7 +64,7 @@ public abstract class ScalarControllerFactory<T> {
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
 		final IScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
-		return bindConnector(connector);
+		return bindConnector(connector, name);
 	}
 	
 	protected abstract T createController(ScalarDataProxy dataProxy);

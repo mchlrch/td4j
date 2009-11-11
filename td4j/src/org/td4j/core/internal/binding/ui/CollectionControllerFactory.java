@@ -26,7 +26,7 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.metamodel.OpenClassRepository;
+import org.td4j.core.internal.capability.ListDataAccessAdapter;
 import org.td4j.core.reflect.PendingConnectorInfo;
 import org.td4j.core.tk.ObjectTK;
 
@@ -34,11 +34,11 @@ import org.td4j.core.tk.ObjectTK;
 
 public abstract class CollectionControllerFactory<T> {
 	private final Mediator mediator;
-	protected final OpenClassRepository classRepository;
+	private final IDataConnectorFactory conFactory;
 
-	protected CollectionControllerFactory(Mediator mediator, OpenClassRepository classRepository) {
+	protected CollectionControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.classRepository = ObjectTK.enforceNotNull(classRepository, "classRepository");
+		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
 	}
 
 	public T bind(ListDataProxy dataProxy) {
@@ -47,8 +47,8 @@ public abstract class CollectionControllerFactory<T> {
 		return controller;
 	}
 
-	public T bindConnector(ICollectionDataConnector connector) {
-		final ListDataProxy proxy = connector.createProxy();
+	public T bindConnector(ICollectionDataConnector connector, String name) {
+		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(connector), name, null);
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}
@@ -59,7 +59,7 @@ public abstract class CollectionControllerFactory<T> {
 		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
 		
 		final ICollectionDataConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName, infoQueue);
-		return bindConnector(connector);
+		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
@@ -68,7 +68,7 @@ public abstract class CollectionControllerFactory<T> {
 		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
 		
 		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, infoQueue);
-		return bindConnector(connector);
+		return bindConnector(connector, name);
 	}
 
 	public T bindMethods(String name, Class<?> argumentType, Object argumentValue) {
@@ -81,7 +81,7 @@ public abstract class CollectionControllerFactory<T> {
 		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();		
 
 		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues, infoQueue);
-		return bindConnector(connector);
+		return bindConnector(connector, name);
 	}
 
 	protected abstract T createController(ListDataProxy proxy);
