@@ -36,7 +36,7 @@ public class ListDataProxy extends DataProxy implements NestedPropertyProvider {
 	private final NestedPropertyProvider nestedPropertyProvider;
 	private ScalarProperty[] nestedProperties;
 	
-	public ListDataProxy(String name, ListDataAccess dataAccess, NestedPropertyProvider nestedPropertyProvider) {
+	public ListDataProxy(ListDataAccess dataAccess, String name, NestedPropertyProvider nestedPropertyProvider) {
 		super(name);
 		this.dataAccess = ObjectTK.enforceNotNull(dataAccess, "dataAccess");
 		this.nestedPropertyProvider = ObjectTK.enforceNotNull(nestedPropertyProvider, "nestedPropertyProvider");

@@ -30,6 +30,10 @@ public class ScalarDataProxy extends DataProxy {
 	private final ScalarDataAccess dataAccess;
 	private final IConverter converter;
 
+	public ScalarDataProxy(ScalarDataAccess dataAccess, String name) {
+		this(dataAccess, name, null);
+	}
+	
 	public ScalarDataProxy(ScalarDataAccess dataAccess, String name, IConverter converter) {
 		super(name);
 		this.dataAccess = ObjectTK.enforceNotNull(dataAccess, "dataAccess");
