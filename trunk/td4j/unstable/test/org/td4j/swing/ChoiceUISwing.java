@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -41,13 +41,14 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.CollectionDataProxy;
-import org.td4j.core.binding.model.ConnectorInfo;
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.capability.ListDataAccessAdapter;
+import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeSupport;
 import org.td4j.core.model.IObservable;
@@ -76,7 +77,7 @@ public class ChoiceUISwing extends JPanel {
 		
 		// direct mit proxy
 		final IScalarDataConnector addressFieldPlug = connectorFactory.createScalarFieldConnector(Person.class, "address");
-		final ScalarDataProxy addressFieldProxy = addressFieldPlug.createProxy();
+		final ScalarDataProxy addressFieldProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(addressFieldPlug), "address");
 		final TextController adrTextController = new TextController(addressText, addressFieldProxy, false);
 		addressFieldProxy.setModel(Person.BART);
 
@@ -99,7 +100,7 @@ public class ChoiceUISwing extends JPanel {
 			}
 		};
 		myFilter.addObserver(myUpdateHandler);
-		final CollectionDataProxy addressListFieldProxy = new CollectionDataProxy(addressFilteredPlug, "foo");
+		final ListDataProxy addressListFieldProxy = new ListDataProxy(new ListDataAccessAdapter(addressFilteredPlug), "foo", null);
 
 		addressText.addKeyListener(new KeyAdapter() {
 			@Override
@@ -221,24 +222,6 @@ public class ChoiceUISwing extends JPanel {
 
 			return filteredColl;
 		}
-
-		@Override
-		public CollectionDataProxy createProxy() {
-			return new CollectionDataProxy(this, null);
-		}
-
-		@Override
-		public ConnectorInfo getConnectorInfo() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public String getName() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
 	}
 
 	/**
