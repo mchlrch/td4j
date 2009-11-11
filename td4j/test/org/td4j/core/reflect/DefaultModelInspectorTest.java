@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.IDataConnector;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -73,11 +72,11 @@ public class DefaultModelInspectorTest {
 
 	// ========= helpers =========
 
-	private void assertPlugSet(List<IDataConnector> plugs, String... plugNames) {
+	private void assertPlugSet(List<NamedDataConnector> plugs, String... plugNames) {
 		assert plugs.size() == plugNames.length;
 
 		Set<String> nameSet = createStringSet(plugNames);
-		for (IDataConnector plug : plugs) {
+		for (NamedDataConnector plug : plugs) {
 			final String plugName = plug.getName();
 			assert nameSet.contains(plugName) : String.format("unexpected plug: %s", plugName);
 		}
@@ -91,11 +90,11 @@ public class DefaultModelInspectorTest {
 		return result;
 	}
 
-	private void assertPlugList(List<IDataConnector> plugs, String... plugNames) {
+	private void assertPlugList(List<NamedDataConnector> plugs, String... plugNames) {
 		assert plugs.size() == plugNames.length;
 
 		for (int i = 0, n = plugs.size(); i < n; i++) {
-			final IDataConnector plug = plugs.get(i);
+			final NamedDataConnector plug = plugs.get(i);
 			final String expectedName = plugNames[i];
 			final String actualName = plug.getName();
 			assert actualName.equals(expectedName) : String.format("@[%d] expected: %s  actual: %s", i, expectedName, actualName);

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,8 +21,6 @@ package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.TestObservable;
 import org.td4j.core.binding.model.TestObservable.NotificationMode;
-import org.td4j.core.internal.binding.model.DataProxy;
-import org.td4j.core.internal.binding.model.ScalarFieldConnector;
 import org.td4j.core.model.CountingObserver;
 import org.testng.annotations.Test;
 
@@ -32,8 +30,11 @@ public class DataProxyTest {
 
 	@Test
 	public void testModelChange() throws Exception {
-		final ScalarFieldConnector con = new ScalarFieldConnector(TestObservable.class, TestObservable.class.getDeclaredField("int1"));
-		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getName()) {
+		final DataProxy proxy = new DataProxy("foo") {
+			@Override
+			public Class<?> getModelType() {
+				return TestObservable.class;
+			}
 		};
 		final CountingObserver observer = new CountingObserver();
 		proxy.addObserver(observer);
@@ -66,8 +67,11 @@ public class DataProxyTest {
 	}
 
 	private void testModelStateOrPropertyChange(NotificationMode notificationMode) throws Exception {
-		final ScalarFieldConnector con = new ScalarFieldConnector(TestObservable.class, TestObservable.class.getDeclaredField("int1"));
-		final DataProxy<ScalarFieldConnector> proxy = new DataProxy<ScalarFieldConnector>(con, con.getName()) {
+		final DataProxy proxy = new DataProxy("foo") {
+			@Override
+			public Class<?> getModelType() {
+				return TestObservable.class;
+			}
 		};
 		final CountingObserver observer = new CountingObserver();
 		proxy.addObserver(observer);
