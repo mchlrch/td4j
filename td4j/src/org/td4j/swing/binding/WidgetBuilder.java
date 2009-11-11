@@ -40,6 +40,8 @@ import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.metamodel.OpenClassRepository;
+import org.td4j.core.reflect.DefaultModelInspector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.filter.AcceptAllFilter;
@@ -62,6 +64,7 @@ public class WidgetBuilder<T> {
 
 	private final Mediator mediator;
 	private final IDataConnectorFactory connectorFactory;
+	private final OpenClassRepository classRepository;
 	private final Navigator navigator;
 
 	private boolean autoCaptions = true;
@@ -79,9 +82,14 @@ public class WidgetBuilder<T> {
 		this(mediator, new DefaultDataConnectorFactory(), navigator);
 	}
 
-	public WidgetBuilder(Mediator mediator, IDataConnectorFactory connectorFactory, Navigator navigator) {
+	private WidgetBuilder(Mediator mediator, IDataConnectorFactory connectorFactory, Navigator navigator) {
+		this(mediator, connectorFactory, new OpenClassRepository(new DefaultModelInspector(connectorFactory)), navigator);
+	}
+	
+	public WidgetBuilder(Mediator mediator, IDataConnectorFactory connectorFactory, OpenClassRepository classRepository,  Navigator navigator) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.connectorFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
+		this.classRepository = ObjectTK.enforceNotNull(classRepository, "classRepository");
 
 		this.navigator = navigator;
 	}
@@ -233,7 +241,7 @@ public class WidgetBuilder<T> {
 	}
 	
 	public TableControllerFactory table(JTable widget) {
-	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
+	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, classRepository, widget, useCurrentCaption(), navigator);
 	  return factory;
 	}	
 

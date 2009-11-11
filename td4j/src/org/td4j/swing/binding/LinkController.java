@@ -72,7 +72,7 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 	
 	protected void doNavigate() {
 		final ScalarDataProxy dataProxy = getDataProxy();
-		final Class<?> valueType = dataProxy.getType();
+		final Class<?> valueType = dataProxy.getValueType();
 		final Object value = dataProxy.readValue();
 		
 		if (URL.class.isAssignableFrom(valueType)) {
