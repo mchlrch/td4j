@@ -51,6 +51,7 @@ import org.td4j.core.binding.model.IScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.tk.ListTK;
 import org.td4j.core.tk.ObjectTK;
@@ -146,7 +147,7 @@ public class InvokationParameterDialog extends JDialog {
       final Class<?> fromType = param.getType();
       final Class<?> toType = String.class;
       final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-			final ScalarDataProxy dataProxy = connector.createProxy(converter);
+			final ScalarDataProxy dataProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(connector), param.getName(), converter);
 			wBuilder.getMediator().addModelSocket(dataProxy);
 			
 			final JLabel caption = new JLabel(param.getName());
@@ -155,7 +156,7 @@ public class InvokationParameterDialog extends JDialog {
 
 			// PEND: blend with code from GenericForm
 			if (param.getType() == Boolean.class) {
-				final ButtonController btnController = wBuilder.button().bindConnector(connector);
+				final ButtonController btnController = wBuilder.button().bindConnector(connector, param.getName());
 				final AbstractButton btn = btnController.getWidget();
 				contentPane.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
 				if (focusRequester == null) {

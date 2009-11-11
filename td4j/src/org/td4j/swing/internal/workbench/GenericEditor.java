@@ -38,12 +38,12 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.CollectionDataContainer;
-import org.td4j.core.binding.model.CollectionDataProxy;
 import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataContainer;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.binding.model.ScalarDataRelay;
+import org.td4j.core.internal.capability.ScalarDataAccess;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.ObjectTK;
@@ -102,10 +102,10 @@ public class GenericEditor extends Editor<Object> {
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
 		
 		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, modelInspector);
-		final IScalarDataConnector[] nestedProperties = nestedPropsFactory.createNestedProperties();
+		final ScalarDataAccess[] nestedProperties = nestedPropsFactory.createNestedProperties();
 		
-		final CollectionDataProxy collectionProxy = listDataContainer.createProxy();
-		collectionProxy.getConnectorInfo().setNestedProperties(nestedProperties);
+		final ListDataProxy collectionProxy = listDataContainer.createProxy();
+		collectionProxy.setNestedProperties(nestedProperties);
 		
 		listTableController = wb.table().bind(collectionProxy);
 		final JTable listTable = listTableController.getWidget();
