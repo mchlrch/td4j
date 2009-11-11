@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.td4j.core.binding.model.ConnectorInfo;
+import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
@@ -69,7 +69,10 @@ public class DefaultModelInspector extends ModelInspector {
 		};
 	};
 
-	private final HashMap<Class<?>, List<IDataConnector>> connectorCache = new HashMap<Class<?>, List<IDataConnector>>();
+	private final HashMap<Class<?>, List<NamedDataConnector>> connectorCache = new HashMap<Class<?>, List<NamedDataConnector>>();
+	private final HashMap<Class<?>, List<ScalarProperty>> scalarPropertyCache = new HashMap<Class<?>, List<ScalarProperty>>();
+	private final HashMap<Class<?>, List<ListProperty>> listPropertyCache = new HashMap<Class<?>, List<ListProperty>>();
+	
 	private final HashMap<Class<?>, List<AbstractExecutable>> executableCache = new HashMap<Class<?>, List<AbstractExecutable>>();
 	private final IDataConnectorFactory connectorFactory;
 
@@ -89,15 +92,17 @@ public class DefaultModelInspector extends ModelInspector {
 		}
 	}
 
-	@Override
-	public List<IDataConnector> getConnectors(Class<?> cls) {
+	List<NamedDataConnector> getConnectors(Class<?> cls) {
 		if (connectorCache.containsKey(cls)) {
 			return connectorCache.get(cls);
 
 		} else {			
 			final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
-			final List<IDataConnector> connectors = createConnectors(cls, infoQueue);
+			final List<NamedDataConnector> connectors = createConnectors(cls, infoQueue);
 			connectorCache.put(cls, connectors);
+			
+			final List<ScalarProperty> scalarProperties = new ArrayList<ScalarProperty>();
+			final List<ListProperty> listProperties = new ArrayList<ListProperty>();
 			
 			// We populate the connectorInfo in a second phase to avoid infinite recursions
 			for (PendingConnectorInfo pendInfo : infoQueue) {
@@ -107,16 +112,18 @@ public class DefaultModelInspector extends ModelInspector {
 				} else {
 					exposeAnnotation = pendInfo.getGetter().getAnnotation(ExposeProperties.class);
 				}
+				
+				
+				final List<ScalarProperty> nestedProperties = new ArrayList<ScalarProperty>();
 				if (exposeAnnotation != null) {
 					
 					// build map for connector lookup by-name
 					final Class<?> valueType = pendInfo.getConnector().getType();
 					final Map<String, IDataConnector> connectorMap = new HashMap<String, IDataConnector>();
-					for (IDataConnector connector : getConnectors(valueType)) {
-						connectorMap.put(connector.getName(), connector);
+					for (NamedDataConnector connector : getConnectors(valueType)) {
+						connectorMap.put(connector.getName(), connector.getConnector());
 					}
 					
-					final List<IScalarDataConnector> nestedProperties = new ArrayList<IScalarDataConnector>();
 					final List<String> unknownProperties = new ArrayList<String>();
 					final List<String> illegalProperties = new ArrayList<String>();
 					for (String pName : exposeAnnotation.value()) {
@@ -127,24 +134,60 @@ public class DefaultModelInspector extends ModelInspector {
 							illegalProperties.add(pName);
 						} else {
 							final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
-							nestedProperties.add(scalarConnector);
+							nestedProperties.add(new ScalarProperty(pName, scalarConnector));
 						}
 					}
 					
 					if ( ! unknownProperties.isEmpty()) {
-						throw new UnknownPropertyException(valueType, unknownProperties.toArray(new String[unknownProperties.size()]));						
+						throw new UnknownPropertyException(valueType, unknownProperties.toArray(new String[unknownProperties.size()]));
+						
 					} else if ( ! illegalProperties.isEmpty()) {
 						throw new IllegalConnectorTypeException(IScalarDataConnector.class, valueType, illegalProperties.toArray(new String[unknownProperties.size()]));
-					} else if ( ! nestedProperties.isEmpty()) {
-						final IScalarDataConnector[] nestedProps = nestedProperties.toArray(new IScalarDataConnector[nestedProperties.size()]);
-						final ConnectorInfo info = pendInfo.getConnector().getConnectorInfo(); 
-						info.setNestedProperties(nestedProps);
+						
 					}
+				}
+				
+				// create property
+				if (pendInfo.isScalarConnector()) {
+					final IScalarDataConnector scalarConnector = (IScalarDataConnector) pendInfo.getConnector();
+					final ScalarProperty scalarProperty = new ScalarProperty(pendInfo.getName(), scalarConnector);
+					scalarProperties.add(scalarProperty);
+					
+				} else {
+					final ScalarProperty[] nestedProps = nestedProperties.toArray(new ScalarProperty[nestedProperties.size()]);
+					final ICollectionDataConnector collectionConnector = (ICollectionDataConnector) pendInfo.getConnector();
+					final ListProperty listProperty = new ListProperty(pendInfo.getName(), collectionConnector, nestedProps);
+					listProperties.add(listProperty);
 				}
 			}
 			
+			scalarPropertyCache.put(cls, scalarProperties);
+			listPropertyCache.put(cls, listProperties);
+			
 			return connectors;
 		}
+	}
+	
+	@Override
+	public List<ScalarProperty> getScalarProperties(Class<?> cls) {
+		if ( ! scalarPropertyCache.containsKey(cls)) {
+			
+			// right now properties are created together with connectors
+			getConnectors(cls);
+		}	
+		
+		return scalarPropertyCache.get(cls);
+	}
+	
+	@Override
+	public List<ListProperty> getListProperties(Class<?> cls) {
+		if ( ! listPropertyCache.containsKey(cls)) {
+			
+			// right now properties are created together with connectors
+			getConnectors(cls);
+		}	
+		
+		return listPropertyCache.get(cls);
 	}
 
 	protected List<AbstractExecutable> createExecutables(Class<?> cls) {
@@ -171,8 +214,8 @@ public class DefaultModelInspector extends ModelInspector {
 		return result;
 	}
 	
-	protected List<IDataConnector> createConnectors(final Class<?> cls, final List<PendingConnectorInfo> infoQueue) {
-		final List<IDataConnector> result = new ArrayList<IDataConnector>();
+	protected List<NamedDataConnector> createConnectors(final Class<?> cls, final List<PendingConnectorInfo> infoQueue) {
+		final List<NamedDataConnector> result = new ArrayList<NamedDataConnector>();
 		final ExposeProperties exposeProps = cls.getAnnotation(ExposeProperties.class);
 		final Level level = exposeProps != null ? exposeProps.level() : DEFAULT_LEVEL;
 
@@ -181,14 +224,14 @@ public class DefaultModelInspector extends ModelInspector {
 			for (String name : exposeProps.value()) {
 				final IDataConnector con = connectorFactory.createConnector(cls, name, infoQueue);
 				ObjectTK.enforceNotNull(con, "con");
-				result.add(con);
+				result.add(new NamedDataConnector(con, name));
 			}
 
 		} else {
 
 			// method plugs
 			final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
-			final List<IDataConnector> methodConnectors = new ArrayList<IDataConnector>();
+			final List<NamedDataConnector> methodConnectors = new ArrayList<NamedDataConnector>();
 			final HashSet<String> propertyNames = new HashSet<String>();
 			for (Method m : allMethods) {
 				if ( ! defaultMethodFilter.accept(m)) continue;
@@ -196,21 +239,21 @@ public class DefaultModelInspector extends ModelInspector {
 				if (pName != null && ! propertyNames.contains(pName)) {
 					final IDataConnector con = connectorFactory.createMethodConnector(cls, pName, infoQueue);
 					ObjectTK.enforceNotNull(con, "con");
-					methodConnectors.add(con);
+					methodConnectors.add(new NamedDataConnector(con, pName));
 					propertyNames.add(pName);
 				}
 			}
 
 			// field plugs
 			final List<Field> allFields = ReflectionTK.getAllFields(cls);
-			final List<IDataConnector> fieldConnectors = new ArrayList<IDataConnector>();
+			final List<NamedDataConnector> fieldConnectors = new ArrayList<NamedDataConnector>();
 			for (Field f : allFields) {
 				final String pName = fieldToPropertyName(f, level);
 				if (pName != null && ! propertyNames.contains(pName)) {
 					f.setAccessible(true);
 					final IDataConnector con = connectorFactory.createFieldConnector(cls, pName, infoQueue);
 					ObjectTK.enforceNotNull(con, "con");
-					fieldConnectors.add(con);
+					fieldConnectors.add(new NamedDataConnector(con, pName));
 					propertyNames.add(pName);
 				}
 			}

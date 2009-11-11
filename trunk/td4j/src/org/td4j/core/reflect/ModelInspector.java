@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,21 +21,12 @@ package org.td4j.core.reflect;
 
 import java.util.List;
 
-import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ListTK;
 
 
-
 public abstract class ModelInspector {
-
-	public abstract List<IDataConnector> getConnectors(Class<?> cls);
-
-	public List<IDataConnector> getConnectors(Class<?> cls, IFilter<IDataConnector> filter) {
-		final List<IDataConnector> baseList = getConnectors(cls);
-		return ListTK.filter(baseList, filter);
-	}
 
 	public abstract List<AbstractExecutable> getExecutables(Class<?> cls);
 
@@ -43,5 +34,8 @@ public abstract class ModelInspector {
 		final List<AbstractExecutable> baseList = getExecutables(cls);
 		return ListTK.filter(baseList, filter);
 	}
+	
+	public abstract List<ScalarProperty> getScalarProperties(Class<?> cls);
+	public abstract List<ListProperty> getListProperties(Class<?> cls);	
 
 }
