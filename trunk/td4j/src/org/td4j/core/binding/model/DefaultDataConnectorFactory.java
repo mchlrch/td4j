@@ -97,24 +97,24 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			final Class<?> itemType = ReflectionTK.getItemType(field);
 			final CollectionFieldConnector connector = new CollectionFieldConnector(cls, field, itemType);
-			enqueueConnectorInfo(infoQueue, connector, field);
+			enqueueConnectorInfo(infoQueue, connector, name, field);
 			return connector;
 		} else {
 			return new ScalarFieldConnector(cls, field);
 		}
 	}
 	
-	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, Field field) {
+	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, String name, Field field) {
 		if (infoQueue == null) return;
 		
-		final PendingConnectorInfo info = new PendingConnectorInfo(connector, field);
+		final PendingConnectorInfo info = new PendingConnectorInfo(connector, name, field);
 		infoQueue.add(info);
 	}
 	
-	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, Method getter) {
+	private void enqueueConnectorInfo(List<PendingConnectorInfo> infoQueue, IDataConnector connector, String name, Method getter) {
 		if (infoQueue == null) return;
 		
-		final PendingConnectorInfo info = new PendingConnectorInfo(connector, getter);
+		final PendingConnectorInfo info = new PendingConnectorInfo(connector, name, getter);
 		infoQueue.add(info);
 	}
 
@@ -183,12 +183,12 @@ public class DefaultDataConnectorFactory implements IDataConnectorFactory {
 
 		if (Collection.class.isAssignableFrom(valueType)) {
 			final Class<?> itemType = ReflectionTK.getItemType(getter);
-			final CollectionMethodConnector connector = new CollectionMethodConnector(cls, name, getter, itemType, argumentValues); 
-			enqueueConnectorInfo(infoQueue, connector, getter);
+			final CollectionMethodConnector connector = new CollectionMethodConnector(cls, getter, itemType, argumentValues); 
+			enqueueConnectorInfo(infoQueue, connector, name, getter);
 			return connector;
 
 		} else {
-			return new ScalarMethodConnector(cls, name, getter, setter, argumentValues);
+			return new ScalarMethodConnector(cls, getter, setter, argumentValues);
 		}
 	}	
 	

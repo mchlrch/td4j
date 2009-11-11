@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.CollectionDataContainerConnector;
+import org.td4j.core.internal.capability.ListDataAccessAdapter;
 import org.td4j.core.model.Observable;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
@@ -107,8 +108,8 @@ public class CollectionDataContainer<T> extends Observable {
 	}
 
 	public ListDataProxy createProxy() {
-		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType(), getPropertyName());
-		final ListDataProxy proxy = con.createProxy();
+		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType());
+		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(con), getPropertyName(), null);
 		proxy.setModel(this);
 		return proxy;
 	}
