@@ -26,6 +26,8 @@ import java.util.Map;
 
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.internal.capability.ScalarDataAccess;
+import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.reflect.ExposePropertiesInEditorList;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.reflect.UnknownPropertyException;
@@ -49,7 +51,7 @@ public class NestedPropertiesInEditorListFactory {
 		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");		
 	}
 	
-	public IScalarDataConnector[] createNestedProperties() {
+	public ScalarDataAccess[] createNestedProperties() {
 		final ExposePropertiesInEditorList spec = modelType.getAnnotation(ExposePropertiesInEditorList.class);
 		
 		// check if specified properties are valid, throw exception otherwise
@@ -59,13 +61,13 @@ public class NestedPropertiesInEditorListFactory {
 			allConnectorsMap.put(connector.getName(), connector);
 		}
 		
-		final List<IScalarDataConnector> result = new ArrayList<IScalarDataConnector>();
+		final List<ScalarDataAccess> result = new ArrayList<ScalarDataAccess>();
 		if (spec != null) {
 			final List<String> invalidColumns = new ArrayList<String>();
 			for (String colPropName : spec.value()) {
 				final IDataConnector connector = allConnectorsMap.get(colPropName);
 				if (connector instanceof IScalarDataConnector) {
-					result.add( (IScalarDataConnector) connector);
+					result.add(new ScalarDataAccessAdapter( (IScalarDataConnector) connector));
 				} else {
 					invalidColumns.add(colPropName);
 				}
@@ -77,11 +79,11 @@ public class NestedPropertiesInEditorListFactory {
 		// accept all properties
 		} else {
 			for (IDataConnector connector : allConnectors) {
-				result.add( (IScalarDataConnector) connector);
+				result.add(new ScalarDataAccessAdapter( (IScalarDataConnector) connector));
 			}
 		}
 		
-		return result.toArray(new IScalarDataConnector[result.size()]);
+		return result.toArray(new ScalarDataAccess[result.size()]);
 	}
 	
 }
