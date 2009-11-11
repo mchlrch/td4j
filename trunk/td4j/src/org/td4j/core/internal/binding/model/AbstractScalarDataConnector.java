@@ -20,9 +20,6 @@
 package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.IScalarDataConnector;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
-import org.td4j.core.internal.binding.model.converter.IConverter;
 
 public abstract class AbstractScalarDataConnector extends AbstractDataConnector implements IScalarDataConnector {
 
@@ -54,18 +51,5 @@ public abstract class AbstractScalarDataConnector extends AbstractDataConnector 
 	protected abstract Object readValue0(Object model) throws Exception;
 
 	protected abstract void writeValue0(Object model, Object val) throws Exception;
-
-	
-
-	// TODO: proxy soll vom property aus erstellt werden
-	public ScalarDataProxy createProxy() {
-	  
-	  // PEND: fix this, temporary only conversion to String supported !!
-	  final Class<?> fromType = getType();
-	  final Class<?> toType = String.class;
-	  final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-	  
-	  return createProxy(converter);
-	}
 
 }
