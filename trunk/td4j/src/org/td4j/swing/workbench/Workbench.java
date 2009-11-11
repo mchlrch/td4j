@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -42,6 +42,10 @@ import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.capability.ListDataAccessAdapter;
+import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.reflect.DefaultModelInspector;
@@ -151,15 +155,15 @@ public class Workbench extends JFrame {
     // options to choose from
     final ICollectionDataConnector classOptionsConnector = connectorFactory
         .createCollectionFieldConnector(SidebarModel.class, "currentClassOptions");
-    final ListController classOptionsController = new ListController(classChooser,
-        classOptionsConnector.createProxy());
+    final ListDataProxy classOptionsProxy = new ListDataProxy(new ListDataAccessAdapter(classOptionsConnector), "currentClassOptions", null);
+    final ListController classOptionsController = new ListController(classChooser, classOptionsProxy);
 
     // choice
     final IScalarDataConnector currentClassConnector = connectorFactory
         .createScalarMethodConnector(SidebarModel.class, "currentClass");
+    final ScalarDataProxy currentClassProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(currentClassConnector), "currentClass");
     final SelectionController currentClassController = new SelectionController(classChooser
-        .getSelectionModel(), new ListModelAdapter(classChooser.getModel()), currentClassConnector
-        .createProxy());
+        .getSelectionModel(), new ListModelAdapter(classChooser.getModel()), currentClassProxy);
 
     classOptionsController.getDataProxy().setModel(model);
     currentClassController.getDataProxy().setModel(model);
