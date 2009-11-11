@@ -22,7 +22,7 @@ package org.td4j.swing.internal.binding;
 import javax.swing.JList;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataProxy;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
@@ -36,7 +36,7 @@ public class ListControllerFactory extends CollectionWidgetControllerFactory<Lis
 	}
 
 	@Override
-	protected ListController createController(CollectionDataProxy dataProxy, JList widget) {
+	protected ListController createController(ListDataProxy dataProxy, JList widget) {
 		return new ListController(widget, dataProxy);
 	}
 
