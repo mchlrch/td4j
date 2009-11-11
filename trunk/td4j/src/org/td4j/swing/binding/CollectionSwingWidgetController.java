@@ -23,14 +23,14 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 
-import org.td4j.core.binding.model.CollectionDataProxy;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.internal.binding.ui.CollectionWidgetController;
 
 
 public abstract class CollectionSwingWidgetController<W extends Component> extends CollectionWidgetController<W> {
 
-	CollectionSwingWidgetController(CollectionDataProxy dataProxy) {
+	CollectionSwingWidgetController(ListDataProxy dataProxy) {
 		super(dataProxy);
 	}
 

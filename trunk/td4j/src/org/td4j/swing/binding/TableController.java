@@ -31,33 +31,26 @@ import java.util.Set;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import org.td4j.core.binding.model.CollectionDataProxy;
-import org.td4j.core.binding.model.ConnectorInfo;
-import org.td4j.core.binding.model.IDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
-import org.td4j.core.internal.binding.model.ToStringConnector;
+import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.internal.capability.NamedScalarDataAccess;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
-import org.td4j.core.reflect.DefaultModelInspector;
-import org.td4j.core.reflect.ModelInspector;
-import org.td4j.core.tk.IFilter;
+import org.td4j.core.tk.ArrayTK;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
 
-// PEND: typisierung mit rowType
 public class TableController extends CollectionSwingWidgetController<JTable> {
   
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory, final Navigator navigator) {
+	public TableController(final JTable table, final ListDataProxy proxy, NamedScalarDataAccess[] columnDataAccess, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
-		this.model = new MyTableModel(proxy, connectorFactory);
+		this.model = new MyTableModel(proxy, columnDataAccess);
 
 		table.setModel(model);
 
@@ -71,7 +64,7 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 					if (rowIndex >= 0) {						
 						final Object rowObject = model.getRowAt(rowIndex);
 						final List<Object> allRows = model.getRows();
-						final EditorContent content = new EditorContent(proxy.getType(), allRows, rowObject);
+						final EditorContent content = new EditorContent(proxy.getValueType(), allRows, rowObject);
 						navigator.seek(content);
 					}
 				}
@@ -105,27 +98,20 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 	public static class MyTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
 
-		// show only scalar connectors in table
-		private static final IFilter<IDataConnector> columnConnectorFilter = new IFilter<IDataConnector>() {
-			public boolean accept(IDataConnector element) {
-				return IScalarDataConnector.class.isAssignableFrom(element.getClass());
-			}
-		};
-
 		private final Class<?> rowType;
-		private final IScalarDataConnector[] columnConnectors;
+		private final NamedScalarDataAccess[] columnProperties;
 		private final List<Object> rowObjects = new ArrayList<Object>();
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(final CollectionDataProxy proxy, IDataConnectorFactory connectorFactory) {			
-			this.rowType = ObjectTK.enforceNotNull(proxy.getType(), "proxy.getType()");
-			this.columnConnectors = createColumnConnectors(rowType, connectorFactory, proxy.getConnectorInfo());
+		private MyTableModel(final ListDataProxy proxy, NamedScalarDataAccess[] columnDataAccess) {			
+			this.rowType = ObjectTK.enforceNotNull(proxy.getValueType(), "proxy.getType()");
+			this.columnProperties = ArrayTK.enforceNotEmpty(columnDataAccess, "columnDataAccess");
 		}
 
 		@Override
 		public int getColumnCount() {
-			return columnConnectors.length;
+			return columnProperties.length;
 		}
 
 		@Override
@@ -143,41 +129,21 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 	    public String getColumnName(int columnIndex) {
-		    final IScalarDataConnector connector = columnConnectors[columnIndex];
-		    return connector.getName();
+		    final NamedScalarDataAccess access = columnProperties[columnIndex];
+		    return access.getName();
+		}
+		
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			final NamedScalarDataAccess access = columnProperties[columnIndex];
+		    return access.getValueType();
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			final IScalarDataConnector connector = columnConnectors[columnIndex];
-			final Object value = connector.readValue(rowObjects.get(rowIndex));
+			final NamedScalarDataAccess access = columnProperties[columnIndex];
+			final Object value = access.readValue(rowObjects.get(rowIndex));
 			return value;
-		}
-
-		private IScalarDataConnector[] createColumnConnectors(Class<?> rowType, IDataConnectorFactory connectorFactory, ConnectorInfo connectorInfo) {
-
-			// PEND: inject modelInspector
-			final ModelInspector inspector = new DefaultModelInspector(connectorFactory);
-
-			// use available info about nestedProperties
-			final IScalarDataConnector[] nestedProperties = connectorInfo.getNestedProperties();
-			if (nestedProperties != null && nestedProperties.length > 0) {
-				return nestedProperties;
-				
-			} else {
-				final List<IDataConnector> connectors = inspector.getConnectors(rowType, columnConnectorFilter);
-				final List<IScalarDataConnector> columnConnectors = new ArrayList<IScalarDataConnector>(connectors.size());
-				for (IDataConnector con : connectors) {
-					columnConnectors.add((IScalarDataConnector) con);
-				}
-				
-				// primitive rowTypes have no connectors by default, so we use toString connector to make sure the table is not blank
-				if (columnConnectors.isEmpty()) {
-				  columnConnectors.add(new ToStringConnector(rowType));
-				}
-	
-				return columnConnectors.toArray(new IScalarDataConnector[columnConnectors.size()]);
-			}
 		}
 
 		private void setCollection(Collection<?> newValue) {
