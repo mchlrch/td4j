@@ -48,7 +48,7 @@ public abstract class CollectionControllerFactory<T> {
 	}
 
 	public T bindConnector(ICollectionDataConnector connector, String name) {
-		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(connector), name, null);
+		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(connector), name);
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}

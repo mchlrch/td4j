@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,8 +34,7 @@ public abstract class DataProxy extends Observable implements IModelSocket, IObs
 	private Object model;
 
 	/**
-	 * @param name
-	 *          may be null
+	 * @param name is used to filter out propertyChangeEvents for this propertyName. May be null
 	 */
 	protected DataProxy(String name) {
 		this.name = name;
