@@ -43,7 +43,7 @@ import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataContainer;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.binding.model.ScalarDataRelay;
-import org.td4j.core.internal.capability.ScalarDataAccess;
+import org.td4j.core.internal.capability.NamedScalarDataAccess;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.ObjectTK;
@@ -102,7 +102,7 @@ public class GenericEditor extends Editor<Object> {
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
 		
 		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, modelInspector);
-		final ScalarDataAccess[] nestedProperties = nestedPropsFactory.createNestedProperties();
+		final NamedScalarDataAccess[] nestedProperties = nestedPropsFactory.createNestedProperties();
 		
 		final ListDataProxy collectionProxy = listDataContainer.createProxy();
 		collectionProxy.setNestedProperties(nestedProperties);
