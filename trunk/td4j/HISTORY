@@ -1,0 +1,5 @@
+:: 10.xy
+
+- LinkController: fallback on xdg-open if Desktop.browse() or Desktop.open() not supported
+
+:: 9.8

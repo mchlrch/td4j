@@ -130,7 +130,7 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		// list: direct mit proxy
 		final JList orderList = new JList();
 		final ICollectionDataConnector orderListConnector = conFactory.createCollectionFieldConnector(Person.class, "orders");
-		final ListDataProxy orderListProxy = new ListDataProxy(new ListDataAccessAdapter(orderListConnector), "orders", null);
+		final ListDataProxy orderListProxy = new ListDataProxy(new ListDataAccessAdapter(orderListConnector), "orders");
 		new ListController(orderList, orderListProxy);
 		mediator.addModelSocket(orderListProxy); // use LoopbackUpdateHandler
 
