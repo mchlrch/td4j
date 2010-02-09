@@ -155,7 +155,7 @@ public class Workbench extends JFrame {
     // options to choose from
     final ICollectionDataConnector classOptionsConnector = connectorFactory
         .createCollectionFieldConnector(SidebarModel.class, "currentClassOptions");
-    final ListDataProxy classOptionsProxy = new ListDataProxy(new ListDataAccessAdapter(classOptionsConnector), "currentClassOptions", null);
+    final ListDataProxy classOptionsProxy = new ListDataProxy(new ListDataAccessAdapter(classOptionsConnector), "currentClassOptions");
     final ListController classOptionsController = new ListController(classChooser, classOptionsProxy);
 
     // choice
