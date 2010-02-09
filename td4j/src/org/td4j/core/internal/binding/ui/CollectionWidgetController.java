@@ -20,9 +20,11 @@
 package org.td4j.core.internal.binding.ui;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
@@ -75,7 +77,8 @@ public abstract class CollectionWidgetController<W> implements IObserver {
 		if (getWidget() == null) return; // during construction phase
 
 		setAccess();
-		updateView(dataProxy.readValue());
+		List<?> value = dataProxy.canRead() ? dataProxy.readValue() : Collections.emptyList(); 
+		updateView(value);
 	}
 
 	protected void updateView(Collection<?> newValue) {

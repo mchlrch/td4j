@@ -109,7 +109,7 @@ public class CollectionDataContainer<T> extends Observable {
 
 	public ListDataProxy createProxy() {
 		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType());
-		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(con), getPropertyName(), null);
+		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(con), getPropertyName());
 		proxy.setModel(this);
 		return proxy;
 	}

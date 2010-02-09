@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -60,7 +60,9 @@ public abstract class ScalarWidgetController<W> implements IObserver {
 		if (getWidget() == null) return; // during construction phase
 
 		setAccess();
-		updateView(dataProxy.readValue());
+		
+		final Object value = dataProxy.canRead() ? dataProxy.readValue() : null;
+		updateView(value);
 	}
 
 	protected void updateView(Object newValue) {

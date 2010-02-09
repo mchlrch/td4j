@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -46,6 +46,7 @@ public class ScalarDataProxy extends DataProxy {
 	}
 	
 	public Class<?> getValueType() {
+		// TODO hier muss  der converter type berücksichtigt werden !!
 		return dataAccess.getValueType();
 	}
 
