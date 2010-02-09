@@ -67,7 +67,7 @@ public class DataProxyTest {
 	}
 
 	private void testModelStateOrPropertyChange(NotificationMode notificationMode) throws Exception {
-		final DataProxy proxy = new DataProxy("foo") {
+		final DataProxy proxy = new DataProxy("int1") {
 			@Override
 			public Class<?> getModelType() {
 				return TestObservable.class;
