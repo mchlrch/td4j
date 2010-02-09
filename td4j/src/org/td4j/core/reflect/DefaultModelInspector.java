@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 
 
-
+// TODO _2 needs complete rewrite
 public class DefaultModelInspector extends ModelInspector {
 
 	public static final Level DEFAULT_LEVEL = Level.PUBLIC;
@@ -149,9 +149,9 @@ public class DefaultModelInspector extends ModelInspector {
 				
 				// create property
 				if (pendInfo.isScalarConnector()) {
-					final IScalarDataConnector scalarConnector = (IScalarDataConnector) pendInfo.getConnector();
-					final ScalarProperty scalarProperty = new ScalarProperty(pendInfo.getName(), scalarConnector);
-					scalarProperties.add(scalarProperty);
+					
+					// TODO: das ist ein hack mit den pendInfos: diese werden nur für collections verwendet, und zwar zurzeit immer
+					throw new IllegalStateException("pendInfo");
 					
 				} else {
 					final ScalarProperty[] nestedProps = nestedProperties.toArray(new ScalarProperty[nestedProperties.size()]);
@@ -161,6 +161,18 @@ public class DefaultModelInspector extends ModelInspector {
 				}
 			}
 			
+		  // TODO: das ist ein hack wegen den pendInfos: diese werden nur für collections verwendet, und zwar zurzeit immer, daher müssen die scalar properties hier noch abgefüllt werden
+			for (NamedDataConnector namedConnector : connectors) {
+				final IDataConnector conn =  namedConnector.getConnector();
+				if (conn instanceof IScalarDataConnector) {
+					final IScalarDataConnector scalarConnector = (IScalarDataConnector) conn;
+					final ScalarProperty scalarProperty = new ScalarProperty(namedConnector.getName(), scalarConnector);
+					scalarProperties.add(scalarProperty);			
+				} else {
+					// ignore collection connectors - those were treated above in the "pendInfo" section
+				}
+			}
+
 			scalarPropertyCache.put(cls, scalarProperties);
 			listPropertyCache.put(cls, listProperties);
 			
@@ -261,7 +273,7 @@ public class DefaultModelInspector extends ModelInspector {
 			result.addAll(fieldConnectors);
 			result.addAll(methodConnectors);
 		}
-
+		
 		return Collections.unmodifiableList(result);
 	}
 

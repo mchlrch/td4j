@@ -19,15 +19,18 @@
 
 package org.td4j.core.reflect;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.td4j.core.binding.model.ICollectionDataConnector;
+import org.td4j.core.internal.capability.DefaultNamedScalarDataAccess;
 import org.td4j.core.internal.capability.ListDataAccess;
-import org.td4j.core.internal.capability.NestedPropertyProvider;
+import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.internal.capability.NestedScalarDataAccessProvider;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class ListProperty implements ListDataAccess, NestedPropertyProvider {
+public class ListProperty implements ListDataAccess, NestedScalarDataAccessProvider {
 	
 	private final String name;
 	private final ICollectionDataConnector dataConnector;
@@ -62,14 +65,18 @@ public class ListProperty implements ListDataAccess, NestedPropertyProvider {
 	}
 	
 	
-	public boolean isNestedPropertiesDefined() {
-		return nestedProperties.length > 0;
-	}
-	
 	public ScalarProperty[] getNestedProperties() {
 		return nestedProperties;
 	}
-
+	
+	public boolean isNestedScalarDataAccessDefined() {
+		return nestedProperties.length > 0;
+	}
+	
+	public NamedScalarDataAccess[] getNestedScalarDataAccess() {
+		return DefaultNamedScalarDataAccess.createFromProperties(Arrays.asList(nestedProperties));
+	}
+	
 	
 	@Override
 	public String toString() {
