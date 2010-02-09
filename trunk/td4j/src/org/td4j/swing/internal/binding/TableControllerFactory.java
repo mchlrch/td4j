@@ -19,8 +19,6 @@
 
 package org.td4j.swing.internal.binding;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -66,9 +64,9 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 	private NamedScalarDataAccess[] createColumnDataAccess(ListDataProxy proxy) {
 
 		// use nestedProperties from proxy, if available
-		if (proxy.isNestedPropertiesDefined()) {
-			final ScalarProperty[] nestedProperties = proxy.getNestedProperties();
-			return propertiesToNamedDataAccess(Arrays.asList(nestedProperties));
+		if (proxy.isNestedScalarDataAccessDefined()) {
+			final NamedScalarDataAccess[] nestedProperties = proxy.getNestedScalarDataAccess();
+			return nestedProperties;
 			
 		// otherwise use all scalar properties
 		} else {
@@ -76,8 +74,7 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 			final List<ScalarProperty> scalarProperties = openClass.getScalarProperties();
 			
 			if ( ! scalarProperties.isEmpty()) {
-				return propertiesToNamedDataAccess(scalarProperties);
-			
+				return DefaultNamedScalarDataAccess.createFromProperties(scalarProperties);			
 				
 			// primitive rowTypes have no properties - fallback to toString connector to make sure that the table is not blank
 			} else {
@@ -86,14 +83,7 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 			}
 		}
 	}
-
-		
-	private NamedScalarDataAccess[] propertiesToNamedDataAccess(List<ScalarProperty> properties) {
-		final List<NamedScalarDataAccess> result = new ArrayList<NamedScalarDataAccess>();
-		for (ScalarProperty prop : properties) {
-			result.add(new DefaultNamedScalarDataAccess(prop, prop.getName()));
-		}
-		return result.toArray(new NamedScalarDataAccess[result.size()]);
-	}
+	
+	
 
 }

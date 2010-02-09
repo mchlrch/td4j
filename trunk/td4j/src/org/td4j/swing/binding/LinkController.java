@@ -23,7 +23,11 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 
@@ -41,15 +45,17 @@ import org.td4j.swing.workbench.Navigator;
 
 public class LinkController extends ScalarSwingWidgetController<JLabel> {
 
+	private static final LinkHandler linkHandler = new LinkHandler();
+	
 	private final JLabel widget;
 	private final Navigator navigator;
 	private final LinkTargetObserver linkTargetObserver = new LinkTargetObserver(this);
 	
 	public LinkController(final JLabel widget, ScalarDataProxy proxy, final Navigator navigator) {
 		super(proxy);
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = ObjectTK.enforceNotNull(widget, "widget");		
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
-
+		
 		widget.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -75,26 +81,26 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 		final Class<?> valueType = dataProxy.getValueType();
 		final Object value = dataProxy.readValue();
 		
-		if (URL.class.isAssignableFrom(valueType)) {
+		if (linkHandler.canBrowse() && URL.class.isAssignableFrom(valueType)) {
 			try {
 				final URI uri = ((URL)value).toURI();
-				Desktop.getDesktop().browse(uri);
+				linkHandler.browse(uri);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
 			
-		} else if (URI.class.isAssignableFrom(valueType)) {
+		} else if (linkHandler.canBrowse() && URI.class.isAssignableFrom(valueType)) {
 			try {
 				final URI uri = (URI)value;
-				Desktop.getDesktop().browse(uri);
+				linkHandler.browse(uri);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
 			
-		} else if (File.class.isAssignableFrom(valueType)) {
+		} else if (linkHandler.canOpen() && File.class.isAssignableFrom(valueType)) {
 			try {
 				final File file = (File)value;
-				Desktop.getDesktop().open(file);
+				linkHandler.open(file);
 			} catch (Exception ex) {
 				throw new RuntimeException(ex);
 			}
@@ -103,7 +109,6 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 			navigator.seek(getDataProxy().readValue());
 		}
 	}
-	
 
 	protected void updateView0(Object newTarget) {
 		updateLinkTargetChanged(newTarget);
@@ -170,4 +175,122 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 			controller.updateLinkTargetStateChanged(target);			
 		}
 	};
+	
+	
+	
+	// --------------------------------
+	private static class LinkHandler {
+		
+		private static final String xdgOpenCmd = "xdg-open";
+		
+		private static enum BrowseHandler {Desktop, Xdg}
+		private static enum OpenHandler {Desktop, Xdg}
+		
+		private final BrowseHandler browseHandler;
+		private final OpenHandler openHandler;
+		
+		private LinkHandler() {
+			browseHandler = initBrowseHandler();
+			openHandler = initOpenHandler();			
+		}
+		
+		boolean canBrowse() {
+			return browseHandler != null;
+		}
+		
+		boolean canOpen() {
+			return openHandler != null;
+		}
+		
+		void browse(URI uri) throws IOException {
+			switch (browseHandler) {
+			case Desktop :
+				Desktop.getDesktop().browse(uri);
+				break;
+			case Xdg:
+				invokeXdgOpen(uri.toASCIIString());
+				break;
+			default:
+				throw new UnsupportedOperationException("browse not supported.");					
+			}
+		}
+		
+		void open(File file)  throws IOException {
+			switch (openHandler) {
+			case Desktop :
+				Desktop.getDesktop().open(file);
+				break;
+			case Xdg:
+				invokeXdgOpen(file.getAbsolutePath());
+				break;
+			default:
+				throw new UnsupportedOperationException("open not supported.");					
+			}
+		}
+		
+		
+		private void invokeXdgOpen(String argument) {
+			try {
+				final String cmd = xdgOpenCmd + " " + argument;
+				final Process proc = Runtime.getRuntime().exec(cmd);
+				
+				final BufferedReader outReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(proc.getInputStream())));
+				final BufferedReader errReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(proc.getErrorStream())));
+
+				final StringBuilder sbOut = new StringBuilder();
+				for (String line = outReader.readLine(); line != null; line = outReader.readLine()) {
+					if (sbOut.length() == 0) sbOut.append(":: Out");
+					sbOut.append("\n").append(line);
+				}
+
+				final StringBuilder sbErr = new StringBuilder();
+				for (String line = errReader.readLine(); line != null; line = errReader.readLine()) {
+					if (sbErr.length() == 0) sbErr.append(":: Error");
+					sbErr.append("\n").append(line);
+				}
+				
+				if (sbOut.length() > 0 || sbErr.length() > 0) {
+					System.out.println("=============================================================");
+					System.out.println("Invoke: " + cmd);
+					System.out.println(sbOut.toString());
+					System.out.println(sbErr.toString());
+				}
+				
+			} catch (IOException ioex) {
+				throw new RuntimeException(ioex);
+			}
+		}
+
+
+		private BrowseHandler initBrowseHandler() {
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				return BrowseHandler.Desktop;
+				
+			} else {
+				try {
+					Runtime.getRuntime().exec(xdgOpenCmd);
+					return BrowseHandler.Xdg;					
+				} catch (IOException ioex) {
+					// xdg-open not found
+				}				
+			}
+			return null;
+		}
+		
+		private OpenHandler initOpenHandler() {
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+				return OpenHandler.Desktop;
+				
+			} else {
+				try {
+					Runtime.getRuntime().exec(xdgOpenCmd);
+					return OpenHandler.Xdg;					
+				} catch (IOException ioex) {
+					// xdg-open not found
+				}				
+			}
+			return null;
+		}
+	}
+	
 }

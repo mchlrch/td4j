@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,13 +31,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnector;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.ModelInspector;
-import org.td4j.core.tk.IFilter;
+import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.LabelController;
@@ -52,18 +52,6 @@ import org.td4j.swing.workbench.Form;
 
 public class GenericForm<T> extends Form<T> {
 
-	private static final IFilter<IDataConnector> scalarPlugFilter = new IFilter<IDataConnector>() {
-		public boolean accept(IDataConnector element) {
-			return IScalarDataConnector.class.isAssignableFrom(element.getClass());
-		}
-	};
-
-	private static final IFilter<IDataConnector> collectionPlugFilter = new IFilter<IDataConnector>() {
-		public boolean accept(IDataConnector element) {
-			return ICollectionDataConnector.class.isAssignableFrom(element.getClass());
-		}
-	};
-
 	private final ModelInspector modelInspector;
 
 	GenericForm(Editor editor, Class<T> modelType, ModelInspector modelInspector) {
@@ -77,12 +65,11 @@ public class GenericForm<T> extends Form<T> {
 
 		// scalar plugs
 		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), getEditor().getWorkbench().getNavigator());
-		for (IDataConnector connector : modelInspector.getConnectors(getModelType(), scalarPlugFilter)) {
-			final Class<?> type = connector.getType();
+		for (ScalarProperty scalarProperty : modelInspector.getScalarProperties(getModelType())) {
+			final Class<?> type = scalarProperty.getValueType();
 
 			// PEND: das kreieren der widgets (+controller) muss auch pluggable sein,
 			// damit neue controller typen unterstütz werden können
-			final IScalarDataConnector scalarConnector = (IScalarDataConnector) connector;
 
 			// PEND: fix this, code duplication with AbstractScalarDataConnector, InvokationParameterDialog
 			// PEND: fix this, temporary only conversion to String supported !!
@@ -93,34 +80,38 @@ public class GenericForm<T> extends Form<T> {
 			
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+			
+			final ScalarDataProxy scalarProxy = new ScalarDataProxy(scalarProperty, scalarProperty.getName());
+			getMediator().addModelSocket(scalarProxy);
 			if (type == Boolean.class) {
-				final ButtonController btnController = wBuilder.caption(label).button().bindConnector(scalarConnector);
+				final ButtonController btnController = wBuilder.caption(label).button().bind(scalarProxy);
 				final AbstractButton btn = btnController.getWidget();
 				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			} else if (type == String.class || convertableToString) {
-				final TextController textController = wBuilder.caption(label).text().bindConnector(scalarConnector);
+				final TextController textController = wBuilder.caption(label).text().bind(scalarProxy);
 				final JTextField text = textController.getWidget();
 				panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			} else if (wBuilder.getNavigator().isTypeNavigatable(type)) {
-				final LinkController linkController = wBuilder.caption(label).link().bindConnector(scalarConnector);
+				final LinkController linkController = wBuilder.caption(label).link().bind(scalarProxy);
 				final JLabel link = linkController.getWidget();
 				panel.add(link, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 			} else {
-			  final LabelController<JLabel> labelController = wBuilder.caption(label).label().bindConnector(scalarConnector);
+			  final LabelController<JLabel> labelController = wBuilder.caption(label).label().bind(scalarProxy);
               final JLabel valueLabel = labelController.getWidget();
               panel.add(valueLabel, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			}
 		}
 
 		// collection plugs
-		for (IDataConnector connector : modelInspector.getConnectors(getModelType(), collectionPlugFilter)) {
-			final ICollectionDataConnector collectionConnector = (ICollectionDataConnector) connector;
-
+		for (ListProperty listProperty : modelInspector.getListProperties(getModelType())) {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 
+			final ListDataProxy listProxy = new ListDataProxy(listProperty, listProperty.getName(), listProperty);
+			getMediator().addModelSocket(listProxy);
+			
 			final TableControllerFactory tableCtrlFactory = wBuilder.caption(label).table();
-			final TableController tableController = tableCtrlFactory.bindConnector(collectionConnector);
+			final TableController tableController = tableCtrlFactory.bind(listProxy);
 			final JTable table = tableController.getWidget();
 			final JScrollPane scrollPane = new JScrollPane(table);
 			scrollPane.setPreferredSize(new Dimension(100, 100));
