@@ -100,7 +100,7 @@ public class ChoiceUISwing extends JPanel {
 			}
 		};
 		myFilter.addObserver(myUpdateHandler);
-		final ListDataProxy addressListFieldProxy = new ListDataProxy(new ListDataAccessAdapter(addressFilteredPlug), "foo", null);
+		final ListDataProxy addressListFieldProxy = new ListDataProxy(new ListDataAccessAdapter(addressFilteredPlug), "foo");
 
 		addressText.addKeyListener(new KeyAdapter() {
 			@Override

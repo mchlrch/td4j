@@ -83,7 +83,7 @@ public class HelloPanel extends JPanel {
 		// DefaultModelInspector.createCollectionMethodPlug(HelloModel.class,
 		// "localeChoice");
 		final ICollectionDataConnector localeChoiceConnector = connectorFactory.createCollectionFieldConnector(HelloModel.class, "localeChoiceField");
-		final ListDataProxy localeChoiceProxy = new ListDataProxy(new ListDataAccessAdapter(localeChoiceConnector), "localeChoiceField", null);
+		final ListDataProxy localeChoiceProxy = new ListDataProxy(new ListDataAccessAdapter(localeChoiceConnector), "localeChoiceField");
 		mediator.addModelSocket(localeChoiceProxy); // use LoopbackUpdateHandler
 		new ListController(localeChooser, localeChoiceProxy);
 
