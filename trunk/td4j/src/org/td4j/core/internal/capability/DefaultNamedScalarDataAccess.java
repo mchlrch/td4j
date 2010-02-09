@@ -19,6 +19,10 @@
 
 package org.td4j.core.internal.capability;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
@@ -26,6 +30,16 @@ public class DefaultNamedScalarDataAccess implements NamedScalarDataAccess {
 
 	private final String name;
 	private final ScalarDataAccess delegate;
+	
+	
+	public static NamedScalarDataAccess[] createFromProperties(List<ScalarProperty> properties) {
+		final List<NamedScalarDataAccess> result = new ArrayList<NamedScalarDataAccess>();
+		for (ScalarProperty prop : properties) {
+			result.add(new DefaultNamedScalarDataAccess(prop, prop.getName()));
+		}
+		return result.toArray(new NamedScalarDataAccess[result.size()]);
+	}
+	
 	
 	public DefaultNamedScalarDataAccess(ScalarDataAccess delegate, String name) {
 		this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
