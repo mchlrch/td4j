@@ -42,6 +42,8 @@ public class ProjectExample {
 	public static class Project {
 
 		public String name;
+		public boolean active = true;
+		public int numberOfBugs;
 		public File licenseFile;
 		public URL website;
 		
