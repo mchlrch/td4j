@@ -31,7 +31,6 @@ import javax.swing.JTextField;
 import org.td4j.core.binding.model.ScalarDataProxy;
 
 
-
 public class TextController extends ScalarSwingWidgetController<JTextField> {
 
 	private final JTextField widget;
@@ -61,7 +60,7 @@ public class TextController extends ScalarSwingWidgetController<JTextField> {
 
 		this.widget = widget;
 
-		// PEND: test mode only
+		// PEND: test mode only - ChoiceUI
 		if (registerListeners) {
 			widget.addKeyListener(enterListener);
 			widget.addFocusListener(focusListener);
