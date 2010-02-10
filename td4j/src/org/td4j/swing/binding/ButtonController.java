@@ -26,7 +26,6 @@ import javax.swing.AbstractButton;
 import org.td4j.core.binding.model.ScalarDataProxy;
 
 
-
 public class ButtonController extends ScalarSwingWidgetController<AbstractButton> {
 
 	private AbstractButton widget;
@@ -49,8 +48,6 @@ public class ButtonController extends ScalarSwingWidgetController<AbstractButton
 	}
 
 	protected void updateView0(Object newValue) {
-
-		// PEND:
 		final boolean selected = newValue instanceof Boolean && ((Boolean) newValue).booleanValue();
 
 		widget.setSelected(selected);
