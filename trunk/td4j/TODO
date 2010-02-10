@@ -1,14 +1,22 @@
-## release 9.08
----------------
-::ExecuteDialog:
-x trigger form update after executable actions
-x trigger form update after navigation
-x request focus on buttons: <executables>, btns in executable dialogs
-x primitive Typen in execute Signaturen unterstützen (int)
+- generic choice support with JList and selectable/choice property (LocalizedHelloWorldExample)
 
-::Build/Deploy:
-x testcases wieder fit machen
-x ant buildfile fur core: build.xml
+- ProjectExample => showcase for supported widgets
+
+- code duplication: GenericForm
+- code duplication: CollectionWidgetController
+
+- replace use of ModelInspector with OpenClassRepository
+- rewrite ModelInspector
+
+- full support for converters
+
+- Naming: @Executable VS @Operation, @Expose VS @Show, @ExposeProperties VS @ShowProperties / @HideProperties
+- Naming: model VS context (ScalarProperty)
+- cleanup interface names (Handler instead of IHandler)
+- ExecutableAction: keine Auto-Navigation zu primitiven Typen.ch
+
+
+- short description of all examples: wiki and class comment
 
 
 ## backlog
@@ -27,11 +35,9 @@ x ant buildfile fur core: build.xml
 ::ExecuteDialog:
 - wenn namen in @Expose auf properties zeigen, dann edit mode - also felder mit property werten befullen
 - erweiterter execute dialog (fluentFeed)
-- anzahl gelistete instanzen im 'execute' header (oberhalb listPanel, hinter Classname) anzeigen
 
 
 ::Types/Converters
-x URL & File als Links anzeigen und via Desktop.browse() bzw. open() oeffnen
 - converter repository
 - Prio. 1 haben Typen von String geparsed werden koennen
 - boolean VS. Boolean // aka primitive types
@@ -42,18 +48,6 @@ x URL & File als Links anzeigen und via Desktop.browse() bzw. open() oeffnen
 - equals und hashCode in connectors sauber implementieren
 - clean-up IDataConnectorFactory und DefaultDataConnectorFactory (infoQueue)
 - rethink ConnectorInfo
-
-::Workbench
-- navigator.back()
-
-
-::Table
-- entities in table mit ctrl+click navigierbar machen
-X @ExposeProperties auf getter-Methoden und Feldern für table columns auswahl
-- @HideProperties auf getter-Methoden und Feldern für table columns auswahl
-- TableColumn Auswahl in handmade panels
-- @SelectionContextExecutable("removeAddress") für table-actions
-
 
 :: Examples
 - finish currency converter
@@ -79,11 +73,10 @@ X @ExposeProperties auf getter-Methoden und Feldern für table columns auswahl
 
 - Property Identifikation via Enumerations, Beispiel für sf wiki documentation
 
-- cleanup interface names (Handler instead of IHandler)
+
 
 
 Typisierung von IModelSocket ausprobieren
-hyperlink in JList, damit 1:n beziehungen angezeigt und navigiert werden können
 package dependencies analysieren
 
 
@@ -98,11 +91,8 @@ IvokationParameterDialog mit Objektauswahl: person.order().addItem(foo, 2)
 
 Caption
 
-testcases für dataProxy refresh/reload
-X 1) model ist observable, stateChange
-X 2) model ist observable, propertyChange
-
-3) model ist NICHT observable, loopbackUpdate via Mediator
+testcases
+dataProxy refresh/reload model ist NICHT observable, loopbackUpdate via Mediator
 
 
 
