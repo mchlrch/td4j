@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ package org.td4j.core.internal.binding.model;
 import java.lang.reflect.Method;
 
 import org.td4j.core.reflect.ReflectionTK;
+import org.td4j.core.tk.ObjectTK;
 
 
 
@@ -53,11 +54,13 @@ public class ScalarMethodConnector extends AbstractScalarDataConnector {
 
 	@Override
 	protected Object readValue0(Object model) throws Exception {
+		ObjectTK.enforceNotNull(model, "model");
 		return getterMethod.invoke(model, argumentValues);
 	}
 
 	@Override
 	protected void writeValue0(Object model, Object val) throws Exception {
+		ObjectTK.enforceNotNull(model, "model");
 		setterMethod.invoke(model, ReflectionTK.composeArray(argumentValues, val));
 	}
 
