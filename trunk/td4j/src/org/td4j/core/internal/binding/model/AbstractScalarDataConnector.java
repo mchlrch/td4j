@@ -47,7 +47,6 @@ public abstract class AbstractScalarDataConnector extends AbstractDataConnector 
 		}
 	}
 
-	// TODO: implementation shall throw NPE if model==null -> check all subclasses
 	protected abstract Object readValue0(Object model) throws Exception;
 
 	protected abstract void writeValue0(Object model, Object val) throws Exception;
