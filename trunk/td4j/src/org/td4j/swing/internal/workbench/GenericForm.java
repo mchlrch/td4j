@@ -83,7 +83,7 @@ public class GenericForm<T> extends Form<T> {
 			
 			final ScalarDataProxy scalarProxy = new ScalarDataProxy(scalarProperty, scalarProperty.getName());
 			getMediator().addModelSocket(scalarProxy);
-			if (type == Boolean.class) {
+			if (type == Boolean.class || type == boolean.class) {
 				final ButtonController btnController = wBuilder.caption(label).button().bind(scalarProxy);
 				final AbstractButton btn = btnController.getWidget();
 				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
