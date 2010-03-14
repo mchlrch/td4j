@@ -1,5 +1,6 @@
 :: 10.xy
-
 - LinkController: fallback on xdg-open if Desktop.browse() or Desktop.open() not supported
+- SvcRepo
+- Companion object support
 
 :: 9.8
