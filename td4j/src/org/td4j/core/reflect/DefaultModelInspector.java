@@ -37,7 +37,9 @@ import org.td4j.core.binding.model.ICollectionDataConnector;
 import org.td4j.core.binding.model.IDataConnector;
 import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.env.SvcRepo;
 import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
 import org.td4j.core.internal.reflect.ExecutableConstructor;
 import org.td4j.core.internal.reflect.ExecutableMethod;
 import org.td4j.core.tk.IFilter;
@@ -221,6 +223,21 @@ public class DefaultModelInspector extends ModelInspector {
 			if (executableTag != null) {
 				result.add(new ExecutableMethod(method, executableTag.paramNames()));
 			}
+		}		
+		
+		// companions
+		final Companion companionSpec = cls.getAnnotation(Companion.class);
+		if (companionSpec != null) {
+			final Class<?> compCls = companionSpec.value();
+			final Object svc = SvcRepo.requireService(compCls);
+			
+			final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
+			for (Method method : compMethods) {
+				final Executable executableTag = method.getAnnotation(Executable.class);
+				if (executableTag != null) {
+					result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
+				}
+			}		
 		}		
 		
 		return result;
