@@ -17,37 +17,22 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.examples;
+package org.td4j.examples.order;
 
-import java.util.ArrayList;
-import java.util.List;
+public class LineItem {
 
-import org.td4j.core.reflect.Executable;
+	public Order order;
+	public int quantity;
+	public Article article;
 
+	LineItem(Order order, int quantity, Article article) {
+		if (order == null) throw new NullPointerException("order");
+		if (quantity <= 0) throw new IllegalArgumentException("quantity <= 0");
+		if (article == null) throw new NullPointerException("article");
 
-
-public class Order {
-
-	public Person person;
-	public String number;
-	public final List<LineItem> lineItems = new ArrayList<LineItem>();
-
-	Order(Person person) {
-		if (person == null) throw new NullPointerException("person");
-
-		this.person = person;
-		this.number = "" + System.currentTimeMillis();
-	}
-
-	@Override
-	public String toString() {
-		return number;
-	}
-
-	@Executable(paramNames={"Article", "Pieces"})
-	public Order addItem(Article article, int i) {
-		lineItems.add(new LineItem(this, i, article));
-		return this;
+		this.order = order;
+		this.quantity = quantity;
+		this.article = article;
 	}
 
 }

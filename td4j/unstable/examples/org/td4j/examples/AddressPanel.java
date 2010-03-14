@@ -20,6 +20,7 @@
 package org.td4j.examples;
 
 import org.td4j.core.binding.Mediator;
+import org.td4j.examples.order.Address;
 import org.td4j.swing.ControllerAwareGridBagPanel;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.binding.TextController;

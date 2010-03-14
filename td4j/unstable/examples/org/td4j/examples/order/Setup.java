@@ -17,22 +17,26 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.examples;
+package org.td4j.examples.order;
 
-public class LineItem {
+import java.util.ArrayList;
+import java.util.List;
 
-	public Order order;
-	public int quantity;
-	public Article article;
 
-	LineItem(Order order, int quantity, Article article) {
-		if (order == null) throw new NullPointerException("order");
-		if (quantity <= 0) throw new IllegalArgumentException("quantity <= 0");
-		if (article == null) throw new NullPointerException("article");
 
-		this.order = order;
-		this.quantity = quantity;
-		this.article = article;
+public class Setup {
+
+	public void setup() {
+		final Person mira = new Person("Michael", "Rauch");
+		mira.at("Bärenmattweg 8", "2503", "Biel/Bienne");
+
+		// PEND: create some articles
+		final List<Article> articles = new ArrayList<Article>();
+		articles.add(new Article("Coding in Java"));
+		articles.add(new Article("Surfing in Java"));
+		articles.add(new Article("Breew your own Java!"));
+
+		mira.order().addItem(articles.get(0), 1).addItem(articles.get(2), 2);
+
 	}
-
 }
