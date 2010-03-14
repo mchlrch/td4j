@@ -71,7 +71,7 @@ public class GenericForm<T> extends Form<T> {
 			// PEND: das kreieren der widgets (+controller) muss auch pluggable sein,
 			// damit neue controller typen unterstütz werden können
 
-			// PEND: fix this, code duplication with AbstractScalarDataConnector, InvokationParameterDialog
+			// PEND: fix this, code duplication with ScalarDataContainer, InvokationParameterDialog
 			// PEND: fix this, temporary only conversion to String supported !!
 		      final Class<?> fromType = type;
 		      final Class<?> toType = String.class;

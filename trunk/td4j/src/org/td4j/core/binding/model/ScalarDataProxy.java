@@ -46,8 +46,11 @@ public class ScalarDataProxy extends DataProxy {
 	}
 	
 	public Class<?> getValueType() {
-		// TODO hier muss  der converter type berücksichtigt werden !!
-		return dataAccess.getValueType();
+		if (converter != null) {
+			return converter.getConversionTargetType();
+		} else {
+			return dataAccess.getValueType();
+		}
 	}
 
 	public boolean canRead() {

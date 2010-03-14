@@ -136,7 +136,16 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
 			final NamedScalarDataAccess access = columnProperties[columnIndex];
-		    return access.getValueType();
+			final Class<?> valueType = access.getValueType();
+			
+			// TODO _this is a workaround to make primitive types work 
+			if (int.class == valueType) return Integer.class;
+			else if (long.class == valueType) return Long.class;
+			else if (float.class == valueType) return Float.class;
+			else if (double.class == valueType) return Double.class;
+			else if (boolean.class == valueType) return Boolean.class;
+			
+		  return valueType;
 		}
 
 		@Override
