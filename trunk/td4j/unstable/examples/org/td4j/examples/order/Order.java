@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.reflect.Executable;
+import org.td4j.core.tk.ObjectTK;
 
 public class Order {
 
@@ -34,9 +35,7 @@ public class Order {
 	public final List<LineItem> lineItems = new ArrayList<LineItem>();
 
 	Order(Person person) {
-		if (person == null) throw new NullPointerException("person");
-
-		this.person = person;
+		this.person = ObjectTK.enforceNotNull(person, "person");
 		this.number = "" + System.currentTimeMillis();
 	}
 

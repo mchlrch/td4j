@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 
 package org.td4j.examples.order;
 
+import org.td4j.core.tk.ObjectTK;
+
 public class LineItem {
 
 	public Order order;
@@ -26,13 +28,11 @@ public class LineItem {
 	public Article article;
 
 	LineItem(Order order, int quantity, Article article) {
-		if (order == null) throw new NullPointerException("order");
+		this.order = ObjectTK.enforceNotNull(order, "order");
+		this.article = ObjectTK.enforceNotNull(article, "article");
+		
 		if (quantity <= 0) throw new IllegalArgumentException("quantity <= 0");
-		if (article == null) throw new NullPointerException("article");
-
-		this.order = order;
 		this.quantity = quantity;
-		this.article = article;
 	}
 
 }

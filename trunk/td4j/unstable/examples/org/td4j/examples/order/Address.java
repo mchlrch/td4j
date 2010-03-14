@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.reflect.Executable;
 import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.tk.ObjectTK;
 
 
 @ExposeProperties
@@ -41,15 +42,10 @@ public class Address extends Observable {
 	}
 
 	Address(Person person, String street, String zip, String city) {
-		if (person == null) throw new NullPointerException("person");
-		if (street == null) throw new NullPointerException("street");
-		if (zip == null) throw new NullPointerException("zip");
-		if (city == null) throw new NullPointerException("city");
-
-		this.person = person;
-		this.street = street;
-		this.zip = zip;
-		this.city = city;
+		this.person = ObjectTK.enforceNotNull(person, "person");
+		this.street = ObjectTK.enforceNotNull(street, "street");
+		this.zip    = ObjectTK.enforceNotNull(zip, "zip");
+		this.city   = ObjectTK.enforceNotNull(city, "city");
 	}
 
 	public String getStreet() {

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import org.td4j.core.binding.IModelSocket;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
+import org.td4j.core.tk.ObjectTK;
 
 
 public class ScalarDataRelay implements IObserver {
@@ -31,8 +32,8 @@ public class ScalarDataRelay implements IObserver {
 	private IModelSocket slave;
 
 	public ScalarDataRelay(ScalarDataProxy master, IModelSocket slave) {
-		if (master == null) throw new NullPointerException("master");
-		if (slave == null) throw new NullPointerException("slave");
+		this.master = ObjectTK.enforceNotNull(master, "master");
+		this.slave = ObjectTK.enforceNotNull(slave, "slave");
 
 		final Class<?> slaveType = slave.getModelType();
 		if ( ! slaveType.isAssignableFrom(master.getValueType())) {
@@ -40,8 +41,6 @@ public class ScalarDataRelay implements IObserver {
 		}
 
 		master.addObserver(this, new ChangeEventFilter(master, ChangeEvent.Type.StateChange));
-		this.master = master;
-		this.slave = slave;
 
 		updateSlave();
 	}

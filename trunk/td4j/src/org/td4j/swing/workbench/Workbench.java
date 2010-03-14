@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -131,10 +131,7 @@ public class Workbench extends JFrame {
   }
 
   private Workbench(final IEditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
-    if (editorFactory == null)
-      throw new NullPointerException("editorFactory");
-
-    this.editorFactory = editorFactory;
+    this.editorFactory = ObjectTK.enforceNotNull(editorFactory, "editorFactory");
     this.navigator = new Navigator(this);
 
     this.sidebarModel = new SidebarModel(this, sidebarEntries);

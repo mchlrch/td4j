@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.tk.ObjectTK;
 
 
 public class ButtonController extends ScalarSwingWidgetController<AbstractButton> {
@@ -38,9 +39,8 @@ public class ButtonController extends ScalarSwingWidgetController<AbstractButton
 
 	public ButtonController(AbstractButton widget, ScalarDataProxy proxy) {
 		super(proxy);
-		if (widget == null) throw new NullPointerException("widget");
-
-		this.widget = widget;
+		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		
 		widget.addActionListener(actionListener);
 
 		setAccess();

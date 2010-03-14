@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableList;
 import org.td4j.core.reflect.Executable;
 import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Workbench;
 
 
@@ -73,11 +74,8 @@ public class Person extends Observable {
 
 	@Executable(paramNames={"firstname", "lastName"})
 	public Person(String firstName, String lastName) {
-		if (firstName == null) throw new NullPointerException("firstName");
-		if (lastName == null) throw new NullPointerException("lastName");
-
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.firstName = ObjectTK.enforceNotNull(firstName, "firstName");
+		this.lastName = ObjectTK.enforceNotNull(lastName, "lastName");
 		this.active = true;
 	}
 

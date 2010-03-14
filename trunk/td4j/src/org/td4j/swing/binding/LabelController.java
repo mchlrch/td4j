@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.lang.reflect.Method;
 
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.tk.ObjectTK;
 
 
 
@@ -34,14 +35,13 @@ public class LabelController<T extends Component> extends ScalarSwingWidgetContr
 
 	public LabelController(T widget, ScalarDataProxy proxy) {
 		super(proxy);
-		if (widget == null) throw new NullPointerException("widget");
+		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 
 		try {
 			setTextMethod = widget.getClass().getMethod("setText", new Class[] { String.class });
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		this.widget = widget;
 
 		setAccess();
 		updateView();

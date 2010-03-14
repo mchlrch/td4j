@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.td4j.core.model.ChangeEvent;
+import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
 
@@ -44,11 +45,8 @@ public class ChangeEventImpl extends ChangeEvent {
 	private Object customPayload;
 
 	public ChangeEventImpl(Object source, Type type) {
-		if (source == null) throw new NullPointerException("source");
-		if (type == null) throw new NullPointerException("type");
-
-		this.source = source;
-		this.type = type;
+		this.source = ObjectTK.enforceNotNull(source, "source");
+		this.type = ObjectTK.enforceNotNull(type, "type");
 	}
 
 	@Override

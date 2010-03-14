@@ -22,6 +22,7 @@ package org.td4j.core.internal.binding.model;
 import java.util.Collection;
 
 import org.td4j.core.binding.model.ICollectionDataConnector;
+import org.td4j.core.tk.ObjectTK;
 
 
 public abstract class AbstractCollectionDataConnector extends AbstractDataConnector implements ICollectionDataConnector {
@@ -30,9 +31,7 @@ public abstract class AbstractCollectionDataConnector extends AbstractDataConnec
 
 	protected AbstractCollectionDataConnector(Class<?> modelType, Class<?> collectionType, Class<?> valueType) {
 		super(modelType, valueType);
-		if (collectionType == null) throw new NullPointerException("collectionType");
-
-		this.collectionType = collectionType;
+		this.collectionType = ObjectTK.enforceNotNull(collectionType, "collectionType");
 	}
 
 	public Class<?> getCollectionType() {

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 package org.td4j.core.model;
 
 import org.td4j.core.tk.IFilter;
+import org.td4j.core.tk.ObjectTK;
 
 public class ObservableTK {
 
@@ -29,7 +30,7 @@ public class ObservableTK {
 	
 	// PEND: prefer this method over the above in framework code to reduce callbacks from observable
 	public static boolean attachObserverToModel(Object model, IObserver observer, IFilter<ChangeEvent> eventFilter) {
-		if (observer == null) throw new NullPointerException("observer");
+		ObjectTK.enforceNotNull(observer, "observer");
 
 		if (model instanceof IObservable) {
 			((IObservable) model).addObserver(observer, eventFilter);
@@ -40,7 +41,7 @@ public class ObservableTK {
 	}
 
 	public static boolean detachObserverFromModel(Object model, IObserver observer) {
-		if (observer == null) throw new NullPointerException("observer");
+		ObjectTK.enforceNotNull(observer, "observer");
 
 		if (model instanceof IObservable) {
 			((IObservable) model).removeObserver(observer);
