@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -48,12 +48,12 @@ public class ScalarProperty implements ScalarDataAccess {
 	
 	// PEND: is context better than model? if yes, change dataConnector sourcecode
 	public Object readValue(Object ctx) {
-		if (ctx == null) throw new NullPointerException("ctx");
+		ObjectTK.enforceNotNull(ctx, "ctx");
 		return dataConnector.readValue(ctx);
 	}
 
 	public void writeValue(Object ctx, Object val) {
-		if (ctx == null) throw new NullPointerException("ctx");
+		ObjectTK.enforceNotNull(ctx, "ctx");
 		dataConnector.writeValue(ctx, val);
 	}
 

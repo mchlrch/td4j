@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.IDataConnector;
+import org.td4j.core.tk.ObjectTK;
 
 public abstract class AbstractDataConnector implements IDataConnector {
 
@@ -27,11 +28,8 @@ public abstract class AbstractDataConnector implements IDataConnector {
 	private final Class<?> valueType;
 
 	protected AbstractDataConnector(Class<?> modelType, Class<?> valueType) {
-		if (modelType == null) throw new NullPointerException("modelType");
-		if (valueType == null) throw new NullPointerException("valueType");
-
-		this.modelType = modelType;
-		this.valueType = valueType;
+		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
+		this.valueType = ObjectTK.enforceNotNull(valueType, "valueType");
 	}
 
 	public Class<?> getModelType() {

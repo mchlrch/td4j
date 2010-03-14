@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ import org.td4j.core.model.ChangeSupport;
 import org.td4j.core.model.IObservable;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
+import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.order.Person;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.TextController;
@@ -185,9 +186,7 @@ public class ChoiceUISwing extends JPanel {
 		private final IPlugFilter filter;
 
 		FilteredCollectionDataConnector(ICollectionDataConnector delegate, IPlugFilter filter) {
-			if (delegate == null) throw new NullPointerException("delegate");
-
-			this.delegate = delegate;
+			this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
 			this.filter = filter;
 		}
 

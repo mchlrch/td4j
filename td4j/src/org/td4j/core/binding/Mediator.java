@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
+import org.td4j.core.tk.ObjectTK;
 
 
 
@@ -39,9 +40,7 @@ public class Mediator<T> extends Observable implements IModelSocket {
 	private final LoopbackObserver loopbackObserver = new LoopbackObserver(this);
 
 	public Mediator(Class<T> modelType) {
-		if (modelType == null) throw new NullPointerException("modelType");
-
-		this.modelType = modelType;
+		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
 	}
 
 	public Class<?> getModelType() {
@@ -113,8 +112,7 @@ public class Mediator<T> extends Observable implements IModelSocket {
 		private final Mediator<?> mediator;
 
 		private LoopbackObserver(Mediator<?> mediator) {
-			if (mediator == null) throw new NullPointerException("mediator");
-			this.mediator = mediator;
+			this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		}
 
 		public void observableChanged(ChangeEvent event) {

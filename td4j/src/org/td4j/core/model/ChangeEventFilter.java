@@ -20,6 +20,7 @@
 package org.td4j.core.model;
 
 import org.td4j.core.tk.IFilter;
+import org.td4j.core.tk.ObjectTK;
 
 
 public class ChangeEventFilter implements IFilter<ChangeEvent> {
@@ -28,11 +29,8 @@ public class ChangeEventFilter implements IFilter<ChangeEvent> {
 	private final ChangeEvent.Type type;
 
 	public ChangeEventFilter(Object src, ChangeEvent.Type type) {
-		if (src == null) throw new NullPointerException("src");
-		if (type == null) throw new NullPointerException("type");
-
-		this.src = src;
-		this.type = type;
+		this.src = ObjectTK.enforceNotNull(src, "src");
+		this.type = ObjectTK.enforceNotNull(type, "type");
 	}
 
 	public boolean accept(ChangeEvent element) {

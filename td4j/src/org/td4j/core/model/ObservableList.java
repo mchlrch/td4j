@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
 
@@ -41,15 +42,12 @@ public class ObservableList<E> implements List<E> {
 
 	public ObservableList(List<E> delegate, ChangeSupport changeSupport, String propertyName) {
 		this(changeSupport, propertyName, delegate);
-		if (propertyName == null) throw new NullPointerException("propertyName");
+		ObjectTK.enforceNotNull(propertyName, "propertyName");
 	}
 
 	private ObservableList(ChangeSupport changeSupport, String propertyName, List<E> delegate) {
-		if (delegate == null) throw new NullPointerException("delegate");
-		if (changeSupport == null) throw new NullPointerException("changeSupport");
-
-		this.delegate = delegate;
-		this.changeSupport = changeSupport;
+		this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
+		this.changeSupport = ObjectTK.enforceNotNull(changeSupport, "changeSupport");
 		this.propertyName = propertyName;
 	}
 

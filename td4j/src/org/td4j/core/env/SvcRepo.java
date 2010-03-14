@@ -19,15 +19,16 @@
 
 package org.td4j.core.env;
 
+import org.td4j.core.tk.ObjectTK;
+
 public class SvcRepo {
 	
 	private static SvcRepository delegate;
 	
 	public static void init(SvcRepository repository) {
-		if (repository == null) throw new NullPointerException("repository");
 		if (delegate != null) throw new IllegalStateException("already initialized");
 		
-		delegate = repository;
+		delegate = ObjectTK.enforceNotNull(repository, "repository");
 	}
 	
 	public static <T> T getService(Class<T> svcDef) {

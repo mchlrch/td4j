@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionListener;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
+import org.td4j.core.tk.ObjectTK;
 
 
 
@@ -38,12 +39,10 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	private boolean proxyToSelectionSyncInProgress;
 
 	public SelectionController(ListSelectionModel selectionModel, IOrderedElementModel dataModel, ScalarDataProxy proxy) {
-		if (dataModel == null) throw new NullPointerException("dataModel");
-		if (proxy == null) throw new NullPointerException("proxy");
+		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
+		this.proxy = ObjectTK.enforceNotNull(proxy, "proxy");
 
 		this.selectionModel = selectionModel;
-		this.dataModel = dataModel;
-		this.proxy = proxy;
 
 		selectionModel.addListSelectionListener(this);
 		proxy.addObserver(this);
@@ -91,7 +90,7 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	}
 
 	private int indexOfObject(Object obj) {
-		if (obj == null) throw new NullPointerException("obj");
+		ObjectTK.enforceNotNull(obj, "obj");
 
 		for (int i = 0, n = dataModel.getSize(); i < n; i++) {
 			final Object candidate = dataModel.getElementAt(i);

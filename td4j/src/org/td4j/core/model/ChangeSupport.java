@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import org.td4j.core.internal.model.ChangeEventImpl;
 import org.td4j.core.tk.ArrayTK;
 import org.td4j.core.tk.IFilter;
+import org.td4j.core.tk.ObjectTK;
 
 
 
@@ -37,9 +38,7 @@ public class ChangeSupport {
 	private final Map<IObserver, IFilter<ChangeEvent>> observers = new HashMap<IObserver, IFilter<ChangeEvent>>();
 
 	public ChangeSupport(Object source) {
-		if (source == null) throw new NullPointerException("source");
-
-		this.source = source;
+		this.source = ObjectTK.enforceNotNull(source, "source");
 	}
 
 	public ChangeEvent preparePropertyChange(String propertyName, Object oldValue, Object newValue) {
