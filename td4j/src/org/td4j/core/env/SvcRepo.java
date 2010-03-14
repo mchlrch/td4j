@@ -34,6 +34,16 @@ public class SvcRepo {
 		return delegate.getService(svcDef);
 	}
 	
+	public static <T> T requireService(Class<T> svcDef) {
+		final T svc = getService(svcDef);
+		if (svc == null) {
+			throw new IllegalStateException("Required Service not available: " + svcDef);
+		} else {
+			return svc;
+		}
+	}
+	
+	
 	public static SvcRepository getRepositoryDelegate() {
 		return delegate;
 	}	
