@@ -17,25 +17,21 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.examples;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.td4j.examples.order;
 
 
-public class Setup {
 
-	public void setup() {
-		final Person mira = new Person("Michael", "Rauch");
-		mira.at("Bärenmattweg 8", "2503", "Biel/Bienne");
+public class Article {
+	private String name;
 
-		// PEND: create some articles
-		final List<Article> articles = new ArrayList<Article>();
-		articles.add(new Article("Coding in Java"));
-		articles.add(new Article("Surfing in Java"));
-		articles.add(new Article("Breew your own Java!"));
-
-		mira.order().addItem(articles.get(0), 1).addItem(articles.get(2), 2);
-
+	public Article(String name) {
+		if (name == null) throw new NullPointerException("name");
+		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }

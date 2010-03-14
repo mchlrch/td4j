@@ -17,7 +17,7 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.examples;
+package org.td4j.examples.order;
 
 import java.util.ArrayList;
 import java.util.List;
