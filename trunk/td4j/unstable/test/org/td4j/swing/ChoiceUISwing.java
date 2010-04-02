@@ -41,14 +41,12 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeSupport;
 import org.td4j.core.model.IObservable;
@@ -74,17 +72,17 @@ public class ChoiceUISwing extends JPanel {
 		add(addressLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
 		add(addressText, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
 
-		final IDataConnectorFactory connectorFactory = new DefaultDataConnectorFactory();
+		final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 		
 		// direct mit proxy
-		final IScalarDataConnector addressFieldPlug = connectorFactory.createScalarFieldConnector(Person.class, "address");
-		final ScalarDataProxy addressFieldProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(addressFieldPlug), "address");
+		final ScalarDataConnector addressFieldPlug = connectorFactory.createScalarFieldConnector(Person.class, "address");
+		final ScalarDataProxy addressFieldProxy = new ScalarDataProxy(addressFieldPlug, "address");
 		final TextController adrTextController = new TextController(addressText, addressFieldProxy, false);
 		addressFieldProxy.setModel(Person.BART);
 
 		// list: direct mit proxy
 		final JList addressList = new JList();
-		final ICollectionDataConnector addressListFieldPlug = connectorFactory.createCollectionFieldConnector(Person.class, "addressChoice");
+		final CollectionDataConnector addressListFieldPlug = connectorFactory.createCollectionFieldConnector(Person.class, "addressChoice");
 
 		final MyFilter myFilter = new MyFilter();
 		final FilteredCollectionDataConnector addressFilteredPlug = new FilteredCollectionDataConnector(addressListFieldPlug, myFilter);
@@ -101,7 +99,7 @@ public class ChoiceUISwing extends JPanel {
 			}
 		};
 		myFilter.addObserver(myUpdateHandler);
-		final ListDataProxy addressListFieldProxy = new ListDataProxy(new ListDataAccessAdapter(addressFilteredPlug), "foo");
+		final ListDataProxy addressListFieldProxy = new ListDataProxy(addressFilteredPlug, "foo");
 
 		addressText.addKeyListener(new KeyAdapter() {
 			@Override
@@ -181,23 +179,23 @@ public class ChoiceUISwing extends JPanel {
 	}
 
 
-	private static class FilteredCollectionDataConnector implements ICollectionDataConnector {
-		private final ICollectionDataConnector delegate;
+	private static class FilteredCollectionDataConnector implements CollectionDataConnector {
+		private final CollectionDataConnector delegate;
 		private final IPlugFilter filter;
 
-		FilteredCollectionDataConnector(ICollectionDataConnector delegate, IPlugFilter filter) {
+		FilteredCollectionDataConnector(CollectionDataConnector delegate, IPlugFilter filter) {
 			this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
 			this.filter = filter;
 		}
 
 		// delegate methods
 
-		public Class<?> getModelType() {
-			return delegate.getModelType();
+		public Class<?> getContextType() {
+			return delegate.getContextType();
 		}
 
-		public Class<?> getType() {
-			return delegate.getType();
+		public Class<?> getValueType() {
+			return delegate.getValueType();
 		}
 
 		public boolean canRead(Object model) {
@@ -208,8 +206,8 @@ public class ChoiceUISwing extends JPanel {
 			return delegate.getCollectionType();
 		}
 
-		public Collection<?> readValue(Object model) {
-			Collection<?> origColl = delegate.readValue(model);
+		public Collection<?> readValue(Object ctx) {
+			Collection<?> origColl = delegate.readValue(ctx);
 			if (origColl == null)
 				return null;
 			else if (origColl.isEmpty()) return Collections.emptyList();
