@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@ import org.td4j.core.tk.StringTK;
 
 public class OpenClass extends Observable {
 	
-	private final OpenClassRepository repository;
 	private final String nameSpace;
 	private final String name;
 	
@@ -50,12 +49,10 @@ public class OpenClass extends Observable {
 	// lazy caching for lookup based on featureGroup. pure features in the list, as FeatureInfo is implementation detail
 	private Map<Object, List<Object>> featuresByGroup;
 	
-	public OpenClass(OpenClassRepository repository, String nameSpace, String name, boolean primitive) {
-		this.repository = ObjectTK.enforceNotNull(repository, "repository");
+	public OpenClass(String nameSpace, String name, boolean primitive) {
 		this.nameSpace = ObjectTK.enforceNotNull(nameSpace, "nameSpace");
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.primitive = primitive;
-		repository.addClass(this);
 		
 		if ( ! primitive) {
 			featuresByIdent = new HashMap<Object, FeatureInfo>();
@@ -65,10 +62,6 @@ public class OpenClass extends Observable {
 			featureCountByGroup = Collections.emptyMap();
 			featuresByGroup = Collections.emptyMap();
 		}
-	}
-	
-	public OpenClassRepository getRepository() {
-		return repository;
 	}
 	
 	public String getNamespace() {
@@ -179,15 +172,13 @@ public class OpenClass extends Observable {
 		if ( ! (obj instanceof OpenClass)) return false;
 		
 		final OpenClass that = (OpenClass) obj;
-		return this.repository.equals(that.repository)
-				&& this.nameSpace.equals(that.nameSpace)
+		return this.nameSpace.equals(that.nameSpace)
 				&& this.name.equals(that.name);
 	}
 	
 	@Override
 	public int hashCode() {
-		int hash = repository.hashCode();
-		hash = 31*hash + nameSpace.hashCode();
+		int hash = nameSpace.hashCode();
 		hash = 31*hash + name.hashCode();
 		return hash;
 	}
