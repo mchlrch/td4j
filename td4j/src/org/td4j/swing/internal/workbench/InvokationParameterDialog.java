@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -46,12 +46,12 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.tk.ListTK;
 import org.td4j.core.tk.ObjectTK;
@@ -63,7 +63,7 @@ import org.td4j.swing.binding.WidgetBuilder;
 public class InvokationParameterDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 
-	private static final DefaultDataConnectorFactory connectorFactory = new DefaultDataConnectorFactory();
+	private static final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 
 	private final List<InvokationParameter> parameterList;
 	private final HashMap<InvokationParameter, Object> paramValueMap = new HashMap<InvokationParameter, Object>();
@@ -141,13 +141,13 @@ public class InvokationParameterDialog extends JDialog {
 		
 		FocusRequester focusRequester = null;
 		for (InvokationParameter param : parameterList) {
-			final IScalarDataConnector connector = connectorFactory.createScalarMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
+			final ScalarDataConnector connector = connectorFactory.createScalarMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
 			
       // PEND: fix this, temporary only conversion to String supported !!
       final Class<?> fromType = param.getType();
       final Class<?> toType = String.class;
       final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-			final ScalarDataProxy dataProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(connector), param.getName(), converter);
+			final ScalarDataProxy dataProxy = new ScalarDataProxy(connector, param.getName(), converter);
 			wBuilder.getMediator().addModelSocket(dataProxy);
 			
 			final JLabel caption = new JLabel(param.getName());

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,8 +19,7 @@
 
 package org.td4j.swing.internal.workbench;
 
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.reflect.ModelInspector;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.IEditorFactory;
@@ -30,18 +29,16 @@ import org.td4j.swing.workbench.Workbench;
 
 public class GenericEditorFactory implements IEditorFactory {
 
-	private final ModelInspector modelInspector;
+	private final MetaModel metaModel;
 	private final IFormFactory formFactory;
-	private final IDataConnectorFactory connectorFactory;
 
-	public GenericEditorFactory(ModelInspector modelInspector, IFormFactory formFactory, IDataConnectorFactory connectorFactory) {
-		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");
+	public GenericEditorFactory(MetaModel model, IFormFactory formFactory) {
+		this.metaModel = ObjectTK.enforceNotNull(model, "model");
 		this.formFactory = ObjectTK.enforceNotNull(formFactory, "formFactory");
-		this.connectorFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
 	}
 
 	public Editor createEditor(Workbench workbench, Class<?> cls) {
-		return new GenericEditor(workbench, cls, modelInspector, formFactory, connectorFactory);
+		return new GenericEditor(workbench, cls, metaModel, formFactory);
 	}
 
 }

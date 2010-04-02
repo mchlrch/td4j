@@ -35,8 +35,9 @@ import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
@@ -52,11 +53,11 @@ import org.td4j.swing.workbench.Form;
 
 public class GenericForm<T> extends Form<T> {
 
-	private final ModelInspector modelInspector;
+	private final MetaModel metaModel;
 
-	GenericForm(Editor editor, Class<T> modelType, ModelInspector modelInspector) {
+	GenericForm(Editor editor, Class<T> modelType, MetaModel model) {
 		super(editor, modelType);
-		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");
+		this.metaModel = ObjectTK.enforceNotNull(model, "model");
 	}
 
 	@Override
@@ -65,7 +66,8 @@ public class GenericForm<T> extends Form<T> {
 
 		// scalar plugs
 		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), getEditor().getWorkbench().getNavigator());
-		for (ScalarProperty scalarProperty : modelInspector.getScalarProperties(getModelType())) {
+		final MetaClass metaClass = metaModel.getMetaClass(getModelType());
+		for (ScalarProperty scalarProperty : metaClass.getScalarProperties()) {
 			final Class<?> type = scalarProperty.getValueType();
 
 			// PEND: das kreieren der widgets (+controller) muss auch pluggable sein,
@@ -103,7 +105,7 @@ public class GenericForm<T> extends Form<T> {
 		}
 
 		// collection plugs
-		for (ListProperty listProperty : modelInspector.getListProperties(getModelType())) {
+		for (ListProperty listProperty : metaClass.getListProperties()) {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 

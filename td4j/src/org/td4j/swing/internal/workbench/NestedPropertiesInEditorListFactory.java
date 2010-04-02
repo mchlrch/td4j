@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,10 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.td4j.core.internal.capability.DefaultNamedScalarDataAccess;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
+import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ExposePropertiesInEditorList;
-import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.ObjectTK;
@@ -36,19 +37,20 @@ import org.td4j.core.tk.ObjectTK;
 public class NestedPropertiesInEditorListFactory {
 	
 	private final Class<?> modelType;
-	private final ModelInspector modelInspector;
+	private final MetaModel metaModel;
 	
 	
-	protected NestedPropertiesInEditorListFactory(Class<?> modelType, ModelInspector modelInspector) {
+	protected NestedPropertiesInEditorListFactory(Class<?> modelType, MetaModel model) {
 		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
-		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");		
+		this.metaModel = ObjectTK.enforceNotNull(model, "model");		
 	}
 	
-	public NamedScalarDataAccess[] createNestedProperties() {
+	public NamedScalarDataConnector[] createNestedProperties() {
 		final ExposePropertiesInEditorList spec = modelType.getAnnotation(ExposePropertiesInEditorList.class);
 		
 		// check if specified properties are valid, throw exception otherwise
-		final List<ScalarProperty> scalarProps = modelInspector.getScalarProperties(modelType);		
+		final MetaClass metaClass = metaModel.getMetaClass(modelType);
+		final List<ScalarProperty> scalarProps = metaClass.getScalarProperties();		
 		final Map<String, ScalarProperty> propMap = new HashMap<String, ScalarProperty>();
 		for (ScalarProperty prop : scalarProps) {
 			propMap.put(prop.getName(), prop);
@@ -71,10 +73,10 @@ public class NestedPropertiesInEditorListFactory {
 			
 		// accept all properties
 		} else {
-			return DefaultNamedScalarDataAccess.createFromProperties(scalarProps);
+			return DefaultNamedScalarDataConnector.createFromProperties(scalarProps);
 		}
 		
-		return DefaultNamedScalarDataAccess.createFromProperties(result);
+		return DefaultNamedScalarDataConnector.createFromProperties(result);
 	}
 	
 }
