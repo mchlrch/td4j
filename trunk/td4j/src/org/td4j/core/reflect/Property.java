@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,23 +19,8 @@
 
 package org.td4j.core.reflect;
 
-import java.util.List;
+public interface Property {
 
-import org.td4j.core.internal.reflect.AbstractExecutable;
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ListTK;
-
-
-public abstract class ModelInspector {
-
-	public abstract List<AbstractExecutable> getExecutables(Class<?> cls);
-
-	public List<AbstractExecutable> getExecutables(Class<?> cls, IFilter<AbstractExecutable> filter) {
-		final List<AbstractExecutable> baseList = getExecutables(cls);
-		return ListTK.filter(baseList, filter);
-	}
+	public String getName();
 	
-	public abstract List<ScalarProperty> getScalarProperties(Class<?> cls);
-	public abstract List<ListProperty> getListProperties(Class<?> cls);	
-
 }
