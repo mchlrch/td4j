@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -25,15 +25,15 @@ import javax.swing.JTable;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.model.ToStringConnector;
 import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
-import org.td4j.core.internal.capability.DefaultNamedScalarDataAccess;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
-import org.td4j.core.metamodel.OpenClassRepository;
-import org.td4j.core.metamodel.OpenJavaClass;
+import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
+import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.TableController;
@@ -43,17 +43,17 @@ import org.td4j.swing.workbench.Navigator;
 public class TableControllerFactory extends CollectionWidgetControllerFactory<TableController, JTable> {
 
 	private final Navigator navigator;
-	private final OpenClassRepository classRepository;
+	private final MetaModel metaModel;
 
-	public TableControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, OpenClassRepository classRepository, JTable widget, ICaption caption, Navigator navigator) {
+	public TableControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, ICaption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
-		this.classRepository = ObjectTK.enforceNotNull(classRepository, "classRepository");
+		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
 		this.navigator = navigator;		
 	}
 
 	@Override
 	protected TableController createController(ListDataProxy dataProxy, JTable widget) {
-		final NamedScalarDataAccess[] columnDataAccess = createColumnDataAccess(dataProxy);
+		final NamedScalarDataConnector[] columnDataAccess = createColumnDataAccess(dataProxy);
 		return new TableController(widget, dataProxy, columnDataAccess, navigator);
 	}
 	
@@ -61,25 +61,25 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 	// -----------------------------------------------------------------------
 	
 	// TODO: this code is not Swing specific and should be refactored to another place
-	private NamedScalarDataAccess[] createColumnDataAccess(ListDataProxy proxy) {
+	private NamedScalarDataConnector[] createColumnDataAccess(ListDataProxy proxy) {
 
 		// use nestedProperties from proxy, if available
 		if (proxy.isNestedScalarDataAccessDefined()) {
-			final NamedScalarDataAccess[] nestedProperties = proxy.getNestedScalarDataAccess();
+			final NamedScalarDataConnector[] nestedProperties = proxy.getNestedScalarDataAccess();
 			return nestedProperties;
 			
 		// otherwise use all scalar properties
 		} else {
-			final OpenJavaClass<?> openClass = classRepository.getOpenJavaClass(proxy.getValueType());
-			final List<ScalarProperty> scalarProperties = openClass.getScalarProperties();
+			final MetaClass metaClass = metaModel.getMetaClass(proxy.getValueType());
+			final List<ScalarProperty> scalarProperties = metaClass.getScalarProperties();
 			
 			if ( ! scalarProperties.isEmpty()) {
-				return DefaultNamedScalarDataAccess.createFromProperties(scalarProperties);			
+				return DefaultNamedScalarDataConnector.createFromProperties(scalarProperties);			
 				
 			// primitive rowTypes have no properties - fallback to toString connector to make sure that the table is not blank
 			} else {
-				final ScalarDataAccessAdapter toStringAccess = new ScalarDataAccessAdapter(new ToStringConnector(proxy.getValueType()));	
-				return new NamedScalarDataAccess[] {new DefaultNamedScalarDataAccess(toStringAccess, "toString")};
+				final ScalarDataConnector toStringConnector = new ToStringConnector(proxy.getValueType());	
+				return new NamedScalarDataConnector[] {new DefaultNamedScalarDataConnector(toStringConnector, "toString")};
 			}
 		}
 	}

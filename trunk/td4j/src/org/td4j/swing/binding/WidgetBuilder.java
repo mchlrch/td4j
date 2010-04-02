@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -36,12 +36,12 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.IDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.metamodel.OpenClassRepository;
-import org.td4j.core.reflect.DefaultModelInspector;
+import org.td4j.core.binding.model.DataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
+import org.td4j.core.internal.metamodel.JavaMetaModel;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.filter.AcceptAllFilter;
@@ -63,8 +63,8 @@ import org.td4j.swing.workbench.Navigator;
 public class WidgetBuilder<T> {
 
 	private final Mediator mediator;
-	private final IDataConnectorFactory connectorFactory;
-	private final OpenClassRepository classRepository;
+	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
+	private final MetaModel metaModel;
 	private final Navigator navigator;
 
 	private boolean autoCaptions = true;
@@ -79,17 +79,12 @@ public class WidgetBuilder<T> {
 	}
 
 	public WidgetBuilder(Mediator mediator, Navigator navigator) {
-		this(mediator, new DefaultDataConnectorFactory(), navigator);
-	}
-
-	private WidgetBuilder(Mediator mediator, IDataConnectorFactory connectorFactory, Navigator navigator) {
-		this(mediator, connectorFactory, new OpenClassRepository(new DefaultModelInspector(connectorFactory)), navigator);
+		this(mediator, navigator, new JavaMetaModel());
 	}
 	
-	public WidgetBuilder(Mediator mediator, IDataConnectorFactory connectorFactory, OpenClassRepository classRepository,  Navigator navigator) {
+	public WidgetBuilder(Mediator mediator, Navigator navigator, MetaModel metaModel) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.connectorFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
-		this.classRepository = ObjectTK.enforceNotNull(classRepository, "classRepository");
+		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
 
 		this.navigator = navigator;
 	}
@@ -225,7 +220,7 @@ public class WidgetBuilder<T> {
 	
 	// ========================================
 	// ==== Table =============================
-	private static final IFilter<IDataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
+	private static final IFilter<DataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
 
 	public TableControllerFactory table() {
 		widgetPreCreate();
@@ -241,7 +236,7 @@ public class WidgetBuilder<T> {
 	}
 	
 	public TableControllerFactory table(JTable widget) {
-	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, classRepository, widget, useCurrentCaption(), navigator);
+	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, metaModel, widget, useCurrentCaption(), navigator);
 	  return factory;
 	}	
 
