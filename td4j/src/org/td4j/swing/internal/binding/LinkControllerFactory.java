@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
 import org.td4j.core.tk.ObjectTK;
@@ -34,7 +34,7 @@ import org.td4j.swing.workbench.Navigator;
 public class LinkControllerFactory extends ScalarWidgetControllerFactory<LinkController, JLabel> {
 	private final Navigator navigator;
 
-	public LinkControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, JLabel widget, ICaption caption, Navigator navigator) {
+	public LinkControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JLabel widget, ICaption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
 	}

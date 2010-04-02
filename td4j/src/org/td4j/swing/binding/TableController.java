@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
@@ -47,7 +47,7 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final ListDataProxy proxy, NamedScalarDataAccess[] columnDataAccess, final Navigator navigator) {
+	public TableController(final JTable table, final ListDataProxy proxy, NamedScalarDataConnector[] columnDataAccess, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
 		this.model = new MyTableModel(proxy, columnDataAccess);
@@ -99,12 +99,12 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 		private static final long serialVersionUID = 1L;
 
 		private final Class<?> rowType;
-		private final NamedScalarDataAccess[] columnProperties;
+		private final NamedScalarDataConnector[] columnProperties;
 		private final List<Object> rowObjects = new ArrayList<Object>();
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(final ListDataProxy proxy, NamedScalarDataAccess[] columnDataAccess) {			
+		private MyTableModel(final ListDataProxy proxy, NamedScalarDataConnector[] columnDataAccess) {			
 			this.rowType = ObjectTK.enforceNotNull(proxy.getValueType(), "proxy.getType()");
 			this.columnProperties = ArrayTK.enforceNotEmpty(columnDataAccess, "columnDataAccess");
 		}
@@ -129,13 +129,13 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 	    public String getColumnName(int columnIndex) {
-		    final NamedScalarDataAccess access = columnProperties[columnIndex];
+		    final NamedScalarDataConnector access = columnProperties[columnIndex];
 		    return access.getName();
 		}
 		
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			final NamedScalarDataAccess access = columnProperties[columnIndex];
+			final NamedScalarDataConnector access = columnProperties[columnIndex];
 			final Class<?> valueType = access.getValueType();
 			
 			// TODO _this is a workaround to make primitive types work 
@@ -150,7 +150,7 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			final NamedScalarDataAccess access = columnProperties[columnIndex];
+			final NamedScalarDataConnector access = columnProperties[columnIndex];
 			final Object value = access.readValue(rowObjects.get(rowIndex));
 			return value;
 		}

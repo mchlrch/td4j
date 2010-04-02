@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ package org.td4j.swing.internal.binding;
 import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.ui.ScalarControllerFactory;
 import org.td4j.core.tk.ObjectTK;
@@ -35,7 +35,7 @@ public class SelectionControllerFactory extends ScalarControllerFactory<Selectio
 	private final ListSelectionModel selectionModel;
 	private final IOrderedElementModel dataModel;
 
-	public SelectionControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory, ListSelectionModel selectionModel, IOrderedElementModel dataModel) {
+	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, IOrderedElementModel dataModel) {
 		super(mediator, connectorFactory);
 
 		this.selectionModel = ObjectTK.enforceNotNull(selectionModel, "selectionModel");
