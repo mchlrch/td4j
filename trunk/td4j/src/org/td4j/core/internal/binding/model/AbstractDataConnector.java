@@ -19,10 +19,10 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.model.IDataConnector;
+import org.td4j.core.binding.model.DataConnector;
 import org.td4j.core.tk.ObjectTK;
 
-public abstract class AbstractDataConnector implements IDataConnector {
+public abstract class AbstractDataConnector implements DataConnector {
 
 	private final Class<?> modelType;
 	private final Class<?> valueType;
@@ -32,11 +32,11 @@ public abstract class AbstractDataConnector implements IDataConnector {
 		this.valueType = ObjectTK.enforceNotNull(valueType, "valueType");
 	}
 
-	public Class<?> getModelType() {
+	public Class<?> getContextType() {
 		return modelType;
 	}
 
-	public Class<?> getType() {
+	public Class<?> getValueType() {
 		return valueType;
 	}
 	

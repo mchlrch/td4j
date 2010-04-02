@@ -29,34 +29,34 @@ public class ScalarDataContainerConnector extends AbstractScalarDataConnector {
 		super(ScalarDataContainer.class, type);
 	}
 
-	public boolean canRead(Object model) {
-		return model != null && modelAsContainer(model).canRead();
+	public boolean canRead(Object ctx) {
+		return ctx != null && contextAsContainer(ctx).canRead();
 	}
 
-	public boolean canWrite(Object model) {
-		return model != null && modelAsContainer(model).canWrite();
-	}
-
-	@Override
-	protected Object readValue0(Object model) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		return modelAsContainer(model).getContent();
+	public boolean canWrite(Object ctx) {
+		return ctx != null && contextAsContainer(ctx).canWrite();
 	}
 
 	@Override
-	protected void writeValue0(Object model, Object val) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		modelAsContainer(model).setContent(val);
+	protected Object readValue0(Object ctx) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		return contextAsContainer(ctx).getContent();
+	}
+
+	@Override
+	protected void writeValue0(Object ctx, Object val) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		contextAsContainer(ctx).setContent(val);
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + ": valueType=" + getModelType();
+		return getClass().getName() + ": contextType=" + getContextType();
 	}
 
-	protected ScalarDataContainer<Object> modelAsContainer(Object model) {
+	protected ScalarDataContainer<Object> contextAsContainer(Object ctx) {
 		@SuppressWarnings("unchecked")
-		final ScalarDataContainer<Object> container = (ScalarDataContainer<Object>) model;
+		final ScalarDataContainer<Object> container = (ScalarDataContainer<Object>) ctx;
 
 		return container;
 	}

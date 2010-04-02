@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,36 +19,36 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.ScalarDataConnector;
 
-public abstract class AbstractScalarDataConnector extends AbstractDataConnector implements IScalarDataConnector {
+public abstract class AbstractScalarDataConnector extends AbstractDataConnector implements ScalarDataConnector {
 
 	protected AbstractScalarDataConnector(Class<?> modelType, Class<?> valueType) {
 		super(modelType, valueType);
 	}
 
-	public Object readValue(Object model) {
-		if (model == null || ! canRead(model)) return null;
+	public Object readValue(Object ctx) {
+		if (ctx == null || ! canRead(ctx)) return null;
 
 		try {
-			return readValue0(model);
+			return readValue0(ctx);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void writeValue(Object model, Object val) {
-		if (model == null || ! canWrite(model)) throw new IllegalStateException("not writable");
+	public void writeValue(Object ctx, Object val) {
+		if (ctx == null || ! canWrite(ctx)) throw new IllegalStateException("not writable");
 
 		try {
-			writeValue0(model, val);
+			writeValue0(ctx, val);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected abstract Object readValue0(Object model) throws Exception;
+	protected abstract Object readValue0(Object ctx) throws Exception;
 
-	protected abstract void writeValue0(Object model, Object val) throws Exception;
+	protected abstract void writeValue0(Object ctx, Object val) throws Exception;
 
 }
