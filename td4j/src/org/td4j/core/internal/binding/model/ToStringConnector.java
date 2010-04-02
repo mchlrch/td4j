@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,28 +26,28 @@ public class ToStringConnector extends AbstractScalarDataConnector {
   }
 
   @Override
-  public boolean canRead(Object model) {
-    return model != null;
+  public boolean canRead(Object ctx) {
+    return ctx != null;
   }
 
   @Override
-  public boolean canWrite(Object model) {
+  public boolean canWrite(Object ctx) {
     return false;
   }
 
   @Override
-  protected Object readValue0(Object model) throws Exception {
-    return model.toString();
+  protected Object readValue0(Object ctx) throws Exception {
+    return ctx.toString();
   }
 
   @Override
-  protected void writeValue0(Object model, Object val) throws Exception {
+  protected void writeValue0(Object ctx, Object val) throws Exception {
     throw new UnsupportedOperationException("write not supported");
   }
 
   @Override
   public String toString() {
-    return getModelType().getName() + "#toString";
+    return getContextType().getName() + "#toString";
   }
 
 }

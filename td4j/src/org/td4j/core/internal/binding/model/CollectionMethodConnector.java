@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,29 +27,33 @@ public class CollectionMethodConnector extends AbstractCollectionDataConnector {
 	private final Method getterMethod;
 	private final Object[] argumentValues;
 	
-	public CollectionMethodConnector(Class<?> modelType, Method getter, Class<?> valueType) {
-		this(modelType, getter, valueType, new Object[0]);
+	public CollectionMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
+		this(contextType, getter, valueType, new Object[0]);
 	}
 
-	public CollectionMethodConnector(Class<?> modelType, Method getter, Class<?> valueType, Object[] argumentValues) {
-		super(modelType, getter.getReturnType(), valueType);
+	public CollectionMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
+		super(contextType, getter.getReturnType(), valueType);
 
 		this.getterMethod = getter;
 		this.argumentValues = argumentValues;
 	}
+	
+	public Method getGetterMethod() {
+		return getterMethod;
+	}
 
-	public boolean canRead(Object model) {
-		return getterMethod != null && model != null;
+	public boolean canRead(Object ctx) {
+		return getterMethod != null && ctx != null;
 	}
 	
 	@Override
-	protected Collection<?> readValue0(Object model) throws Exception {
-		return (Collection<?>) getterMethod.invoke(model, argumentValues);
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		return (Collection<?>) getterMethod.invoke(ctx, argumentValues);
 	}
 	
 	@Override
 	public String toString() {
-		return getModelType().getName() + "." + getterMethod.getName() + " : " + getCollectionType().getName() + "<" + getType() + ">";
+		return getContextType().getName() + "." + getterMethod.getName() + " : " + getCollectionType().getName() + "<" + getValueType() + ">";
 	}
 	
 }

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,16 +21,16 @@ package org.td4j.core.internal.binding.model;
 
 import java.util.Collection;
 
-import org.td4j.core.binding.model.ICollectionDataConnector;
+import org.td4j.core.binding.model.CollectionDataConnector;
 import org.td4j.core.tk.ObjectTK;
 
 
-public abstract class AbstractCollectionDataConnector extends AbstractDataConnector implements ICollectionDataConnector {
+public abstract class AbstractCollectionDataConnector extends AbstractDataConnector implements CollectionDataConnector {
 
 	private final Class<?> collectionType;
 
-	protected AbstractCollectionDataConnector(Class<?> modelType, Class<?> collectionType, Class<?> valueType) {
-		super(modelType, valueType);
+	protected AbstractCollectionDataConnector(Class<?> contextType, Class<?> collectionType, Class<?> valueType) {
+		super(contextType, valueType);
 		this.collectionType = ObjectTK.enforceNotNull(collectionType, "collectionType");
 	}
 
@@ -38,16 +38,16 @@ public abstract class AbstractCollectionDataConnector extends AbstractDataConnec
 		return collectionType;
 	}
 
-	public Collection<?> readValue(Object model) {
-		if (model == null || ! canRead(model)) return null;
+	public Collection<?> readValue(Object ctx) {
+		if (ctx == null || ! canRead(ctx)) return null;
 
 		try {
-			return readValue0(model);
+			return readValue0(ctx);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected abstract Collection<?> readValue0(Object model) throws Exception;
+	protected abstract Collection<?> readValue0(Object ctx) throws Exception;
 
 }

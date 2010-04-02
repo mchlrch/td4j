@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,31 +26,31 @@ import org.td4j.core.binding.model.CollectionDataContainer;
 
 public class CollectionDataContainerConnector extends AbstractCollectionDataConnector {
 
-	public CollectionDataContainerConnector(Class<?> type, Class<?> collectionType) {
-		super(CollectionDataContainer.class, collectionType, type);
+	public CollectionDataContainerConnector(Class<?> valueType, Class<?> collectionType) {
+		super(CollectionDataContainer.class, collectionType, valueType);
 	}
 
-	public boolean canRead(Object model) {
-		return model != null && modelAsContainer(model).canRead();
+	public boolean canRead(Object ctx) {
+		return ctx != null && contextAsContainer(ctx).canRead();
 	}
 
-	public boolean canWrite(Object model) {
-		return model != null && modelAsContainer(model).canWrite();
+	public boolean canWrite(Object ctx) {
+		return ctx != null && contextAsContainer(ctx).canWrite();
 	}
 
 	@Override
-	protected Collection<?> readValue0(Object model) throws Exception {
-		return modelAsContainer(model).getContent();
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		return contextAsContainer(ctx).getContent();
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + ": valueType=" + getType();
+		return getClass().getName() + ": valueType=" + getValueType();
 	}
 
-	protected CollectionDataContainer<Object> modelAsContainer(Object model) {
+	protected CollectionDataContainer<Object> contextAsContainer(Object ctx) {
 		@SuppressWarnings("unchecked")
-		final CollectionDataContainer<Object> container = (CollectionDataContainer<Object>) model;
+		final CollectionDataContainer<Object> container = (CollectionDataContainer<Object>) ctx;
 
 		return container;
 	}

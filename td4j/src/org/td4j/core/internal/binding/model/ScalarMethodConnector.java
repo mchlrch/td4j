@@ -43,30 +43,38 @@ public class ScalarMethodConnector extends AbstractScalarDataConnector {
 		this.setterMethod = setter;
 		this.argumentValues = argumentValues;
 	}
-
-	public boolean canRead(Object model) {
-		return getterMethod != null && model != null;
+	
+	public Method getGetterMethod() {
+		return getterMethod;
+	}
+	
+	public Method getSetterMethod() {
+		return setterMethod;
 	}
 
-	public boolean canWrite(Object model) {
-		return setterMethod != null && model != null;
+	public boolean canRead(Object ctx) {
+		return getterMethod != null && ctx != null;
+	}
+
+	public boolean canWrite(Object ctx) {
+		return setterMethod != null && ctx != null;
 	}
 
 	@Override
-	protected Object readValue0(Object model) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		return getterMethod.invoke(model, argumentValues);
+	protected Object readValue0(Object ctx) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		return getterMethod.invoke(ctx, argumentValues);
 	}
 
 	@Override
-	protected void writeValue0(Object model, Object val) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		setterMethod.invoke(model, ReflectionTK.composeArray(argumentValues, val));
+	protected void writeValue0(Object ctx, Object val) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		setterMethod.invoke(ctx, ReflectionTK.composeArray(argumentValues, val));
 	}
 
 	@Override
 	public String toString() {
-		return getModelType().getName() + "." + getterMethod.getName() + ":" + getterMethod.getReturnType().getName();
+		return getContextType().getName() + "." + getterMethod.getName() + ":" + getterMethod.getReturnType().getName();
 	}
 
 }

@@ -35,30 +35,34 @@ public class ScalarFieldConnector extends AbstractScalarDataConnector {
 
 		this.field = field;
 	}
-
-	public boolean canRead(Object model) {
-		return model != null;
+	
+	public Field getField() {
+		return field;
 	}
 
-	public boolean canWrite(Object model) {
+	public boolean canRead(Object ctx) {
+		return ctx != null;
+	}
+
+	public boolean canWrite(Object ctx) {
 		return ! Modifier.isFinal(field.getModifiers());
 	}
 
 	@Override
-	protected Object readValue0(Object model) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		return field.get(model);
+	protected Object readValue0(Object ctx) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		return field.get(ctx);
 	}
 
 	@Override
-	protected void writeValue0(Object model, Object val) throws Exception {
-		ObjectTK.enforceNotNull(model, "model");
-		field.set(model, val);
+	protected void writeValue0(Object ctx, Object val) throws Exception {
+		ObjectTK.enforceNotNull(ctx, "ctx");
+		field.set(ctx, val);
 	}
 
 	@Override
 	public String toString() {
-		return getModelType().getName() + "#" + field.getName();
+		return getContextType().getName() + "#" + field.getName();
 	}
 
 }
