@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,14 +30,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.examples.AppLauncher;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
@@ -72,9 +70,9 @@ public class HelloPanel extends JPanel {
 		messageText.setBorder(BorderFactory.createTitledBorder("Message"));
 
 		// bind widgets
-		final IDataConnectorFactory connectorFactory = new DefaultDataConnectorFactory();
-		final IScalarDataConnector nameConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "name");
-		final ScalarDataProxy nameProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(nameConnector), "name");
+		final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
+		final ScalarDataConnector nameConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "name");
+		final ScalarDataProxy nameProxy = new ScalarDataProxy(nameConnector, "name");
 		mediator.addModelSocket(nameProxy);
 		new TextController(nameText, nameProxy);
 
@@ -82,19 +80,19 @@ public class HelloPanel extends JPanel {
 		// final ICollectionValuePlug localeChoicePlug =
 		// DefaultModelInspector.createCollectionMethodPlug(HelloModel.class,
 		// "localeChoice");
-		final ICollectionDataConnector localeChoiceConnector = connectorFactory.createCollectionFieldConnector(HelloModel.class, "localeChoiceField");
-		final ListDataProxy localeChoiceProxy = new ListDataProxy(new ListDataAccessAdapter(localeChoiceConnector), "localeChoiceField");
+		final CollectionDataConnector localeChoiceConnector = connectorFactory.createCollectionFieldConnector(HelloModel.class, "localeChoiceField");
+		final ListDataProxy localeChoiceProxy = new ListDataProxy(localeChoiceConnector, "localeChoiceField");
 		mediator.addModelSocket(localeChoiceProxy); // use LoopbackUpdateHandler
 		new ListController(localeChooser, localeChoiceProxy);
 
 		// PEND: localeChoice selection auf "locale" binden
-		final IScalarDataConnector localeConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "locale");
-		final ScalarDataProxy localeProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(localeConnector), "locale");
+		final ScalarDataConnector localeConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "locale");
+		final ScalarDataProxy localeProxy = new ScalarDataProxy(localeConnector, "locale");
 		mediator.addModelSocket(localeProxy);
 		new SelectionController(localeChooser.getSelectionModel(), new ListModelAdapter(localeChooser.getModel()), localeProxy);
 
-		final IScalarDataConnector messageConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "message");
-		final ScalarDataProxy messageProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(messageConnector), "message");
+		final ScalarDataConnector messageConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "message");
+		final ScalarDataProxy messageProxy = new ScalarDataProxy(messageConnector, "message");
 		mediator.addModelSocket(messageProxy);
 		new TextController(messageText, messageProxy);
 

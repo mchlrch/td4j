@@ -34,15 +34,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.binding.model.ScalarDataRelay;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.examples.order.Address;
 import org.td4j.examples.order.Person;
 import org.td4j.swing.binding.ButtonController;
@@ -70,18 +68,18 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		final Person homer = new Person("Homer", "Simpson");
 		homer.at("Evergreen Terrace", "98765", "Springfield");
 
-		final IDataConnectorFactory conFactory = new DefaultDataConnectorFactory();
+		final DataConnectorFactory conFactory = new JavaDataConnectorFactory();
 
 		// direct
-		final IScalarDataConnector nameFieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
-		final ScalarDataProxy nameFieldProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(nameFieldPlug), "firstName");
+		final ScalarDataConnector nameFieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
+		final ScalarDataProxy nameFieldProxy = new ScalarDataProxy(nameFieldPlug, "firstName");
 		new TextController(nameText, nameFieldProxy);
 		nameFieldProxy.setModel(homer);
 
 		// with mediator
-		final IScalarDataConnector name2FieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
+		final ScalarDataConnector name2FieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
 		final Mediator<Person> mediator = new Mediator<Person>(Person.class);
-		final ScalarDataProxy name2FieldProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(name2FieldPlug), "firstName");
+		final ScalarDataProxy name2FieldProxy = new ScalarDataProxy(name2FieldPlug, "firstName");
 		mediator.addModelSocket(name2FieldProxy);
 		new TextController(name2Text, name2FieldProxy);
 		mediator.setModel(homer);
@@ -108,16 +106,16 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		addLabel(active2Controller,  0, 4, _W_, _none);
 		addWidget(active2Controller, 1, 4, _W_, _horz);
 
-		final IScalarDataConnector indexedConnector = conFactory.createScalarMethodConnector(Person.class, "prefixedName", new Class[] { String.class }, new Object[] { "Mr." });
+		final ScalarDataConnector indexedConnector = conFactory.createScalarMethodConnector(Person.class, "prefixedName", new Class[] { String.class }, new Object[] { "Mr." });
 		final TextController indexedTextController = builder.text().bindConnector(indexedConnector, "prefixedName"); 
 		addLabel(indexedTextController,  0, 5, _W_, _none);
 		addWidget(indexedTextController, 1, 5, _W_, _horz);
 
 		// cascaded properties: person.address.city
-		final IScalarDataConnector addressConnector = conFactory.createScalarFieldConnector(Person.class, "address");
-		final ScalarDataProxy addressProxy          = new ScalarDataProxy(new ScalarDataAccessAdapter(addressConnector), "address");
-		final IScalarDataConnector cityConnector    = conFactory.createScalarFieldConnector(Address.class, "city");
-		final ScalarDataProxy cityProxy             = new ScalarDataProxy(new ScalarDataAccessAdapter(cityConnector), "city");
+		final ScalarDataConnector addressConnector = conFactory.createScalarFieldConnector(Person.class, "address");
+		final ScalarDataProxy addressProxy          = new ScalarDataProxy(addressConnector, "address");
+		final ScalarDataConnector cityConnector    = conFactory.createScalarFieldConnector(Address.class, "city");
+		final ScalarDataProxy cityProxy             = new ScalarDataProxy(cityConnector, "city");
 		new ScalarDataRelay(addressProxy, cityProxy);
 		final JLabel cityLabel = new JLabel("city(cascaded)");
 		final JTextField cityText = new JTextField("-city-");
@@ -129,8 +127,8 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 
 		// list: direct mit proxy
 		final JList orderList = new JList();
-		final ICollectionDataConnector orderListConnector = conFactory.createCollectionFieldConnector(Person.class, "orders");
-		final ListDataProxy orderListProxy = new ListDataProxy(new ListDataAccessAdapter(orderListConnector), "orders");
+		final CollectionDataConnector orderListConnector = conFactory.createCollectionFieldConnector(Person.class, "orders");
+		final ListDataProxy orderListProxy = new ListDataProxy(orderListConnector, "orders");
 		new ListController(orderList, orderListProxy);
 		mediator.addModelSocket(orderListProxy); // use LoopbackUpdateHandler
 

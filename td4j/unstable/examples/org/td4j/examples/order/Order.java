@@ -31,7 +31,8 @@ public class Order {
 	public Person person;
 	public String number;
 	
-	@OperationAffinity({"addItemOrder", "editItem", "removeItem"})
+	// TODO
+//	@OperationAffinity({"addItemOrder", "editItem", "removeItem"})
 	public final List<LineItem> lineItems = new ArrayList<LineItem>();
 
 	Order(Person person) {
