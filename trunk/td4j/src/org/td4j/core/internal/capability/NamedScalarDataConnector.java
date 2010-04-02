@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,16 +19,11 @@
 
 package org.td4j.core.internal.capability;
 
-import java.util.List;
+import org.td4j.core.binding.model.ScalarDataConnector;
 
-public interface ListDataAccess {
+// TODO _0 move to pkg core.binding.model
+public interface NamedScalarDataConnector extends ScalarDataConnector {
+
+	public String getName();
 	
-	public Class<?> getContextType();
-
-	public Class<?> getValueType();
-	
-	public List<?> readValue(Object ctx);
-
-	public boolean canRead(Object ctx);
-
 }

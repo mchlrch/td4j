@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,26 +22,28 @@ package org.td4j.core.internal.capability;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class DefaultNamedScalarDataAccess implements NamedScalarDataAccess {
+//TODO _0 move to pkg core.binding.model
+public class DefaultNamedScalarDataConnector implements NamedScalarDataConnector {
 
 	private final String name;
-	private final ScalarDataAccess delegate;
+	private final ScalarDataConnector delegate;
 	
 	
-	public static NamedScalarDataAccess[] createFromProperties(List<ScalarProperty> properties) {
-		final List<NamedScalarDataAccess> result = new ArrayList<NamedScalarDataAccess>();
+	public static NamedScalarDataConnector[] createFromProperties(List<ScalarProperty> properties) {
+		final List<NamedScalarDataConnector> result = new ArrayList<NamedScalarDataConnector>();
 		for (ScalarProperty prop : properties) {
-			result.add(new DefaultNamedScalarDataAccess(prop, prop.getName()));
+			result.add(new DefaultNamedScalarDataConnector(prop, prop.getName()));
 		}
-		return result.toArray(new NamedScalarDataAccess[result.size()]);
+		return result.toArray(new NamedScalarDataConnector[result.size()]);
 	}
 	
 	
-	public DefaultNamedScalarDataAccess(ScalarDataAccess delegate, String name) {
+	public DefaultNamedScalarDataConnector(ScalarDataConnector delegate, String name) {
 		this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
 		this.name = StringTK.enforceNotEmpty(name, "name");
 	}
