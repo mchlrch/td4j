@@ -38,18 +38,16 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.DefaultDataConnectorFactory;
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
+import org.td4j.core.internal.metamodel.JavaMetaModel;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
-import org.td4j.core.reflect.DefaultModelInspector;
-import org.td4j.core.reflect.ModelInspector;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
@@ -85,16 +83,14 @@ public class Workbench extends JFrame {
   }
 
   public static void start(final Object initialNavigation, final Class<?>... sidebarEntries) {
-    final IDataConnectorFactory connectorFactory = new DefaultDataConnectorFactory();
-    final ModelInspector modelInspector = new DefaultModelInspector(connectorFactory);
+    final MetaModel metaModel = new JavaMetaModel();
 
-    final GenericFormFactory genericFormFactory = new GenericFormFactory(modelInspector);
+    final GenericFormFactory genericFormFactory = new GenericFormFactory(metaModel);
     final ByClassNameFormFactory byClassNameFormFactory = new ByClassNameFormFactory();
     final CompositeFormFactory formFactory = new CompositeFormFactory(byClassNameFormFactory,
         genericFormFactory);
 
-    final IEditorFactory editorFactory = new GenericEditorFactory(modelInspector, formFactory,
-        connectorFactory);
+    final IEditorFactory editorFactory = new GenericEditorFactory(metaModel, formFactory);
     start(editorFactory, initialNavigation, sidebarEntries);
   }
 
@@ -147,18 +143,17 @@ public class Workbench extends JFrame {
   private Component createSidebar(final SidebarModel model) {
     final JList classChooser = new JList();
     classChooser.setCellRenderer(new ClassNameRenderer());
-    final IDataConnectorFactory connectorFactory = new DefaultDataConnectorFactory();
+    
+    final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 
     // options to choose from
-    final ICollectionDataConnector classOptionsConnector = connectorFactory
-        .createCollectionFieldConnector(SidebarModel.class, "currentClassOptions");
-    final ListDataProxy classOptionsProxy = new ListDataProxy(new ListDataAccessAdapter(classOptionsConnector), "currentClassOptions");
+    final CollectionDataConnector classOptionsConnector = connectorFactory.createCollectionFieldConnector(SidebarModel.class, "currentClassOptions");
+    final ListDataProxy classOptionsProxy = new ListDataProxy(classOptionsConnector, "currentClassOptions");
     final ListController classOptionsController = new ListController(classChooser, classOptionsProxy);
 
     // choice
-    final IScalarDataConnector currentClassConnector = connectorFactory
-        .createScalarMethodConnector(SidebarModel.class, "currentClass");
-    final ScalarDataProxy currentClassProxy = new ScalarDataProxy(new ScalarDataAccessAdapter(currentClassConnector), "currentClass");
+    final ScalarDataConnector currentClassConnector = connectorFactory.createScalarMethodConnector(SidebarModel.class, "currentClass");
+    final ScalarDataProxy currentClassProxy = new ScalarDataProxy(currentClassConnector, "currentClass");
     final SelectionController currentClassController = new SelectionController(classChooser
         .getSelectionModel(), new ListModelAdapter(classChooser.getModel()), currentClassProxy);
 

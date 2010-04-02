@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,14 +38,14 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.CollectionDataContainer;
-import org.td4j.core.binding.model.IDataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.ScalarDataContainer;
 import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.binding.model.ScalarDataRelay;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.internal.reflect.AbstractExecutable;
-import org.td4j.core.reflect.ModelInspector;
+import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
@@ -72,23 +72,23 @@ public class GenericEditor extends Editor<Object> {
 	
 	// PEND: muss die connectorFactory in der Signatur sein - jetzt wird WidgetBuilder gebraucht um die Tabelle zu erzeugen
 
-	GenericEditor(Workbench workbench, Class<?> modelType, ModelInspector modelInspector, IFormFactory formFactory, IDataConnectorFactory connectorFactory) {
+	GenericEditor(Workbench workbench, Class<?> modelType, MetaModel model, IFormFactory formFactory) {
 		
 		// PEND: richtige typsierung einführen nach Typisierung von IModelSocket
 		super(workbench, modelType);
 		
 		this.mediator = new Mediator(modelType);
-		ObjectTK.enforceNotNull(modelInspector,   "modelInspector");
-		ObjectTK.enforceNotNull(formFactory,      "formFactory");			
-		ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
+		ObjectTK.enforceNotNull(model,       "model");
+		ObjectTK.enforceNotNull(formFactory, "formFactory");			
 
 		final JPanel header = new JPanel(new GridBagLayout());
 		typeLabel = new JLabel(modelType.getName());
 		header.add(typeLabel,    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,       new Insets(5, 5, 5, 5), 0, 0));
 		header.add(new JLabel(), new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		
+		final MetaClass metaClass = model.getMetaClass(modelType); 
 		final JMenu executableMenu = new JMenu("executables");
-		for (AbstractExecutable executable : modelInspector.getExecutables(modelType)) {
+		for (AbstractExecutable executable : metaClass.getOperations()) {
 			executableMenu.add(new InvokeExecutableAction(this, executable));
 		}
 		if (executableMenu.getItemCount() == 0) executableMenu.setEnabled(false);
@@ -101,8 +101,8 @@ public class GenericEditor extends Editor<Object> {
 		
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
 		
-		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, modelInspector);
-		final NamedScalarDataAccess[] nestedProperties = nestedPropsFactory.createNestedProperties();
+		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, model);
+		final NamedScalarDataConnector[] nestedProperties = nestedPropsFactory.createNestedProperties();
 		
 		final ListDataProxy collectionProxy = listDataContainer.createProxy();
 		collectionProxy.setNestedProperties(nestedProperties);

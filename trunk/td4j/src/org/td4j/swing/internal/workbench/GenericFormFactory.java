@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 package org.td4j.swing.internal.workbench;
 
-import org.td4j.core.reflect.ModelInspector;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
@@ -28,15 +28,15 @@ import org.td4j.swing.workbench.IFormFactory;
 
 public class GenericFormFactory implements IFormFactory {
 
-	private final ModelInspector modelInspector;
+	private final MetaModel metaModel;
 
-	public GenericFormFactory(ModelInspector modelInspector) {
-		this.modelInspector = ObjectTK.enforceNotNull(modelInspector, "modelInspector");
+	public GenericFormFactory(MetaModel model) {
+		this.metaModel = ObjectTK.enforceNotNull(model, "model");
 	}
 
 	@Override
 	public Form createForm(Editor editor, Class<?> modelType) {
-		return new GenericForm(editor, modelType, modelInspector);
+		return new GenericForm(editor, modelType, metaModel);
 	}
 
 }
