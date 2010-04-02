@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,24 +19,21 @@
 
 package org.td4j.core.internal.binding.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.binding.model.IDataConnectorFactory;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
-import org.td4j.core.reflect.PendingConnectorInfo;
+import org.td4j.core.internal.binding.model.CollectionFieldConnector;
+import org.td4j.core.internal.binding.model.CollectionMethodConnector;
 import org.td4j.core.tk.ObjectTK;
 
 
 
 public abstract class CollectionControllerFactory<T> {
 	private final Mediator mediator;
-	private final IDataConnectorFactory conFactory;
+	private final DataConnectorFactory conFactory;
 
-	protected CollectionControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory) {
+	protected CollectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
 	}
@@ -47,27 +44,23 @@ public abstract class CollectionControllerFactory<T> {
 		return controller;
 	}
 
-	public T bindConnector(ICollectionDataConnector connector, String name) {
-		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(connector), name);
+	public T bindConnector(CollectionDataConnector connector, String name) {
+		final ListDataProxy proxy = new ListDataProxy(connector, name);
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}
 
 	public T bindField(String fieldName) {
+		final CollectionFieldConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName);
+		// TODO: process nestedProperties from field annotation
 		
-		// TODO: handle infoQueue correctly
-		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
-		
-		final ICollectionDataConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName, infoQueue);
 		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
+		final CollectionMethodConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name);
+		// TODO: process nestedProperties from field annotation
 		
-		// TODO: handle infoQueue correctly
-		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();
-		
-		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, infoQueue);
 		return bindConnector(connector, name);
 	}
 
@@ -76,11 +69,9 @@ public abstract class CollectionControllerFactory<T> {
 	}
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
+		final CollectionMethodConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
+		// TODO: process nestedProperties from field annotation
 		
-		// TODO: handle infoQueue correctly
-		final List<PendingConnectorInfo> infoQueue = new ArrayList<PendingConnectorInfo>();		
-
-		final ICollectionDataConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues, infoQueue);
 		return bindConnector(connector, name);
 	}
 

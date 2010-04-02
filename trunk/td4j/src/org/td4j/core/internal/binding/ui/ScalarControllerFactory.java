@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,18 +20,17 @@
 package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.IDataConnectorFactory;
-import org.td4j.core.binding.model.IScalarDataConnector;
+import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.capability.ScalarDataAccessAdapter;
 import org.td4j.core.tk.ObjectTK;
 
 
 public abstract class ScalarControllerFactory<T> {
 	private final Mediator mediator;
-	private final IDataConnectorFactory conFactory;
+	private final DataConnectorFactory conFactory;
 
-	protected ScalarControllerFactory(Mediator mediator, IDataConnectorFactory connectorFactory) {
+	protected ScalarControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
 		this.mediator   = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");			
 	}
@@ -42,19 +41,19 @@ public abstract class ScalarControllerFactory<T> {
 		return controller;
 	}
 	
-	public T bindConnector(IScalarDataConnector connector, String name) {
-		final ScalarDataProxy proxy = new ScalarDataProxy(new ScalarDataAccessAdapter(connector), name);
+	public T bindConnector(ScalarDataConnector connector, String name) {
+		final ScalarDataProxy proxy = new ScalarDataProxy(connector, name);
 		mediator.addModelSocket(proxy);
 		return bind(proxy);
 	}	
 	
 	public T bindField(String fieldName) {
-		final IScalarDataConnector connector = conFactory.createScalarFieldConnector(mediator.getModelType(), fieldName);
+		final ScalarDataConnector connector = conFactory.createScalarFieldConnector(mediator.getModelType(), fieldName);
 		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
-		final IScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name);
+		final ScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name);
 		return bindConnector(connector, name);
 	}
 
@@ -63,7 +62,7 @@ public abstract class ScalarControllerFactory<T> {
 	}
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		final IScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
+		final ScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
 		return bindConnector(connector, name);
 	}
 	
