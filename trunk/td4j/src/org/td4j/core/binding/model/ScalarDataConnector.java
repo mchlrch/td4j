@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,10 +19,18 @@
 
 package org.td4j.core.binding.model;
 
-public interface IDataConnector {
 
-	public Class<?> getModelType();
+public interface ScalarDataConnector extends DataConnector {
 
-	public Class<?> getType();
-	
+	// TODO: implementation shall throw NPE if model==null -> check all subclasses
+	public Object readValue(Object ctx);
+
+	public void writeValue(Object ctx, Object val);
+
+	// TODO: implementation shall return null if model==null -> check all
+	// subclasses
+	public boolean canRead(Object ctx);
+
+	public boolean canWrite(Object ctx);
+
 }

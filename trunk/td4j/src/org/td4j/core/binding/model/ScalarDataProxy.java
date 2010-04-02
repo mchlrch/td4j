@@ -21,22 +21,21 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.converter.IConverter;
-import org.td4j.core.internal.capability.ScalarDataAccess;
 import org.td4j.core.tk.ObjectTK;
 
 
 public class ScalarDataProxy extends DataProxy {
 
-	private final ScalarDataAccess dataAccess;
+	private final ScalarDataConnector dataAccess;
 	private final IConverter converter;
 
-	public ScalarDataProxy(ScalarDataAccess dataAccess, String name) {
-		this(dataAccess, name, null);
+	public ScalarDataProxy(ScalarDataConnector dataConnector, String name) {
+		this(dataConnector, name, null);
 	}
 	
-	public ScalarDataProxy(ScalarDataAccess dataAccess, String name, IConverter converter) {
+	public ScalarDataProxy(ScalarDataConnector dataConnector, String name, IConverter converter) {
 		super(name);
-		this.dataAccess = ObjectTK.enforceNotNull(dataAccess, "dataAccess");
+		this.dataAccess = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 		this.converter = converter;
 	}
 

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.CollectionDataContainerConnector;
-import org.td4j.core.internal.capability.ListDataAccessAdapter;
 import org.td4j.core.model.Observable;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
@@ -109,7 +108,7 @@ public class CollectionDataContainer<T> extends Observable {
 
 	public ListDataProxy createProxy() {
 		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType());
-		final ListDataProxy proxy = new ListDataProxy(new ListDataAccessAdapter(con), getPropertyName());
+		final ListDataProxy proxy = new ListDataProxy(con, getPropertyName());
 		proxy.setModel(this);
 		return proxy;
 	}
