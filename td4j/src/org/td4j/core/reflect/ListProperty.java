@@ -19,24 +19,26 @@
 
 package org.td4j.core.reflect;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.binding.model.ICollectionDataConnector;
-import org.td4j.core.internal.capability.DefaultNamedScalarDataAccess;
-import org.td4j.core.internal.capability.ListDataAccess;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.internal.capability.NestedScalarDataAccessProvider;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class ListProperty implements ListDataAccess, NestedScalarDataAccessProvider {
+public class ListProperty implements CollectionDataConnector, NestedScalarDataAccessProvider, Property {
 	
 	private final String name;
-	private final ICollectionDataConnector dataConnector;
+	private final CollectionDataConnector dataConnector;
 	private final ScalarProperty[] nestedProperties;
 	
-	public ListProperty(String name, ICollectionDataConnector dataConnector, ScalarProperty[] nestedProperties) {
+	public ListProperty(String name, CollectionDataConnector dataConnector, ScalarProperty[] nestedProperties) {
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 		this.nestedProperties = ObjectTK.enforceNotNull(nestedProperties, "nestedProperties");
@@ -46,17 +48,29 @@ public class ListProperty implements ListDataAccess, NestedScalarDataAccessProvi
 		return name;
 	}
 	
+	@Override
+	public Class<?> getCollectionType() {
+		return List.class;
+	}
+	
 	public Class<?> getContextType() {
-		return dataConnector.getModelType();
+		return dataConnector.getContextType();
 	}
 	
 	public Class<?> getValueType() {
-		return dataConnector.getType();
+		return dataConnector.getValueType();
 	}
 	
 	public List<?> readValue(Object ctx) {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		return (List<?>) dataConnector.readValue(ctx);
+		final Collection<?> values = dataConnector.readValue(ctx);
+		
+		List<Object> result = Collections.emptyList(); 
+		if (values != null) {
+			result = new ArrayList<Object>(values); 
+		}
+		
+		return result;
 	}
 
 	public boolean canRead(Object ctx) {
@@ -73,8 +87,8 @@ public class ListProperty implements ListDataAccess, NestedScalarDataAccessProvi
 		return nestedProperties.length > 0;
 	}
 	
-	public NamedScalarDataAccess[] getNestedScalarDataAccess() {
-		return DefaultNamedScalarDataAccess.createFromProperties(Arrays.asList(nestedProperties));
+	public NamedScalarDataConnector[] getNestedScalarDataAccess() {
+		return DefaultNamedScalarDataConnector.createFromProperties(Arrays.asList(nestedProperties));
 	}
 	
 	
