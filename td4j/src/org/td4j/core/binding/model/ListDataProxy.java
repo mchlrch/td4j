@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,30 +19,32 @@
 
 package org.td4j.core.binding.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.DataProxy;
-import org.td4j.core.internal.capability.ListDataAccess;
-import org.td4j.core.internal.capability.NamedScalarDataAccess;
+import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.internal.capability.NestedScalarDataAccessProvider;
 import org.td4j.core.tk.ObjectTK;
 
 
 public class ListDataProxy extends DataProxy implements NestedScalarDataAccessProvider {
 
-	private final ListDataAccess dataAccess;
+	private final ListDataAccessAdapter dataAccess;
 	
 	// TODO: cleanup this hack
 	private final NestedScalarDataAccessProvider nestedPropertyProvider;
-	private NamedScalarDataAccess[] nestedProperties;
+	private NamedScalarDataConnector[] nestedProperties;
 	
-	public ListDataProxy(ListDataAccess dataAccess, String name) {
-		this(dataAccess, name, null);
+	public ListDataProxy(CollectionDataConnector dataConnector, String name) {
+		this(dataConnector, name, null);
 	}
 	
-	public ListDataProxy(ListDataAccess dataAccess, String name, NestedScalarDataAccessProvider nestedPropertyProvider) {
-		super(name);
-		this.dataAccess = ObjectTK.enforceNotNull(dataAccess, "dataAccess");
+	public ListDataProxy(CollectionDataConnector dataConnector, String name, NestedScalarDataAccessProvider nestedPropertyProvider) {
+		super(name);		
+		this.dataAccess = new ListDataAccessAdapter(dataConnector); 
 		this.nestedPropertyProvider = nestedPropertyProvider;
 	}
 	
@@ -63,7 +65,7 @@ public class ListDataProxy extends DataProxy implements NestedScalarDataAccessPr
 		return dataAccess.readValue(getModel());
 	}
 	
-	public void setNestedProperties(NamedScalarDataAccess[] nestedProperties) {
+	public void setNestedProperties(NamedScalarDataConnector[] nestedProperties) {
 		this.nestedProperties = nestedProperties;
 	}
 
@@ -75,19 +77,54 @@ public class ListDataProxy extends DataProxy implements NestedScalarDataAccessPr
 	}
 	
 	@Override
-	public NamedScalarDataAccess[] getNestedScalarDataAccess() {
+	public NamedScalarDataConnector[] getNestedScalarDataAccess() {
 		if (nestedProperties != null && nestedProperties.length > 0) {
 			return nestedProperties;
 		} else if (nestedPropertyProvider != null) {
 			return nestedPropertyProvider.getNestedScalarDataAccess();
 		} else {
-			return new NamedScalarDataAccess[0];
+			return new NamedScalarDataConnector[0];
 		}
 	}	
 
 	@Override
 	public String toString() {
 		return dataAccess.toString();
+	}
+	
+	
+	// ==================================================================================
+	
+	private static class ListDataAccessAdapter {
+
+		private final CollectionDataConnector connector;
+		
+		private ListDataAccessAdapter(CollectionDataConnector connector) {
+			this.connector = ObjectTK.enforceNotNull(connector, "connector");
+		}
+		
+		public boolean canRead(Object ctx) {
+			return connector.canRead(ctx);
+		}
+
+		public Class<?> getContextType() {
+			return connector.getContextType();
+		}
+
+		public Class<?> getValueType() {
+			return connector.getValueType();
+		}
+
+		public List<?> readValue(Object ctx) {
+			final Collection<?> values = connector.readValue(ctx);
+			
+			List<Object> result = Collections.emptyList(); 
+			if (values != null) {
+				result = new ArrayList<Object>(values); 
+			}
+				
+			return result;
+		}
 	}
 	
 }
