@@ -20,19 +20,16 @@
 package org.td4j.core.reflect;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.binding.model.CollectionDataConnector;
-import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
-import org.td4j.core.internal.capability.NamedScalarDataConnector;
-import org.td4j.core.internal.capability.NestedScalarDataAccessProvider;
+import org.td4j.core.internal.capability.NestedPropertiesProvider;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class ListProperty implements CollectionDataConnector, NestedScalarDataAccessProvider, Property {
+public class ListProperty implements CollectionDataConnector, NestedPropertiesProvider, Property {
 	
 	private final String name;
 	private final CollectionDataConnector dataConnector;
@@ -83,14 +80,9 @@ public class ListProperty implements CollectionDataConnector, NestedScalarDataAc
 		return nestedProperties;
 	}
 	
-	public boolean isNestedScalarDataAccessDefined() {
+	public boolean isNestedPropertiesDefined() {
 		return nestedProperties.length > 0;
-	}
-	
-	public NamedScalarDataConnector[] getNestedScalarDataAccess() {
-		return DefaultNamedScalarDataConnector.createFromProperties(Arrays.asList(nestedProperties));
-	}
-	
+	}	
 	
 	@Override
 	public String toString() {

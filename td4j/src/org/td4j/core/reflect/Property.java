@@ -19,8 +19,9 @@
 
 package org.td4j.core.reflect;
 
-public interface Property {
+public interface Property extends DataConnector {
 
 	public String getName();
+	
 	
 }
