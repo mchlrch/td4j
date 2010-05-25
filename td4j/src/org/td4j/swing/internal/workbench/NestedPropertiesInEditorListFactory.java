@@ -24,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
-import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ExposePropertiesInEditorList;
@@ -45,7 +43,7 @@ public class NestedPropertiesInEditorListFactory {
 		this.metaModel = ObjectTK.enforceNotNull(model, "model");		
 	}
 	
-	public NamedScalarDataConnector[] createNestedProperties() {
+	public ScalarProperty[] createNestedProperties() {
 		final ExposePropertiesInEditorList spec = modelType.getAnnotation(ExposePropertiesInEditorList.class);
 		
 		// check if specified properties are valid, throw exception otherwise
@@ -71,12 +69,12 @@ public class NestedPropertiesInEditorListFactory {
 				throw new UnknownPropertyException(modelType, invalidColumns.toArray(new String[invalidColumns.size()])); 
 			}
 			
+			return result.toArray(new ScalarProperty[result.size()]);
+			
 		// accept all properties
 		} else {
-			return DefaultNamedScalarDataConnector.createFromProperties(scalarProps);
-		}
-		
-		return DefaultNamedScalarDataConnector.createFromProperties(result);
+			return result.toArray(new ScalarProperty[scalarProps.size()]);
+		}		
 	}
 	
 }

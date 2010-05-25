@@ -37,11 +37,11 @@ import javax.swing.table.TableModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.DataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.metamodel.JavaMetaModel;
 import org.td4j.core.metamodel.MetaModel;
+import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.filter.AcceptAllFilter;

@@ -32,10 +32,10 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
+import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ArrayTK;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Navigator;
@@ -47,10 +47,10 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final ListDataProxy proxy, NamedScalarDataConnector[] columnDataAccess, final Navigator navigator) {
+	public TableController(final JTable table, final ListDataProxy proxy, ScalarProperty[] columnProperties, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
-		this.model = new MyTableModel(proxy, columnDataAccess);
+		this.model = new MyTableModel(proxy, columnProperties);
 
 		table.setModel(model);
 
@@ -99,14 +99,14 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 		private static final long serialVersionUID = 1L;
 
 		private final Class<?> rowType;
-		private final NamedScalarDataConnector[] columnProperties;
+		private final ScalarProperty[] columnProperties;
 		private final List<Object> rowObjects = new ArrayList<Object>();
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(final ListDataProxy proxy, NamedScalarDataConnector[] columnDataAccess) {			
+		private MyTableModel(final ListDataProxy proxy, ScalarProperty[] columnProperties) {			
 			this.rowType = ObjectTK.enforceNotNull(proxy.getValueType(), "proxy.getType()");
-			this.columnProperties = ArrayTK.enforceNotEmpty(columnDataAccess, "columnDataAccess");
+			this.columnProperties = ArrayTK.enforceNotEmpty(columnProperties, "columnProperties");
 		}
 
 		@Override
@@ -129,14 +129,14 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 	    public String getColumnName(int columnIndex) {
-		    final NamedScalarDataConnector access = columnProperties[columnIndex];
-		    return access.getName();
+		    final ScalarProperty prop = columnProperties[columnIndex];
+		    return prop.getName();
 		}
 		
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			final NamedScalarDataConnector access = columnProperties[columnIndex];
-			final Class<?> valueType = access.getValueType();
+			final ScalarProperty prop = columnProperties[columnIndex];
+			final Class<?> valueType = prop.getValueType();
 			
 			// TODO _this is a workaround to make primitive types work 
 			if (int.class == valueType) return Integer.class;
@@ -150,8 +150,8 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			final NamedScalarDataConnector access = columnProperties[columnIndex];
-			final Object value = access.readValue(rowObjects.get(rowIndex));
+			final ScalarProperty prop = columnProperties[columnIndex];
+			final Object value = prop.readValue(rowObjects.get(rowIndex));
 			return value;
 		}
 
