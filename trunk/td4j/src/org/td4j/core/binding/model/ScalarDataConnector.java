@@ -19,6 +19,8 @@
 
 package org.td4j.core.binding.model;
 
+import org.td4j.core.reflect.DataConnector;
+
 
 public interface ScalarDataConnector extends DataConnector {
 

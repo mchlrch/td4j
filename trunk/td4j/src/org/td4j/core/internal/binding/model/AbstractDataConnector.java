@@ -19,7 +19,7 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.model.DataConnector;
+import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.tk.ObjectTK;
 
 public abstract class AbstractDataConnector implements DataConnector {

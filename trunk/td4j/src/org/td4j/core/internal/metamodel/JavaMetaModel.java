@@ -48,6 +48,7 @@ public class JavaMetaModel extends MutableMetaModel {
 		
 		metaClass.setScalarProperties(features.scalarProperties);
 		metaClass.setListProperties(features.listProperties);
+		metaClass.setOperations(features.operations);
 		
 		putFeature(key, metaClass);
 		return metaClass;

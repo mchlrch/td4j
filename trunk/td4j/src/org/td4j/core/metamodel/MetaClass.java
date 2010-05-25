@@ -52,6 +52,11 @@ public abstract class MetaClass implements FeatureRepository {
 		}
 	}
 	
+	public ScalarProperty getScalarProperty(String name) {
+		final ScalarProperties props = getFeature(ScalarPropertiesKey.ALL);
+		return props != null ? props.getByName(name) : null;
+	}
+	
 	public List<ListProperty> getListProperties() {
 		final ListProperties props = getFeature(ListPropertiesKey.ALL);
 		if (props != null) {
@@ -59,6 +64,11 @@ public abstract class MetaClass implements FeatureRepository {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+	
+	public ListProperty getListProperty(String name) {
+		final ListProperties props = getFeature(ListPropertiesKey.ALL);
+		return props != null ? props.getByName(name) : null;
 	}
 	
 	public List<AbstractExecutable> getOperations() {
@@ -85,6 +95,11 @@ public abstract class MetaClass implements FeatureRepository {
 	protected void setListProperties(List<ListProperty> properties) {
 		final ListProperties props = new ListProperties(properties);
 		putFeature(ListPropertiesKey.ALL, props);
+	}
+	
+	protected void setOperations(List<AbstractExecutable> operations) {
+		final Operations ops = new Operations(operations);
+		putFeature(OperationsKey.ALL, ops);
 	}
 
 	protected abstract <T extends Object> void putFeature(FeatureKey<T> key, T feature);

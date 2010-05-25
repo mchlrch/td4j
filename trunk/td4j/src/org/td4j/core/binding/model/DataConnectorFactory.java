@@ -23,6 +23,7 @@ import org.td4j.core.internal.binding.model.CollectionFieldConnector;
 import org.td4j.core.internal.binding.model.CollectionMethodConnector;
 import org.td4j.core.internal.binding.model.ScalarFieldConnector;
 import org.td4j.core.internal.binding.model.ScalarMethodConnector;
+import org.td4j.core.reflect.DataConnector;
 
 public interface DataConnectorFactory {
 
