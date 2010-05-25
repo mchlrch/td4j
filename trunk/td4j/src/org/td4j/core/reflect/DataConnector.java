@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009, 2010 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,31 +19,9 @@
 
 package org.td4j.core.reflect;
 
-import org.td4j.core.binding.model.DataConnector;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+public interface DataConnector {
 
-public class NamedDataConnector {
+	public Class<?> getContextType();
+	public Class<?> getValueType();
 	
-	private final DataConnector connector;
-	private final String name;
-	
-	public NamedDataConnector(DataConnector connector, String name) {
-		this.connector = ObjectTK.enforceNotNull(connector, "connector");
-		this.name = StringTK.enforceNotEmpty(name, "name");
-	}
-	
-	public DataConnector getConnector() {
-		return connector;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	@Override
-	public String toString() {
-		return getName();
-	}
-
 }
