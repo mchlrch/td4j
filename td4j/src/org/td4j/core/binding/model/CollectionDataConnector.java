@@ -21,6 +21,8 @@ package org.td4j.core.binding.model;
 
 import java.util.Collection;
 
+import org.td4j.core.reflect.DataConnector;
+
 
 public interface CollectionDataConnector extends DataConnector {
 

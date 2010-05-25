@@ -19,10 +19,12 @@
 
 package org.td4j.core.internal.capability;
 
+import org.td4j.core.reflect.ScalarProperty;
 
-public interface NestedScalarDataAccessProvider {
+
+public interface NestedPropertiesProvider {
 	
-	public boolean isNestedScalarDataAccessDefined();	
-	public NamedScalarDataConnector[] getNestedScalarDataAccess();
+	public boolean isNestedPropertiesDefined();	
+	public ScalarProperty[] getNestedProperties();
 
 }

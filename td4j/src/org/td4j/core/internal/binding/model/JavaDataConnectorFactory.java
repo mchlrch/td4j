@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
-import org.td4j.core.binding.model.DataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.UnknownPropertyException;
 

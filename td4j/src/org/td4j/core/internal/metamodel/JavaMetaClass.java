@@ -22,6 +22,7 @@ package org.td4j.core.internal.metamodel;
 import java.util.List;
 import java.util.Set;
 
+import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.ListProperty;
@@ -66,16 +67,21 @@ public class JavaMetaClass<T> extends MetaClass {
 		return featRepo.getFeatureKeys();
 	}
 
-	// === [ open scope to public ] ===================================
+	// === [ open scope for visibility in pkg ] ===================================
 	
 	@Override
-	public void setScalarProperties(List<ScalarProperty> properties) {
+	protected void setScalarProperties(List<ScalarProperty> properties) {
 		super.setScalarProperties(properties);
 	}
 	
 	@Override
-	public void setListProperties(List<ListProperty> properties) {
+	protected void setListProperties(List<ListProperty> properties) {
 		super.setListProperties(properties);
+	}
+	
+	@Override
+	protected void setOperations(List<AbstractExecutable> operations) {
+		super.setOperations(operations);
 	}
 
 	// =============================================================

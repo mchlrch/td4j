@@ -25,24 +25,24 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.DataProxy;
-import org.td4j.core.internal.capability.NamedScalarDataConnector;
-import org.td4j.core.internal.capability.NestedScalarDataAccessProvider;
+import org.td4j.core.internal.capability.NestedPropertiesProvider;
+import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.tk.ObjectTK;
 
 
-public class ListDataProxy extends DataProxy implements NestedScalarDataAccessProvider {
+public class ListDataProxy extends DataProxy implements NestedPropertiesProvider {
 
 	private final ListDataAccessAdapter dataAccess;
 	
 	// TODO: cleanup this hack
-	private final NestedScalarDataAccessProvider nestedPropertyProvider;
-	private NamedScalarDataConnector[] nestedProperties;
+	private final NestedPropertiesProvider nestedPropertyProvider;
+	private ScalarProperty[] nestedProperties;
 	
 	public ListDataProxy(CollectionDataConnector dataConnector, String name) {
 		this(dataConnector, name, null);
 	}
 	
-	public ListDataProxy(CollectionDataConnector dataConnector, String name, NestedScalarDataAccessProvider nestedPropertyProvider) {
+	public ListDataProxy(CollectionDataConnector dataConnector, String name, NestedPropertiesProvider nestedPropertyProvider) {
 		super(name);		
 		this.dataAccess = new ListDataAccessAdapter(dataConnector); 
 		this.nestedPropertyProvider = nestedPropertyProvider;
@@ -65,25 +65,25 @@ public class ListDataProxy extends DataProxy implements NestedScalarDataAccessPr
 		return dataAccess.readValue(getModel());
 	}
 	
-	public void setNestedProperties(NamedScalarDataConnector[] nestedProperties) {
+	public void setNestedProperties(ScalarProperty[] nestedProperties) {
 		this.nestedProperties = nestedProperties;
 	}
 
 	@Override
-	public boolean isNestedScalarDataAccessDefined() {
+	public boolean isNestedPropertiesDefined() {
 		final boolean explicit = nestedProperties != null && nestedProperties.length > 0;
-		final boolean thruProvider = nestedPropertyProvider != null && nestedPropertyProvider.isNestedScalarDataAccessDefined();
+		final boolean thruProvider = nestedPropertyProvider != null && nestedPropertyProvider.isNestedPropertiesDefined();
 		return explicit || thruProvider;
 	}
 	
 	@Override
-	public NamedScalarDataConnector[] getNestedScalarDataAccess() {
+	public ScalarProperty[] getNestedProperties() {
 		if (nestedProperties != null && nestedProperties.length > 0) {
 			return nestedProperties;
 		} else if (nestedPropertyProvider != null) {
-			return nestedPropertyProvider.getNestedScalarDataAccess();
+			return nestedPropertyProvider.getNestedProperties();
 		} else {
-			return new NamedScalarDataConnector[0];
+			return new ScalarProperty[0];
 		}
 	}	
 

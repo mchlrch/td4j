@@ -20,38 +20,42 @@
 package org.td4j.core.internal.metamodel;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.td4j.core.binding.model.CollectionDataConnector;
-import org.td4j.core.binding.model.DataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.env.SvcRepo;
 import org.td4j.core.internal.binding.model.CollectionFieldConnector;
 import org.td4j.core.internal.binding.model.CollectionMethodConnector;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
+import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
+import org.td4j.core.internal.reflect.ExecutableConstructor;
+import org.td4j.core.internal.reflect.ExecutableMethod;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.metamodel.container.Operations;
+import org.td4j.core.reflect.Companion;
+import org.td4j.core.reflect.DataConnector;
+import org.td4j.core.reflect.Executable;
 import org.td4j.core.reflect.Expose;
 import org.td4j.core.reflect.ExposeProperties;
 import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.IllegalConnectorTypeException;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.NamedDataConnector;
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.ScalarProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.StringTK;
 
 public class JavaModelInspector {
 	
@@ -71,8 +75,7 @@ public class JavaModelInspector {
 	
 	private static final IFilter<Method> defaultMethodFilter = new IFilter<Method>() {
 		public boolean accept(Method m) {
-			return ! (m.getDeclaringClass() == Object.class); // filter out
-																												// Object.getClass()
+			return ! (m.getDeclaringClass() == Object.class); // filter out Object.getClass()
 		};
 	};
 	
@@ -86,34 +89,34 @@ public class JavaModelInspector {
 	
 	public FeatureContainer createFeatures(Class<?> cls) {
 		final FeatureContainer features = new FeatureContainer();
+
+		populateConnectors(cls, features);
 		
+		features.operations.addAll(createOperations(cls));
+		
+		return features;
+	}
+	
+	private void populateConnectors(final Class<?> cls, final FeatureContainer features) {
 		final List<NamedDataConnector> connectors = createConnectors(cls);		
 		for (NamedDataConnector nc : connectors) {
-			final DataConnector connector = nc.getConnector();
+			final DataConnector connector = nc.connector;
 			
 			if (connector instanceof ScalarDataConnector) {
 				final ScalarDataConnector scalarConnector = (ScalarDataConnector) connector;
-				final ScalarProperty scalarProperty = new ScalarProperty(nc.getName(), scalarConnector);
+				final ScalarProperty scalarProperty = new ScalarProperty(nc.name, scalarConnector);
 				features.scalarProperties.add(scalarProperty);
 				
 			} else if (connector instanceof CollectionDataConnector) {
 				final CollectionDataConnector collectionConnector = (CollectionDataConnector) connector;
 				final ScalarProperty[] nestedProperties = findNestedProperties(connector);
-				final ListProperty listProperty = new ListProperty(nc.getName(), collectionConnector, nestedProperties);
+				final ListProperty listProperty = new ListProperty(nc.name, collectionConnector, nestedProperties);
 				features.listProperties.add(listProperty);
 				
 			} else {
 				throw new IllegalStateException("Unsupported connector type: " + connector.getClass());
 			}
-		}
-		
-		return features;
-	}
-	
-	private void createOperations(JavaMetaClass<?> metaClass) {
-		Operations operations;
-		// TODO _0 implement
-		
+		}		
 	}
 	
 	
@@ -179,6 +182,46 @@ public class JavaModelInspector {
 		return fieldConnectors;
 	}
 	
+	
+	private List<AbstractExecutable> createOperations(final Class<?> cls) {
+		final List<AbstractExecutable> result = new ArrayList<AbstractExecutable>();
+
+		// constructors
+		final Constructor<?>[] constructors = cls.getDeclaredConstructors();
+		for (Constructor<?> constructor : constructors) {
+			final Executable executableTag = constructor.getAnnotation(Executable.class);
+			if (executableTag != null) {
+				result.add(new ExecutableConstructor(constructor, executableTag.paramNames()));
+			}
+		}
+
+		// methods
+		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
+		for (Method method : allMethods) {
+			final Executable executableTag = method.getAnnotation(Executable.class);
+			if (executableTag != null) {
+				result.add(new ExecutableMethod(method, executableTag.paramNames()));
+			}
+		}
+
+		// companions
+		final Companion companionSpec = cls.getAnnotation(Companion.class);
+		if (companionSpec != null) {
+			final Class<?> compCls = companionSpec.value();
+			final Object svc = SvcRepo.requireService(compCls);
+
+			final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
+			for (Method method : compMethods) {
+				final Executable executableTag = method.getAnnotation(Executable.class);
+				if (executableTag != null) {
+					result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
+				}
+			}
+		}
+
+		return result;
+	}
+	
 	// =======================================================================================================
 	
 	// nested properties are only supported for collection connectors
@@ -202,28 +245,17 @@ public class JavaModelInspector {
 	private ScalarProperty[] findNestedProperties(final Class<?> valueType, final ExposeProperties exposeAnnotation) {
 		if (exposeAnnotation == null) return new ScalarProperty[0];
 		
-		// TODO: simplify this once properties can be retrieved by-name from MetaClass
-		
-		// build map for property lookup by-name
 		final MetaClass mc = metaModel.getMetaClass(valueType);
-		final Map<String, ScalarProperty> scalarPropertyMap = new HashMap<String, ScalarProperty>();
-		final Map<String, ListProperty> listPropertyMap = new HashMap<String, ListProperty>();
-		
-		for (ScalarProperty prop : mc.getScalarProperties()) {
-			scalarPropertyMap.put(prop.getName(), prop);
-		}
-		for (ListProperty prop : mc.getListProperties()) {
-			listPropertyMap.put(prop.getName(), prop);
-		}		
 		
 		final List<ScalarProperty> nestedProperties = new ArrayList<ScalarProperty>();
 		final List<String> unknownProperties = new ArrayList<String>();
 		final List<String> illegalProperties = new ArrayList<String>();
+
 		for (String pName : exposeAnnotation.value()) {
-			final ScalarProperty prop = scalarPropertyMap.get(pName);
+			final ScalarProperty prop = mc.getScalarProperty(pName);
 			if (prop != null) {
 				nestedProperties.add(prop);
-			} else if (listPropertyMap.containsKey(pName)) {
+			} else if (mc.getListProperty(pName) != null) {
 				illegalProperties.add(pName);				
 			} else {
 				unknownProperties.add(pName);				
@@ -292,18 +324,30 @@ public class JavaModelInspector {
 
 		return false;
 	}
-
-	private boolean scalar(Field f) {
-		final Class<?> type = f.getType();
-		return ! (Collection.class.isAssignableFrom(type)) && ! (type.isArray());
-	}
-	
 	
 	// =======================================================================================================
 	public static class FeatureContainer {
 		public final List<ScalarProperty> scalarProperties = new ArrayList<ScalarProperty>();
 		public final List<ListProperty> listProperties = new ArrayList<ListProperty>();
+		public final List<AbstractExecutable> operations = new ArrayList<AbstractExecutable>();
 	}
+	
+	
+	private static class NamedDataConnector {
+		
+		private final DataConnector connector;
+		private final String name;
+		
+		private NamedDataConnector(DataConnector connector, String name) {
+			this.connector = ObjectTK.enforceNotNull(connector, "connector");
+			this.name = StringTK.enforceNotEmpty(name, "name");
+		}
+				
+		@Override
+		public String toString() {
+			return name;
+		}
 
+	}
 
 }
