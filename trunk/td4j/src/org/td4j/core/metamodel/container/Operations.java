@@ -24,11 +24,10 @@ import java.util.List;
 
 import org.td4j.core.internal.reflect.AbstractExecutable;
 
-// TODO _0 implement
-public class Operations {
-
-	public List<AbstractExecutable> get() {
-		return null;
+public class Operations extends OrderedContainer<AbstractExecutable> {
+	
+	public Operations(List<AbstractExecutable> operations) {
+		super(operations);
 	}
 	
 }

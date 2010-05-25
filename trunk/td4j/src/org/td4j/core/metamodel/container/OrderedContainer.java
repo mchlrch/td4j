@@ -19,19 +19,24 @@
 
 package org.td4j.core.metamodel.container;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.reflect.ScalarProperty;
-
-public class ScalarProperties extends NamedItemsContainer<ScalarProperty> {
+class OrderedContainer<T> {
 	
-	public ScalarProperties(List<ScalarProperty> props) {
-		super(props);
+	final List<T> elements;
+	
+	OrderedContainer(List<T> items) {
+		if (items == null || items.isEmpty()) {
+			this.elements = Collections.emptyList();
+		} else {
+			this.elements = new ArrayList<T>(items);
+		}
 	}
 	
-	@Override
-	protected String nameOfItem(ScalarProperty property) {
-		return property.getName();
+	public List<T> get() {
+		return elements;
 	}
 
 }

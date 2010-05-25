@@ -19,19 +19,28 @@
 
 package org.td4j.core.metamodel.container;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.td4j.core.reflect.ScalarProperty;
-
-public class ScalarProperties extends NamedItemsContainer<ScalarProperty> {
+abstract class NamedItemsContainer<T> extends OrderedContainer<T> {
 	
-	public ScalarProperties(List<ScalarProperty> props) {
-		super(props);
+	final Map<String, T> dictionary = new HashMap<String, T>();
+	
+	NamedItemsContainer(List<T> items) {
+		super(items);
+		
+		for (T item : items) {
+			final String name = nameOfItem(item);
+			
+			if (dictionary.containsKey(name)) throw new IllegalStateException("duplicate name: " + name);
+		}
 	}
 	
-	@Override
-	protected String nameOfItem(ScalarProperty property) {
-		return property.getName();
+	public T getByName(String name) {
+		return dictionary.get(name);
 	}
+	
+	protected abstract String nameOfItem(T item);
 
 }
