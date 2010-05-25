@@ -19,26 +19,19 @@
 
 package org.td4j.core.metamodel.container;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.reflect.ListProperty;
 
-public class ListProperties {
-	
-	final List<ListProperty> properties;
+public class ListProperties extends NamedItemsContainer<ListProperty> {
 	
 	public ListProperties(List<ListProperty> props) {
-		if (props == null || props.isEmpty()) {
-			this.properties = Collections.emptyList();
-		} else {
-			this.properties = new ArrayList<ListProperty>(props);
-		}
+		super(props);
 	}
 	
-	public List<ListProperty> get() {
-		return properties;
+	@Override
+	protected String nameOfItem(ListProperty property) {
+		return property.getName();
 	}
 
 }
