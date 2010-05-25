@@ -24,14 +24,12 @@ import java.util.List;
 import javax.swing.JTable;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.ICaption;
 import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.internal.binding.model.ToStringConnector;
 import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
-import org.td4j.core.internal.capability.DefaultNamedScalarDataConnector;
-import org.td4j.core.internal.capability.NamedScalarDataConnector;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ScalarProperty;
@@ -53,19 +51,19 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 
 	@Override
 	protected TableController createController(ListDataProxy dataProxy, JTable widget) {
-		final NamedScalarDataConnector[] columnDataAccess = createColumnDataAccess(dataProxy);
-		return new TableController(widget, dataProxy, columnDataAccess, navigator);
+		final ScalarProperty[] columnProperties = createColumnProperties(dataProxy);
+		return new TableController(widget, dataProxy, columnProperties, navigator);
 	}
 	
 	
 	// -----------------------------------------------------------------------
 	
 	// TODO: this code is not Swing specific and should be refactored to another place
-	private NamedScalarDataConnector[] createColumnDataAccess(ListDataProxy proxy) {
+	private ScalarProperty[] createColumnProperties(ListDataProxy proxy) {
 
 		// use nestedProperties from proxy, if available
-		if (proxy.isNestedScalarDataAccessDefined()) {
-			final NamedScalarDataConnector[] nestedProperties = proxy.getNestedScalarDataAccess();
+		if (proxy.isNestedPropertiesDefined()) {
+			final ScalarProperty[] nestedProperties = proxy.getNestedProperties();
 			return nestedProperties;
 			
 		// otherwise use all scalar properties
@@ -74,12 +72,12 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 			final List<ScalarProperty> scalarProperties = metaClass.getScalarProperties();
 			
 			if ( ! scalarProperties.isEmpty()) {
-				return DefaultNamedScalarDataConnector.createFromProperties(scalarProperties);			
+				return scalarProperties.toArray(new ScalarProperty[scalarProperties.size()]);			
 				
 			// primitive rowTypes have no properties - fallback to toString connector to make sure that the table is not blank
 			} else {
 				final ScalarDataConnector toStringConnector = new ToStringConnector(proxy.getValueType());	
-				return new NamedScalarDataConnector[] {new DefaultNamedScalarDataConnector(toStringConnector, "toString")};
+				return new ScalarProperty[] {new ScalarProperty("toString", toStringConnector)};
 			}
 		}
 	}
