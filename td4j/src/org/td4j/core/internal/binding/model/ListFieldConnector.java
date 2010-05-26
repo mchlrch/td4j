@@ -19,41 +19,37 @@
 
 package org.td4j.core.internal.binding.model;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.Collection;
 
-public class CollectionMethodConnector extends AbstractCollectionDataConnector {
 
-	private final Method getterMethod;
-	private final Object[] argumentValues;
-	
-	public CollectionMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
-		this(contextType, getter, valueType, new Object[0]);
-	}
+public class ListFieldConnector extends AbstractListDataConnector {
 
-	public CollectionMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
-		super(contextType, getter.getReturnType(), valueType);
+	private final Field field;
 
-		this.getterMethod = getter;
-		this.argumentValues = argumentValues;
+	public ListFieldConnector(Class<?> contextType, Field field, Class<?> valueType) {
+		super(contextType, valueType);
+
+		if ( ! Collection.class.isAssignableFrom(field.getType())) throw new IllegalArgumentException("not a collection type: " + field.getType());
+		this.field = field;
 	}
 	
-	public Method getGetterMethod() {
-		return getterMethod;
+	public Field getField() {
+		return field;
 	}
 
 	public boolean canRead(Object ctx) {
-		return getterMethod != null && ctx != null;
+		return ctx != null;
 	}
-	
+
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) getterMethod.invoke(ctx, argumentValues);
+		return (Collection<?>) field.get(ctx);
 	}
 	
 	@Override
 	public String toString() {
-		return getContextType().getName() + "." + getterMethod.getName() + " : " + getCollectionType().getName() + "<" + getValueType() + ">";
+		return getContextType().getName() + "#" + field.getName() + " : List<" + getValueType() + ">";
 	}
-	
+
 }

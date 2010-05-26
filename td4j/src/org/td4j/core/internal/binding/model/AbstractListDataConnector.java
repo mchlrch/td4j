@@ -19,37 +19,31 @@
 
 package org.td4j.core.internal.binding.model;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import org.td4j.core.binding.model.ListDataConnector;
 
 
-public class CollectionFieldConnector extends AbstractCollectionDataConnector {
+public abstract class AbstractListDataConnector extends AbstractDataConnector implements ListDataConnector {
 
-	private final Field field;
-
-	public CollectionFieldConnector(Class<?> contextType, Field field, Class<?> valueType) {
-		super(contextType, field.getType(), valueType);
-
-		if ( ! Collection.class.isAssignableFrom(field.getType())) throw new IllegalArgumentException("not a collection type: " + field.getType());
-		this.field = field;
-	}
-	
-	public Field getField() {
-		return field;
+	protected AbstractListDataConnector(Class<?> contextType, Class<?> valueType) {
+		super(contextType, valueType);
 	}
 
-	public boolean canRead(Object ctx) {
-		return ctx != null;
+	public List<?> readValue(Object ctx) {
+		if (ctx == null || ! canRead(ctx)) return null;
+
+		try {
+			final ArrayList<Object> result = new ArrayList<Object>();
+			result.addAll(readValue0(ctx));
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) field.get(ctx);
-	}
-	
-	@Override
-	public String toString() {
-		return getContextType().getName() + "#" + field.getName() + " : " + getCollectionType().getName() + "<" + getValueType() + ">";
-	}
+	protected abstract Collection<?> readValue0(Object ctx) throws Exception;
 
 }

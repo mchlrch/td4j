@@ -19,14 +19,15 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.model.ScalarDataContainer;
-import org.td4j.core.tk.ObjectTK;
+import java.util.Collection;
+
+import org.td4j.core.binding.model.ListDataContainer;
 
 
-public class ScalarDataContainerConnector extends AbstractScalarDataConnector {
+public class ListDataContainerConnector extends AbstractListDataConnector {
 
-	public ScalarDataContainerConnector(Class<?> type) {
-		super(ScalarDataContainer.class, type);
+	public ListDataContainerConnector(Class<?> valueType) {
+		super(ListDataContainer.class, valueType);
 	}
 
 	public boolean canRead(Object ctx) {
@@ -38,25 +39,18 @@ public class ScalarDataContainerConnector extends AbstractScalarDataConnector {
 	}
 
 	@Override
-	protected Object readValue0(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+	protected Collection<?> readValue0(Object ctx) throws Exception {
 		return contextAsContainer(ctx).getContent();
 	}
 
 	@Override
-	protected void writeValue0(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		contextAsContainer(ctx).setContent(val);
-	}
-
-	@Override
 	public String toString() {
-		return getClass().getName() + ": contextType=" + getContextType();
+		return getClass().getName() + ": valueType=" + getValueType();
 	}
 
-	protected ScalarDataContainer<Object> contextAsContainer(Object ctx) {
+	protected ListDataContainer<Object> contextAsContainer(Object ctx) {
 		@SuppressWarnings("unchecked")
-		final ScalarDataContainer<Object> container = (ScalarDataContainer<Object>) ctx;
+		final ListDataContainer<Object> container = (ListDataContainer<Object>) ctx;
 
 		return container;
 	}

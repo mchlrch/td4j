@@ -19,10 +19,10 @@
 
 package org.td4j.core.internal.binding.model;
 
-public class ToStringConnector extends AbstractScalarDataConnector {
+public class ToStringConnector extends AbstractIndividualDataConnector {
 
-  public ToStringConnector(Class<?> modelType) {
-    super(modelType, String.class);
+  public ToStringConnector(Class<?> ctxType) {
+    super(ctxType, String.class);
   }
 
   @Override

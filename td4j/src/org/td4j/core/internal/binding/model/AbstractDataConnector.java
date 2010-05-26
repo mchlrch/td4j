@@ -24,16 +24,16 @@ import org.td4j.core.tk.ObjectTK;
 
 public abstract class AbstractDataConnector implements DataConnector {
 
-	private final Class<?> modelType;
+	private final Class<?> ctxType;
 	private final Class<?> valueType;
 
-	protected AbstractDataConnector(Class<?> modelType, Class<?> valueType) {
-		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
+	protected AbstractDataConnector(Class<?> ctxType, Class<?> valueType) {
+		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
 		this.valueType = ObjectTK.enforceNotNull(valueType, "valueType");
 	}
 
 	public Class<?> getContextType() {
-		return modelType;
+		return ctxType;
 	}
 
 	public Class<?> getValueType() {

@@ -19,40 +19,44 @@
 
 package org.td4j.core.internal.binding.model;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
-import org.td4j.core.binding.model.CollectionDataContainer;
+public class ListMethodConnector extends AbstractListDataConnector {
 
+	private final Method getterMethod;
+	private final Object[] argumentValues;
+	
+	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
+		this(contextType, getter, valueType, new Object[0]);
+	}
 
-public class CollectionDataContainerConnector extends AbstractCollectionDataConnector {
+	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
+		super(contextType, valueType);
 
-	public CollectionDataContainerConnector(Class<?> valueType, Class<?> collectionType) {
-		super(CollectionDataContainer.class, collectionType, valueType);
+		final Class<?> returnType = getter.getReturnType();
+		if ( ! Collection.class.isAssignableFrom(returnType)) throw new IllegalArgumentException("not a collection type: " + returnType);
+		
+		this.getterMethod = getter;
+		this.argumentValues = argumentValues;
+	}
+	
+	public Method getGetterMethod() {
+		return getterMethod;
 	}
 
 	public boolean canRead(Object ctx) {
-		return ctx != null && contextAsContainer(ctx).canRead();
+		return getterMethod != null && ctx != null;
 	}
-
-	public boolean canWrite(Object ctx) {
-		return ctx != null && contextAsContainer(ctx).canWrite();
-	}
-
+	
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return contextAsContainer(ctx).getContent();
+		return (Collection<?>) getterMethod.invoke(ctx, argumentValues);
 	}
-
+	
 	@Override
 	public String toString() {
-		return getClass().getName() + ": valueType=" + getValueType();
+		return getContextType().getName() + "." + getterMethod.getName() + " : List<" + getValueType() + ">";
 	}
-
-	protected CollectionDataContainer<Object> contextAsContainer(Object ctx) {
-		@SuppressWarnings("unchecked")
-		final CollectionDataContainer<Object> container = (CollectionDataContainer<Object>) ctx;
-
-		return container;
-	}
-
+	
 }

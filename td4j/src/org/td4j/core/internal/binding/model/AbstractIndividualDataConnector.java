@@ -19,26 +19,15 @@
 
 package org.td4j.core.internal.binding.model;
 
-import java.util.Collection;
+import org.td4j.core.binding.model.IndividualDataConnector;
 
-import org.td4j.core.binding.model.CollectionDataConnector;
-import org.td4j.core.tk.ObjectTK;
+public abstract class AbstractIndividualDataConnector extends AbstractDataConnector implements IndividualDataConnector {
 
-
-public abstract class AbstractCollectionDataConnector extends AbstractDataConnector implements CollectionDataConnector {
-
-	private final Class<?> collectionType;
-
-	protected AbstractCollectionDataConnector(Class<?> contextType, Class<?> collectionType, Class<?> valueType) {
-		super(contextType, valueType);
-		this.collectionType = ObjectTK.enforceNotNull(collectionType, "collectionType");
+	protected AbstractIndividualDataConnector(Class<?> ctxType, Class<?> valueType) {
+		super(ctxType, valueType);
 	}
 
-	public Class<?> getCollectionType() {
-		return collectionType;
-	}
-
-	public Collection<?> readValue(Object ctx) {
+	public Object readValue(Object ctx) {
 		if (ctx == null || ! canRead(ctx)) return null;
 
 		try {
@@ -48,6 +37,18 @@ public abstract class AbstractCollectionDataConnector extends AbstractDataConnec
 		}
 	}
 
-	protected abstract Collection<?> readValue0(Object ctx) throws Exception;
+	public void writeValue(Object ctx, Object val) {
+		if (ctx == null || ! canWrite(ctx)) throw new IllegalStateException("not writable");
+
+		try {
+			writeValue0(ctx, val);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected abstract Object readValue0(Object ctx) throws Exception;
+
+	protected abstract void writeValue0(Object ctx, Object val) throws Exception;
 
 }
