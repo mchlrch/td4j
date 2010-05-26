@@ -30,12 +30,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.env.SvcRepo;
-import org.td4j.core.internal.binding.model.CollectionFieldConnector;
-import org.td4j.core.internal.binding.model.CollectionMethodConnector;
+import org.td4j.core.internal.binding.model.ListFieldConnector;
+import org.td4j.core.internal.binding.model.ListMethodConnector;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
@@ -44,14 +44,14 @@ import org.td4j.core.internal.reflect.ExecutableMethod;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.Companion;
 import org.td4j.core.reflect.DataConnector;
-import org.td4j.core.reflect.Executable;
-import org.td4j.core.reflect.Expose;
-import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.Show;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.IllegalConnectorTypeException;
 import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.ReflectionTK;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
@@ -102,15 +102,15 @@ public class JavaModelInspector {
 		for (NamedDataConnector nc : connectors) {
 			final DataConnector connector = nc.connector;
 			
-			if (connector instanceof ScalarDataConnector) {
-				final ScalarDataConnector scalarConnector = (ScalarDataConnector) connector;
-				final ScalarProperty scalarProperty = new ScalarProperty(nc.name, scalarConnector);
-				features.scalarProperties.add(scalarProperty);
+			if (connector instanceof IndividualDataConnector) {
+				final IndividualDataConnector individualConnector = (IndividualDataConnector) connector;
+				final IndividualProperty individualProperty = new IndividualProperty(nc.name, individualConnector);
+				features.individualProperties.add(individualProperty);
 				
-			} else if (connector instanceof CollectionDataConnector) {
-				final CollectionDataConnector collectionConnector = (CollectionDataConnector) connector;
-				final ScalarProperty[] nestedProperties = findNestedProperties(connector);
-				final ListProperty listProperty = new ListProperty(nc.name, collectionConnector, nestedProperties);
+			} else if (connector instanceof ListDataConnector) {
+				final ListDataConnector listConnector = (ListDataConnector) connector;
+				final IndividualProperty[] nestedProperties = findNestedProperties(connector);
+				final ListProperty listProperty = new ListProperty(nc.name, listConnector, nestedProperties);
 				features.listProperties.add(listProperty);
 				
 			} else {
@@ -124,7 +124,7 @@ public class JavaModelInspector {
 	
 	private List<NamedDataConnector> createConnectors(final Class<?> cls) {
 		final List<NamedDataConnector> result = new ArrayList<NamedDataConnector>();
-		final ExposeProperties exposeProps = cls.getAnnotation(ExposeProperties.class);
+		final ShowProperties exposeProps = cls.getAnnotation(ShowProperties.class);
 		final Level level = exposeProps != null ? exposeProps.level() : DEFAULT_LEVEL;
 
 		// explicit specification of properties and their order via annotations
@@ -189,7 +189,7 @@ public class JavaModelInspector {
 		// constructors
 		final Constructor<?>[] constructors = cls.getDeclaredConstructors();
 		for (Constructor<?> constructor : constructors) {
-			final Executable executableTag = constructor.getAnnotation(Executable.class);
+			final Operation executableTag = constructor.getAnnotation(Operation.class);
 			if (executableTag != null) {
 				result.add(new ExecutableConstructor(constructor, executableTag.paramNames()));
 			}
@@ -198,7 +198,7 @@ public class JavaModelInspector {
 		// methods
 		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
 		for (Method method : allMethods) {
-			final Executable executableTag = method.getAnnotation(Executable.class);
+			final Operation executableTag = method.getAnnotation(Operation.class);
 			if (executableTag != null) {
 				result.add(new ExecutableMethod(method, executableTag.paramNames()));
 			}
@@ -212,7 +212,7 @@ public class JavaModelInspector {
 
 			final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
 			for (Method method : compMethods) {
-				final Executable executableTag = method.getAnnotation(Executable.class);
+				final Operation executableTag = method.getAnnotation(Operation.class);
 				if (executableTag != null) {
 					result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
 				}
@@ -224,35 +224,35 @@ public class JavaModelInspector {
 	
 	// =======================================================================================================
 	
-	// nested properties are only supported for collection connectors
-	private ScalarProperty[] findNestedProperties(final DataConnector connector) {
+	// nested properties are only supported for list connectors
+	private IndividualProperty[] findNestedProperties(final DataConnector connector) {
 		final Class<?> valueType = connector.getValueType();
-		if (connector instanceof CollectionFieldConnector) {
-			final CollectionFieldConnector cfConnector = (CollectionFieldConnector) connector;
-			final ExposeProperties exposeAnnotation = cfConnector.getField().getAnnotation(ExposeProperties.class);
+		if (connector instanceof ListFieldConnector) {
+			final ListFieldConnector cfConnector = (ListFieldConnector) connector;
+			final ShowProperties exposeAnnotation = cfConnector.getField().getAnnotation(ShowProperties.class);
 			return findNestedProperties(valueType, exposeAnnotation);
 			
-		} else if (connector instanceof CollectionMethodConnector) {
-			final CollectionMethodConnector cmConnector = (CollectionMethodConnector) connector;
-			final ExposeProperties exposeAnnotation = cmConnector.getGetterMethod().getAnnotation(ExposeProperties.class);
+		} else if (connector instanceof ListMethodConnector) {
+			final ListMethodConnector cmConnector = (ListMethodConnector) connector;
+			final ShowProperties exposeAnnotation = cmConnector.getGetterMethod().getAnnotation(ShowProperties.class);
 			return findNestedProperties(valueType, exposeAnnotation);
 			
 		} else {
-			return new ScalarProperty[0];
+			return new IndividualProperty[0];
 		}
 	}
 	
-	private ScalarProperty[] findNestedProperties(final Class<?> valueType, final ExposeProperties exposeAnnotation) {
-		if (exposeAnnotation == null) return new ScalarProperty[0];
+	private IndividualProperty[] findNestedProperties(final Class<?> valueType, final ShowProperties exposeAnnotation) {
+		if (exposeAnnotation == null) return new IndividualProperty[0];
 		
 		final MetaClass mc = metaModel.getMetaClass(valueType);
 		
-		final List<ScalarProperty> nestedProperties = new ArrayList<ScalarProperty>();
+		final List<IndividualProperty> nestedProperties = new ArrayList<IndividualProperty>();
 		final List<String> unknownProperties = new ArrayList<String>();
 		final List<String> illegalProperties = new ArrayList<String>();
 
 		for (String pName : exposeAnnotation.value()) {
-			final ScalarProperty prop = mc.getScalarProperty(pName);
+			final IndividualProperty prop = mc.getIndividualProperty(pName);
 			if (prop != null) {
 				nestedProperties.add(prop);
 			} else if (mc.getListProperty(pName) != null) {
@@ -266,11 +266,11 @@ public class JavaModelInspector {
 			throw new UnknownPropertyException(valueType, unknownProperties.toArray(new String[unknownProperties.size()]));
 			
 		} else if ( ! illegalProperties.isEmpty()) {
-			throw new IllegalConnectorTypeException(ScalarDataConnector.class, valueType, illegalProperties.toArray(new String[unknownProperties.size()]));
+			throw new IllegalConnectorTypeException(IndividualDataConnector.class, valueType, illegalProperties.toArray(new String[unknownProperties.size()]));
 			
 		}
 		
-		return nestedProperties.toArray(new ScalarProperty[nestedProperties.size()]);
+		return nestedProperties.toArray(new IndividualProperty[nestedProperties.size()]);
 	}
 	
 	// =======================================================================================================
@@ -313,7 +313,7 @@ public class JavaModelInspector {
 		final Hide hide = ao != null ? ao.getAnnotation(Hide.class) : null;
 		if (hide != null) return false;
 
-		final Expose expose = ao != null ? ao.getAnnotation(Expose.class) : null;
+		final Show expose = ao != null ? ao.getAnnotation(Show.class) : null;
 		if (expose != null || Modifier.isPublic(member.getModifiers())) {
 			return true;
 		}
@@ -327,7 +327,7 @@ public class JavaModelInspector {
 	
 	// =======================================================================================================
 	public static class FeatureContainer {
-		public final List<ScalarProperty> scalarProperties = new ArrayList<ScalarProperty>();
+		public final List<IndividualProperty> individualProperties = new ArrayList<IndividualProperty>();
 		public final List<ListProperty> listProperties = new ArrayList<ListProperty>();
 		public final List<AbstractExecutable> operations = new ArrayList<AbstractExecutable>();
 	}

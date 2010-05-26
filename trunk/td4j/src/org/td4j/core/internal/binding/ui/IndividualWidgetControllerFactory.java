@@ -20,18 +20,18 @@
 package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.tk.ObjectTK;
 
 
 
-public abstract class ScalarWidgetControllerFactory<T extends ScalarWidgetController<W>, W> extends ScalarControllerFactory<T> {
+public abstract class IndividualWidgetControllerFactory<T extends IndividualWidgetController<W>, W> extends IndividualControllerFactory<T> {
 	private final W widget;
-	private final ICaption caption;
+	private final Caption caption;
 
-	protected ScalarWidgetControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, W widget, ICaption caption) {
+	protected IndividualWidgetControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
 		super(mediator, connectorFactory);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
@@ -39,17 +39,17 @@ public abstract class ScalarWidgetControllerFactory<T extends ScalarWidgetContro
 	}
 
 	@Override
-	public T bind(ScalarDataProxy dataProxy) {
+	public T bind(IndividualDataProxy dataProxy) {
 		final T controller = super.bind(dataProxy);
 		controller.setCaption(caption);
 		return controller;
 	}
 	
 	@Override
-	protected T createController(ScalarDataProxy dataProxy) {
+	protected T createController(IndividualDataProxy dataProxy) {
 		return createController(dataProxy, widget);
 	}
 	
-	protected abstract T createController(ScalarDataProxy dataProxy, W widget);	
+	protected abstract T createController(IndividualDataProxy dataProxy, W widget);	
 
 }

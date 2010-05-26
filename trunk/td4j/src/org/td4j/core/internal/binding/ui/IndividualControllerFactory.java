@@ -21,39 +21,39 @@ package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataConnector;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.tk.ObjectTK;
 
 
-public abstract class ScalarControllerFactory<T> {
+public abstract class IndividualControllerFactory<T> {
 	private final Mediator mediator;
 	private final DataConnectorFactory conFactory;
 
-	protected ScalarControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
+	protected IndividualControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
 		this.mediator   = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");			
 	}
 
-	public T bind(ScalarDataProxy dataProxy) {
+	public T bind(IndividualDataProxy dataProxy) {
 		ObjectTK.enforceNotNull(dataProxy, "dataProxy");
 		final T controller = createController(dataProxy);
 		return controller;
 	}
 	
-	public T bindConnector(ScalarDataConnector connector, String name) {
-		final ScalarDataProxy proxy = new ScalarDataProxy(connector, name);
-		mediator.addModelSocket(proxy);
+	public T bindConnector(IndividualDataConnector connector, String name) {
+		final IndividualDataProxy proxy = new IndividualDataProxy(connector, name);
+		mediator.addContextSocket(proxy);
 		return bind(proxy);
 	}	
 	
 	public T bindField(String fieldName) {
-		final ScalarDataConnector connector = conFactory.createScalarFieldConnector(mediator.getModelType(), fieldName);
+		final IndividualDataConnector connector = conFactory.createIndividualFieldConnector(mediator.getContextType(), fieldName);
 		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
-		final ScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name);
+		final IndividualDataConnector connector = conFactory.createIndividualMethodConnector(mediator.getContextType(), name);
 		return bindConnector(connector, name);
 	}
 
@@ -62,9 +62,9 @@ public abstract class ScalarControllerFactory<T> {
 	}
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		final ScalarDataConnector connector = conFactory.createScalarMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
+		final IndividualDataConnector connector = conFactory.createIndividualMethodConnector(mediator.getContextType(), name, argumentTypes, argumentValues);
 		return bindConnector(connector, name);
 	}
 	
-	protected abstract T createController(ScalarDataProxy dataProxy);
+	protected abstract T createController(IndividualDataProxy dataProxy);
 }

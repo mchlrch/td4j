@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,11 +19,10 @@
 
 package org.td4j.core.internal.binding.ui;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
@@ -33,16 +32,16 @@ import org.td4j.core.reflect.ReflectionTK;
 
 
 // PEND: code reading, make as immutable as possible
-// PEND: parts are common with scalar
-public abstract class CollectionWidgetController<W> implements IObserver {
+// PEND: parts are common with IndividualWidgetController
+public abstract class ListWidgetController<W> implements IObserver {
 
 	private final ListDataProxy dataProxy;
 
-	private ICaption caption;
+	private Caption caption;
 
 	private boolean viewUpdateInProgress;
 
-	protected CollectionWidgetController(ListDataProxy proxy) {
+	protected ListWidgetController(ListDataProxy proxy) {
 		this.dataProxy = proxy;
 		proxy.addObserver(this, new ChangeEventFilter(dataProxy, ChangeEvent.Type.StateChange));
 	}
@@ -81,7 +80,7 @@ public abstract class CollectionWidgetController<W> implements IObserver {
 		updateView(value);
 	}
 
-	protected void updateView(Collection<?> newValue) {
+	protected void updateView(List<?> newValue) {
 		viewUpdateInProgress = true;
 		try {
 			updateView0(newValue);
@@ -96,17 +95,17 @@ public abstract class CollectionWidgetController<W> implements IObserver {
 
 	public abstract W getWidget();
 
-	public ICaption getCaption() {
+	public Caption getCaption() {
 		return caption;
 	}
 
-	public void setCaption(ICaption caption) {
+	public void setCaption(Caption caption) {
 		this.caption = caption;
 		updateCaption();
 	}
 
 	// PEND: better naming for those methods
-	protected abstract void updateView0(Collection<?> newValue);
+	protected abstract void updateView0(List<?> newValue);
 
 	protected abstract void setAccess();
 
