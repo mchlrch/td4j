@@ -37,15 +37,15 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataContainer;
+import org.td4j.core.binding.model.ListDataContainer;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataContainer;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.binding.model.ScalarDataRelay;
+import org.td4j.core.binding.model.IndividualDataContainer;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.binding.model.IndividualDataRelay;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
@@ -53,7 +53,7 @@ import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableModelAdapter;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
-import org.td4j.swing.workbench.IFormFactory;
+import org.td4j.swing.workbench.FormFactory;
 import org.td4j.swing.workbench.Workbench;
 
 public class GenericEditor extends Editor<Object> {
@@ -63,8 +63,8 @@ public class GenericEditor extends Editor<Object> {
 	private final JLabel typeLabel;
 	private final JPanel editor;
 	
-	private final CollectionDataContainer listDataContainer;
-	private final ScalarDataContainer listSelectionContainer;
+	private final ListDataContainer listDataContainer;
+	private final IndividualDataContainer listSelectionContainer;
 	
 	private final JSplitPane splitPane;
 	private final TableController listTableController;
@@ -72,7 +72,7 @@ public class GenericEditor extends Editor<Object> {
 	
 	// PEND: muss die connectorFactory in der Signatur sein - jetzt wird WidgetBuilder gebraucht um die Tabelle zu erzeugen
 
-	GenericEditor(Workbench workbench, Class<?> modelType, MetaModel model, IFormFactory formFactory) {
+	GenericEditor(Workbench workbench, Class<?> modelType, MetaModel model, FormFactory formFactory) {
 		
 		// PEND: richtige typsierung einführen nach Typisierung von IModelSocket
 		super(workbench, modelType);
@@ -97,17 +97,17 @@ public class GenericEditor extends Editor<Object> {
 		header.add(menuBar, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 		
 		// list table
-		listDataContainer = new CollectionDataContainer(modelType, "listData");
+		listDataContainer = new ListDataContainer(modelType, "listData");
 		
 		final WidgetBuilder wb = new WidgetBuilder(modelType);
 		
 		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, model);
-		final ScalarProperty[] nestedProperties = nestedPropsFactory.createNestedProperties();
+		final IndividualProperty[] nestedProperties = nestedPropsFactory.createNestedProperties();
 		
-		final ListDataProxy collectionProxy = listDataContainer.createProxy();
-		collectionProxy.setNestedProperties(nestedProperties);
+		final ListDataProxy listProxy = listDataContainer.createProxy();
+		listProxy.setNestedProperties(nestedProperties);
 		
-		listTableController = wb.table().bind(collectionProxy);
+		listTableController = wb.table().bind(listProxy);
 		final JTable listTable = listTableController.getWidget();
 		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		
@@ -123,11 +123,11 @@ public class GenericEditor extends Editor<Object> {
 		final JScrollPane bodyScrollPane = new JScrollPane(bodyContainer);		
 		
 		// connect table selection to mediator
-		listSelectionContainer = new ScalarDataContainer(modelType, "listSelection");
-		final ScalarDataProxy listSelectionProxy = listSelectionContainer.createProxy();
+		listSelectionContainer = new IndividualDataContainer(modelType, "listSelection");
+		final IndividualDataProxy listSelectionProxy = listSelectionContainer.createProxy();
 		final SelectionController listTableSelection = new SelectionController(listTable.getSelectionModel(), new TableModelAdapter(listTableController.getModel()), listSelectionProxy);
-		final ScalarDataRelay relayMediator = new ScalarDataRelay(listSelectionProxy, mediator);
-		final ScalarDataRelay relayForm = new ScalarDataRelay(listSelectionProxy, form);		
+		final IndividualDataRelay relayMediator = new IndividualDataRelay(listSelectionProxy, mediator);
+		final IndividualDataRelay relayForm = new IndividualDataRelay(listSelectionProxy, form);		
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(listTableScrollPane);		
@@ -143,7 +143,7 @@ public class GenericEditor extends Editor<Object> {
 	}
 		
 	public Object getModel() {
-		return mediator.getModel();
+		return mediator.getContext();
 	}
 	
 	public Form<?> getForm() {
@@ -156,7 +156,7 @@ public class GenericEditor extends Editor<Object> {
 		listSelectionContainer.setContent(content.getMainObject());
 		
 	  // force form refresh to update data from models that are not Observable
-		form.refreshFromModel();
+		form.refreshFromContext();
 		
 		if (content.getInstances().size() > 1) {
 			splitPane.setDividerLocation(-1);

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
 package org.td4j.swing.internal.binding;
 
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.swing.binding.IOrderedElementModel;
+import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.TableController;
 
 
-public class TableModelAdapter implements IOrderedElementModel {
+public class TableModelAdapter implements OrderedElementModel {
 
 	private final TableController.MyTableModel tableModel;
 

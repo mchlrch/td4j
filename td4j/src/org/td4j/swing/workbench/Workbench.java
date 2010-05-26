@@ -38,11 +38,11 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.metamodel.JavaMetaModel;
 import org.td4j.core.metamodel.MetaModel;
@@ -64,7 +64,7 @@ public class Workbench extends JFrame {
   private static Workbench INSTANCE; // static singleton, initialized via
   // setup() method
 
-  private final IEditorFactory editorFactory;
+  private final EditorFactory editorFactory;
   private final HashMap<Class<?>, Editor> editorCache = new HashMap<Class<?>, Editor>();
   private final HashMap<Class<?>, EditorContent> lastContentCache = new HashMap<Class<?>, EditorContent>();
 
@@ -90,11 +90,11 @@ public class Workbench extends JFrame {
     final CompositeFormFactory formFactory = new CompositeFormFactory(byClassNameFormFactory,
         genericFormFactory);
 
-    final IEditorFactory editorFactory = new GenericEditorFactory(metaModel, formFactory);
+    final EditorFactory editorFactory = new GenericEditorFactory(metaModel, formFactory);
     start(editorFactory, initialNavigation, sidebarEntries);
   }
 
-  public static void start(final IEditorFactory editorFactory, final Object initialNavigation,
+  public static void start(final EditorFactory editorFactory, final Object initialNavigation,
       final Class<?>... sidebarEntries) {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
@@ -111,7 +111,7 @@ public class Workbench extends JFrame {
     });
   }
 
-  private static Workbench setup(final IEditorFactory editorFactory,
+  private static Workbench setup(final EditorFactory editorFactory,
       final List<Class<?>> sidebarEntries) {
     if (INSTANCE == null) {
       synchronized (Workbench.class) {
@@ -126,7 +126,7 @@ public class Workbench extends JFrame {
     return INSTANCE;
   }
 
-  private Workbench(final IEditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
+  private Workbench(final EditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
     this.editorFactory = ObjectTK.enforceNotNull(editorFactory, "editorFactory");
     this.navigator = new Navigator(this);
 
@@ -147,18 +147,18 @@ public class Workbench extends JFrame {
     final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 
     // options to choose from
-    final CollectionDataConnector classOptionsConnector = connectorFactory.createCollectionFieldConnector(SidebarModel.class, "currentClassOptions");
+    final ListDataConnector classOptionsConnector = connectorFactory.createListFieldConnector(SidebarModel.class, "currentClassOptions");
     final ListDataProxy classOptionsProxy = new ListDataProxy(classOptionsConnector, "currentClassOptions");
     final ListController classOptionsController = new ListController(classChooser, classOptionsProxy);
 
     // choice
-    final ScalarDataConnector currentClassConnector = connectorFactory.createScalarMethodConnector(SidebarModel.class, "currentClass");
-    final ScalarDataProxy currentClassProxy = new ScalarDataProxy(currentClassConnector, "currentClass");
+    final IndividualDataConnector currentClassConnector = connectorFactory.createIndividualMethodConnector(SidebarModel.class, "currentClass");
+    final IndividualDataProxy currentClassProxy = new IndividualDataProxy(currentClassConnector, "currentClass");
     final SelectionController currentClassController = new SelectionController(classChooser
         .getSelectionModel(), new ListModelAdapter(classChooser.getModel()), currentClassProxy);
 
-    classOptionsController.getDataProxy().setModel(model);
-    currentClassController.getDataProxy().setModel(model);
+    classOptionsController.getDataProxy().setContext(model);
+    currentClassController.getDataProxy().setContext(model);
 
     return classChooser;
   }

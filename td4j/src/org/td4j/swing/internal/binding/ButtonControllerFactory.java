@@ -22,21 +22,21 @@ package org.td4j.swing.internal.binding;
 import javax.swing.AbstractButton;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
 import org.td4j.swing.binding.ButtonController;
 
 
-public class ButtonControllerFactory extends ScalarWidgetControllerFactory<ButtonController, AbstractButton> {
+public class ButtonControllerFactory extends IndividualWidgetControllerFactory<ButtonController, AbstractButton> {
 
-	public ButtonControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, AbstractButton widget, ICaption caption) {
+	public ButtonControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, AbstractButton widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 
 	@Override
-	protected ButtonController createController(ScalarDataProxy dataProxy, AbstractButton widget) {
+	protected ButtonController createController(IndividualDataProxy dataProxy, AbstractButton widget) {
 		return new ButtonController(widget, dataProxy);
 	}
 

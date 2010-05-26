@@ -27,7 +27,7 @@ import java.util.Map;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ExposePropertiesInEditorList;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.ObjectTK;
 
@@ -43,22 +43,22 @@ public class NestedPropertiesInEditorListFactory {
 		this.metaModel = ObjectTK.enforceNotNull(model, "model");		
 	}
 	
-	public ScalarProperty[] createNestedProperties() {
+	public IndividualProperty[] createNestedProperties() {
 		final ExposePropertiesInEditorList spec = modelType.getAnnotation(ExposePropertiesInEditorList.class);
 		
 		// check if specified properties are valid, throw exception otherwise
 		final MetaClass metaClass = metaModel.getMetaClass(modelType);
-		final List<ScalarProperty> scalarProps = metaClass.getScalarProperties();		
-		final Map<String, ScalarProperty> propMap = new HashMap<String, ScalarProperty>();
-		for (ScalarProperty prop : scalarProps) {
+		final List<IndividualProperty> individualProps = metaClass.getIndividualProperties();		
+		final Map<String, IndividualProperty> propMap = new HashMap<String, IndividualProperty>();
+		for (IndividualProperty prop : individualProps) {
 			propMap.put(prop.getName(), prop);
 		}
 		
-		final List<ScalarProperty> result = new ArrayList<ScalarProperty>();
+		final List<IndividualProperty> result = new ArrayList<IndividualProperty>();
 		if (spec != null) {
 			final List<String> invalidColumns = new ArrayList<String>();
 			for (String colPropName : spec.value()) {
-				final ScalarProperty prop = propMap.get(colPropName);
+				final IndividualProperty prop = propMap.get(colPropName);
 				if (prop != null) {
 					result.add(prop);
 				} else {
@@ -69,11 +69,11 @@ public class NestedPropertiesInEditorListFactory {
 				throw new UnknownPropertyException(modelType, invalidColumns.toArray(new String[invalidColumns.size()])); 
 			}
 			
-			return result.toArray(new ScalarProperty[result.size()]);
+			return result.toArray(new IndividualProperty[result.size()]);
 			
 		// accept all properties
 		} else {
-			return result.toArray(new ScalarProperty[scalarProps.size()]);
+			return result.toArray(new IndividualProperty[individualProps.size()]);
 		}		
 	}
 	

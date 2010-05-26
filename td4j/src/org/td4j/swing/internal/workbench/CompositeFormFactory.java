@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,20 +22,20 @@ package org.td4j.swing.internal.workbench;
 import org.td4j.core.tk.ArrayTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
-import org.td4j.swing.workbench.IFormFactory;
+import org.td4j.swing.workbench.FormFactory;
 
 
-public class CompositeFormFactory implements IFormFactory {
+public class CompositeFormFactory implements FormFactory {
 
-	private final IFormFactory[] delegates;
+	private final FormFactory[] delegates;
 
-	public CompositeFormFactory(IFormFactory... delegates) {
+	public CompositeFormFactory(FormFactory... delegates) {
 		this.delegates = ArrayTK.enforceNotEmpty(delegates, "delegates");
 	}
 
 	@Override
 	public Form createForm(Editor editor, Class<?> modelType) {
-		for (IFormFactory factory : delegates) {
+		for (FormFactory factory : delegates) {
 			final Form form = factory.createForm(editor, modelType);
 			if (form != null) return form;
 		}

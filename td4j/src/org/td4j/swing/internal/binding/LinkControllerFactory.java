@@ -22,25 +22,25 @@ package org.td4j.swing.internal.binding;
 import javax.swing.JLabel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.workbench.Navigator;
 
 
-public class LinkControllerFactory extends ScalarWidgetControllerFactory<LinkController, JLabel> {
+public class LinkControllerFactory extends IndividualWidgetControllerFactory<LinkController, JLabel> {
 	private final Navigator navigator;
 
-	public LinkControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JLabel widget, ICaption caption, Navigator navigator) {
+	public LinkControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JLabel widget, Caption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
 	}
 
 	@Override
-	protected LinkController createController(ScalarDataProxy dataProxy, JLabel widget) {
+	protected LinkController createController(IndividualDataProxy dataProxy, JLabel widget) {
 		return new LinkController(widget, dataProxy, navigator);
 	}
 

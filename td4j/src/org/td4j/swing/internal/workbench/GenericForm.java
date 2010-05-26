@@ -32,13 +32,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.LabelController;
@@ -64,16 +64,16 @@ public class GenericForm<T> extends Form<T> {
 	protected JPanel createForm() {
 		final JPanel panel = new JPanel(new GridBagLayout());
 
-		// scalar plugs
+		// individual plugs
 		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), getEditor().getWorkbench().getNavigator());
-		final MetaClass metaClass = metaModel.getMetaClass(getModelType());
-		for (ScalarProperty scalarProperty : metaClass.getScalarProperties()) {
-			final Class<?> type = scalarProperty.getValueType();
+		final MetaClass metaClass = metaModel.getMetaClass(getContextType());
+		for (IndividualProperty individualProperty : metaClass.getIndividualProperties()) {
+			final Class<?> type = individualProperty.getValueType();
 
 			// PEND: das kreieren der widgets (+controller) muss auch pluggable sein,
 			// damit neue controller typen unterstütz werden können
 
-			// PEND: fix this, code duplication with ScalarDataContainer, InvokationParameterDialog
+			// PEND: fix this, code duplication with IndividualDataContainer, InvokationParameterDialog
 			// PEND: fix this, temporary only conversion to String supported !!
 		      final Class<?> fromType = type;
 		      final Class<?> toType = String.class;
@@ -83,34 +83,34 @@ public class GenericForm<T> extends Form<T> {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 			
-			final ScalarDataProxy scalarProxy = new ScalarDataProxy(scalarProperty, scalarProperty.getName());
-			getMediator().addModelSocket(scalarProxy);
+			final IndividualDataProxy individualProxy = new IndividualDataProxy(individualProperty, individualProperty.getName());
+			getMediator().addContextSocket(individualProxy);
 			if (type == Boolean.class || type == boolean.class) {
-				final ButtonController btnController = wBuilder.caption(label).button().bind(scalarProxy);
+				final ButtonController btnController = wBuilder.caption(label).button().bind(individualProxy);
 				final AbstractButton btn = btnController.getWidget();
 				panel.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			} else if (type == String.class || convertableToString) {
-				final TextController textController = wBuilder.caption(label).text().bind(scalarProxy);
+				final TextController textController = wBuilder.caption(label).text().bind(individualProxy);
 				final JTextField text = textController.getWidget();
 				panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			} else if (wBuilder.getNavigator().isTypeNavigatable(type)) {
-				final LinkController linkController = wBuilder.caption(label).link().bind(scalarProxy);
+				final LinkController linkController = wBuilder.caption(label).link().bind(individualProxy);
 				final JLabel link = linkController.getWidget();
 				panel.add(link, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 			} else {
-			  final LabelController<JLabel> labelController = wBuilder.caption(label).label().bind(scalarProxy);
+			  final LabelController<JLabel> labelController = wBuilder.caption(label).label().bind(individualProxy);
               final JLabel valueLabel = labelController.getWidget();
               panel.add(valueLabel, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 			}
 		}
 
-		// collection plugs
+		// list plugs
 		for (ListProperty listProperty : metaClass.getListProperties()) {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 
 			final ListDataProxy listProxy = new ListDataProxy(listProperty, listProperty.getName(), listProperty);
-			getMediator().addModelSocket(listProxy);
+			getMediator().addContextSocket(listProxy);
 			
 			final TableControllerFactory tableCtrlFactory = wBuilder.caption(label).table();
 			final TableController tableController = tableCtrlFactory.bind(listProxy);

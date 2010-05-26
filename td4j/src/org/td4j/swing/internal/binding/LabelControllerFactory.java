@@ -22,21 +22,21 @@ package org.td4j.swing.internal.binding;
 import java.awt.Component;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
 import org.td4j.swing.binding.LabelController;
 
 
-public class LabelControllerFactory<T extends Component> extends ScalarWidgetControllerFactory<LabelController<T>, T> {
+public class LabelControllerFactory<T extends Component> extends IndividualWidgetControllerFactory<LabelController<T>, T> {
 
-	public LabelControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, T widget, ICaption caption) {
+	public LabelControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, T widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 
 	@Override
-	protected LabelController<T> createController(ScalarDataProxy dataProxy, T widget) {
+	protected LabelController<T> createController(IndividualDataProxy dataProxy, T widget) {
 		return new LabelController<T>(widget, dataProxy);
 	}
 
