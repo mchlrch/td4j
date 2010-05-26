@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,16 +19,16 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.internal.binding.model.ScalarDataContainerConnector;
+import org.td4j.core.internal.binding.model.IndividualDataContainerConnector;
 import org.testng.annotations.Test;
 
 
-public class ScalarDataContainerConnectorTest {
+public class IndividualDataContainerConnectorTest {
 
 	@Test
 	public void testReadWrite() {
-		final ScalarDataContainer<String> container = new ScalarDataContainer<String>(String.class, "foo");
-		final ScalarDataContainerConnector con = new ScalarDataContainerConnector(container.getContentType());
+		final IndividualDataContainer<String> container = new IndividualDataContainer<String>(String.class, "foo");
+		final IndividualDataContainerConnector con = new IndividualDataContainerConnector(container.getContentType());
 
 		assert container.getContent() == null;
 		assert con.readValue(container) == null;

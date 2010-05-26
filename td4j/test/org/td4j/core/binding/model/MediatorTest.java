@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,70 +30,70 @@ public class MediatorTest {
 	public Object[][] createHarness() {
 		final Mediator<String> mediator = new Mediator<String>(String.class);
 		final String model = "foo";
-		mediator.setModel(model);
+		mediator.setContext(model);
 		final CountingModelSocket socket = new CountingModelSocket(String.class);
-		mediator.addModelSocket(socket);
+		mediator.addContextSocket(socket);
 		return new Object[][] { { mediator, model, socket } };
 	}
 
 	@Test(dataProvider = "harness")
 	public void testModelKeeper(Mediator mediator, Object model, CountingModelSocket socket) {
-		assert model == mediator.getModel();
-		assert String.class == mediator.getModelType();
+		assert model == mediator.getContext();
+		assert String.class == mediator.getContextType();
 	}
 
 	@Test(dataProvider = "harness", expectedExceptions = { IllegalArgumentException.class }, dependsOnMethods = { "testModelKeeper" })
 	public void testInvalidModel(Mediator mediator, Object model, CountingModelSocket socket) {
-		mediator.setModel(new Integer(1));
+		mediator.setContext(new Integer(1));
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelKeeper" })
 	public void testModelSocketDelegate(Mediator mediator, Object model, CountingModelSocket socket) {
-		assert socket.setModelCount == 1;
-		assert socket.getModel() == model;
+		assert socket.setContextCount == 1;
+		assert socket.getContext() == model;
 
-		mediator.setModel(null);
-		assert socket.setModelCount == 2;
-		assert socket.getModel() == null;
+		mediator.setContext(null);
+		assert socket.setContextCount == 2;
+		assert socket.getContext() == null;
 
 		final String newModel = "bar";
-		mediator.setModel(newModel);
-		assert socket.setModelCount == 3;
-		assert socket.getModel() == newModel;
+		mediator.setContext(newModel);
+		assert socket.setContextCount == 3;
+		assert socket.getContext() == newModel;
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelSocketDelegate" })
 	public void testModelSocketDelegateRemoval(Mediator mediator, Object model, CountingModelSocket socket) {
-		mediator.removeModelSocket(socket);
-		assert socket.setModelCount == 2;
-		assert socket.getModel() == null;
+		mediator.removeContextSocket(socket);
+		assert socket.setContextCount == 2;
+		assert socket.getContext() == null;
 
-		mediator.setModel("bar");
-		assert socket.setModelCount == 2;
-		assert socket.getModel() == null;
+		mediator.setContext("bar");
+		assert socket.setContextCount == 2;
+		assert socket.getContext() == null;
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelKeeper" })
 	public void testReloadModel(Mediator mediator, Object model, CountingModelSocket socket) {
-		assert socket.refreshFromModelCount == 0;
+		assert socket.refreshFromContextCount == 0;
 
-		mediator.refreshFromModel();
-		assert socket.refreshFromModelCount == 1;
+		mediator.refreshFromContext();
+		assert socket.refreshFromContextCount == 1;
 	}
 
 	@Test(dataProvider = "harness")
 	public void testMediatorCascade(Mediator mediator, Object model, CountingModelSocket socket) {
 		final Mediator subMediator = new Mediator(String.class);
 		final CountingModelSocket subSocket = new CountingModelSocket(String.class);
-		subMediator.addModelSocket(subSocket);
-		assert subMediator.getModel() == null;
-		assert subSocket.getModel() == null;
-		assert subSocket.setModelCount == 1;
+		subMediator.addContextSocket(subSocket);
+		assert subMediator.getContext() == null;
+		assert subSocket.getContext() == null;
+		assert subSocket.setContextCount == 1;
 
-		mediator.addModelSocket(subMediator);
-		assert subMediator.getModel() == model;
-		assert subSocket.getModel() == model;
-		assert subSocket.setModelCount == 2;
+		mediator.addContextSocket(subMediator);
+		assert subMediator.getContext() == model;
+		assert subSocket.getContext() == model;
+		assert subSocket.setContextCount == 2;
 	}
 
 }
