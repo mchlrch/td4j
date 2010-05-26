@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.ExposePropertiesInEditorList;
+import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.ObjectTK;
@@ -44,7 +44,7 @@ public class NestedPropertiesInEditorListFactory {
 	}
 	
 	public IndividualProperty[] createNestedProperties() {
-		final ExposePropertiesInEditorList spec = modelType.getAnnotation(ExposePropertiesInEditorList.class);
+		final ShowPropertiesInEditorList spec = modelType.getAnnotation(ShowPropertiesInEditorList.class);
 		
 		// check if specified properties are valid, throw exception otherwise
 		final MetaClass metaClass = metaModel.getMetaClass(modelType);
