@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,41 +19,41 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.binding.IModelSocket;
+import org.td4j.core.binding.ContextSocket;
 import org.td4j.core.tk.ObjectTK;
 
 
-class CountingModelSocket implements IModelSocket {
+class CountingModelSocket implements ContextSocket {
 
-	private final Class<?> modelType;
+	private final Class<?> ctxType;
 
-	public Object model;
-	public int setModelCount;
-	public int refreshFromModelCount;
+	public Object ctx;
+	public int setContextCount;
+	public int refreshFromContextCount;
 
-	CountingModelSocket(Class<?> modelType) {
-		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
+	CountingModelSocket(Class<?> ctxType) {
+		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
 	}
 
-	public Object getModel() {
-		return model;
+	public Object getContext() {
+		return ctx;
 	}
 
-	public void setModel(Object model) {
-		this.model = model;
-		setModelCount++;
+	public void setContext(Object ctx) {
+		this.ctx = ctx;
+		setContextCount++;
 	}
 
-	public Class<?> getModelType() {
-		return modelType;
+	public Class<?> getContextType() {
+		return ctxType;
 	}
 
-	public void refreshFromModel() {
-		refreshFromModelCount++;
+	public void refreshFromContext() {
+		refreshFromContextCount++;
 	}
 
 	public void reset() {
-		setModelCount = 0;
-		refreshFromModelCount = 0;
+		setContextCount = 0;
+		refreshFromContextCount = 0;
 	}
 }

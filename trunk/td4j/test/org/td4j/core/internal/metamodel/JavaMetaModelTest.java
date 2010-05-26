@@ -26,12 +26,12 @@ import java.util.Set;
 
 import org.td4j.core.internal.metamodel.JavaModelInspector.Level;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.reflect.Expose;
-import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.reflect.Show;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.Property;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -80,11 +80,11 @@ public class JavaMetaModelTest {
 	// ========= helpers =========
 
 	private void assertProperties(MetaClass metaClass, String... propertyNames) {
-		final List<ScalarProperty> scalarProps = metaClass.getScalarProperties();
+		final List<IndividualProperty> individualProps = metaClass.getIndividualProperties();
 		final List<ListProperty> listProps = metaClass.getListProperties();
 		
 		final List<Property> allProps = new ArrayList<Property>();
-		allProps.addAll(scalarProps);
+		allProps.addAll(individualProps);
 		allProps.addAll(listProps);
 		
 		assert allProps.size() == propertyNames.length;
@@ -132,7 +132,7 @@ public class JavaMetaModelTest {
 
 
 	// default exposure for annotation is DefaultModelInspector.Level.XRAY
-	@ExposeProperties
+	@ShowProperties
 	public static class ClsB {
 		private int int1;
 		int int2;
@@ -157,14 +157,14 @@ public class JavaMetaModelTest {
 	}
 
 
-	@ExposeProperties(level = Level.PUBLIC)
+	@ShowProperties(level = Level.PUBLIC)
 	public static class ClsC {
-		@Expose
+		@Show
 		private int int1;
 		@Hide
 		public int int2;
 
-		@Expose
+		@Show
 		private int getInteger1() {
 			return int1;
 		}
@@ -176,7 +176,7 @@ public class JavaMetaModelTest {
 	}
 
 
-	@ExposeProperties(level = Level.XRAY)
+	@ShowProperties(level = Level.XRAY)
 	public static class ClsD {
 		private int int1;
 		@Hide
@@ -184,7 +184,7 @@ public class JavaMetaModelTest {
 	}
 
 
-	@ExposeProperties( { "int4", "int1", "integer3", "integer2" })
+	@ShowProperties( { "int4", "int1", "integer3", "integer2" })
 	public static class ClsE {
 		private int int1;
 		int int2;
@@ -209,7 +209,7 @@ public class JavaMetaModelTest {
 	}
 
 
-	@ExposeProperties("int5")
+	@ShowProperties("int5")
 	public static class ClsF {
 		public int int4;
 	}

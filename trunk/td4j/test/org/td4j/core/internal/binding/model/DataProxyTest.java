@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ import org.testng.annotations.Test;
 public class DataProxyTest {
 
 	@Test
-	public void testModelChange() throws Exception {
+	public void testContextChange() throws Exception {
 		final DataProxy proxy = new DataProxy("foo") {
 			@Override
-			public Class<?> getModelType() {
+			public Class<?> getContextType() {
 				return TestObservable.class;
 			}
 		};
@@ -42,43 +42,43 @@ public class DataProxyTest {
 		assert observer.stateChangeCount == 0;
 
 		final TestObservable observable1 = new TestObservable(NotificationMode.PropertyChange);
-		proxy.setModel(observable1);
-		assert proxy.getModel() == observable1;
+		proxy.setContext(observable1);
+		assert proxy.getContext() == observable1;
 		assert observer.stateChangeCount == 1;
 
 		final TestObservable observable2 = new TestObservable(NotificationMode.PropertyChange);
-		proxy.setModel(observable2);
-		assert proxy.getModel() == observable2;
+		proxy.setContext(observable2);
+		assert proxy.getContext() == observable2;
 		assert observer.stateChangeCount == 2;
 
-		proxy.setModel(null);
-		assert proxy.getModel() == null;
+		proxy.setContext(null);
+		assert proxy.getContext() == null;
 		assert observer.stateChangeCount == 3;
 	}
 
-	@Test(dependsOnMethods = { "testModelChange" })
-	public void testModelStateChange() throws Exception {
-		testModelStateOrPropertyChange(NotificationMode.StateChange);
+	@Test(dependsOnMethods = { "testContextChange" })
+	public void testContextStateChange() throws Exception {
+		testContextStateOrPropertyChange(NotificationMode.StateChange);
 	}
 
-	@Test(dependsOnMethods = { "testModelChange" })
+	@Test(dependsOnMethods = { "testContextChange" })
 	public void testModelPropertyChange() throws Exception {
-		testModelStateOrPropertyChange(NotificationMode.PropertyChange);
+		testContextStateOrPropertyChange(NotificationMode.PropertyChange);
 	}
 
-	private void testModelStateOrPropertyChange(NotificationMode notificationMode) throws Exception {
+	private void testContextStateOrPropertyChange(NotificationMode notificationMode) throws Exception {
 		final DataProxy proxy = new DataProxy("int1") {
 			@Override
-			public Class<?> getModelType() {
+			public Class<?> getContextType() {
 				return TestObservable.class;
 			}
 		};
 		final CountingObserver observer = new CountingObserver();
 		proxy.addObserver(observer);
 		final TestObservable observable = new TestObservable(notificationMode);
-		proxy.setModel(observable);
+		proxy.setContext(observable);
 
-		assert proxy.getModel() == observable;
+		assert proxy.getContext() == observable;
 		assert observer.stateChangeCount == 1;
 
 		observable.setInt1(11);
@@ -87,7 +87,7 @@ public class DataProxyTest {
 		observable.setInt1(22);
 		assert observer.stateChangeCount == 3;
 
-		proxy.setModel(null);
+		proxy.setContext(null);
 		assert observer.stateChangeCount == 4;
 
 		observable.setInt1(33);

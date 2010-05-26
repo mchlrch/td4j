@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,17 +19,16 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.binding.model.ScalarDataContainer;
+import org.td4j.core.binding.model.IndividualDataContainer;
 import org.td4j.core.model.CountingObserver;
 import org.testng.annotations.Test;
 
 
-
-public class ScalarDataContainerTest {
+public class IndividualDataContainerTest {
 
 	@Test
 	public void testContentChange() {
-		final ScalarDataContainer<String> container = new ScalarDataContainer<String>(String.class, "foo");
+		final IndividualDataContainer<String> container = new IndividualDataContainer<String>(String.class, "foo");
 		final CountingObserver observer = new CountingObserver();
 		container.addObserver(observer);
 

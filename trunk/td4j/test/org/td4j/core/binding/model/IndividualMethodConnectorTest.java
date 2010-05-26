@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,16 +21,16 @@ package org.td4j.core.binding.model;
 
 import java.lang.reflect.Method;
 
-import org.td4j.core.internal.binding.model.ScalarMethodConnector;
+import org.td4j.core.internal.binding.model.IndividualMethodConnector;
 import org.testng.annotations.Test;
 
 
-public class ScalarMethodConnectorTest {
+public class IndividualMethodConnectorTest {
 
 	@Test
 	public void testReadAccess() throws Exception {
 		final Method getter = MyA.class.getMethod("getInt1", new Class[0]);
-		final ScalarMethodConnector con = new ScalarMethodConnector(MyA.class, getter, null);
+		final IndividualMethodConnector con = new IndividualMethodConnector(MyA.class, getter, null);
 
 		final MyA a = new MyA();
 		assert con.canRead(a);
@@ -41,7 +41,7 @@ public class ScalarMethodConnectorTest {
 	public void testReadWriteAccess() throws Exception {
 		final Method getter = MyA.class.getMethod("getInt2", new Class[0]);
 		final Method setter = MyA.class.getMethod("setInt2", new Class[] { int.class });
-		final ScalarMethodConnector con = new ScalarMethodConnector(MyA.class, getter, setter);
+		final IndividualMethodConnector con = new IndividualMethodConnector(MyA.class, getter, setter);
 
 		final MyA a = new MyA();
 		assert con.canRead(a);
