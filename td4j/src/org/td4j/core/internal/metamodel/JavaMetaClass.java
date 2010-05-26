@@ -26,7 +26,7 @@ import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 
 public class JavaMetaClass<T> extends MetaClass {
@@ -70,8 +70,8 @@ public class JavaMetaClass<T> extends MetaClass {
 	// === [ open scope for visibility in pkg ] ===================================
 	
 	@Override
-	protected void setScalarProperties(List<ScalarProperty> properties) {
-		super.setScalarProperties(properties);
+	protected void setIndividualProperties(List<IndividualProperty> properties) {
+		super.setIndividualProperties(properties);
 	}
 	
 	@Override

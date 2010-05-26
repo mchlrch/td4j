@@ -19,8 +19,8 @@
 
 package org.td4j.core.internal.binding.ui;
 
-import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.Caption;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
@@ -28,21 +28,21 @@ import org.td4j.core.reflect.ReflectionTK;
 
 
 
-public abstract class ScalarWidgetController<W> implements IObserver {
+public abstract class IndividualWidgetController<W> implements IObserver {
 
-	private final ScalarDataProxy dataProxy;
+	private final IndividualDataProxy dataProxy;
 
-	private ICaption caption;
+	private Caption caption;
 
 	private boolean modelUpdateInProgress;
 	private boolean viewUpdateInProgress;
 
-	protected ScalarWidgetController(ScalarDataProxy proxy) {
+	protected IndividualWidgetController(IndividualDataProxy proxy) {
 		dataProxy = proxy;
 		dataProxy.addObserver(this, new ChangeEventFilter(dataProxy, ChangeEvent.Type.StateChange));
 	}
 
-	public ScalarDataProxy getDataProxy() {
+	public IndividualDataProxy getDataProxy() {
 		return dataProxy;
 	}
 
@@ -101,11 +101,11 @@ public abstract class ScalarWidgetController<W> implements IObserver {
 
 	public abstract W getWidget();
 
-	public ICaption getCaption() {
+	public Caption getCaption() {
 		return caption;
 	}
 
-	public void setCaption(ICaption caption) {
+	public void setCaption(Caption caption) {
 		this.caption = caption;
 		updateCaption();
 	}

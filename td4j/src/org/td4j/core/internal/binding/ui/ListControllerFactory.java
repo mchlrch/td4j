@@ -20,20 +20,20 @@
 package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.internal.binding.model.CollectionFieldConnector;
-import org.td4j.core.internal.binding.model.CollectionMethodConnector;
+import org.td4j.core.internal.binding.model.ListFieldConnector;
+import org.td4j.core.internal.binding.model.ListMethodConnector;
 import org.td4j.core.tk.ObjectTK;
 
 
 
-public abstract class CollectionControllerFactory<T> {
+public abstract class ListControllerFactory<T> {
 	private final Mediator mediator;
 	private final DataConnectorFactory conFactory;
 
-	protected CollectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
+	protected ListControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
 	}
@@ -44,21 +44,21 @@ public abstract class CollectionControllerFactory<T> {
 		return controller;
 	}
 
-	public T bindConnector(CollectionDataConnector connector, String name) {
+	public T bindConnector(ListDataConnector connector, String name) {
 		final ListDataProxy proxy = new ListDataProxy(connector, name);
-		mediator.addModelSocket(proxy);
+		mediator.addContextSocket(proxy);
 		return bind(proxy);
 	}
 
 	public T bindField(String fieldName) {
-		final CollectionFieldConnector connector = conFactory.createCollectionFieldConnector(mediator.getModelType(), fieldName);
+		final ListFieldConnector connector = conFactory.createListFieldConnector(mediator.getContextType(), fieldName);
 		// TODO: process nestedProperties from field annotation
 		
 		return bindConnector(connector, fieldName);
 	}
 
 	public T bindMethods(String name) {
-		final CollectionMethodConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name);
+		final ListMethodConnector connector = conFactory.createListMethodConnector(mediator.getContextType(), name);
 		// TODO: process nestedProperties from field annotation
 		
 		return bindConnector(connector, name);
@@ -69,7 +69,7 @@ public abstract class CollectionControllerFactory<T> {
 	}
 
 	public T bindMethods(String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		final CollectionMethodConnector connector = conFactory.createCollectionMethodConnector(mediator.getModelType(), name, argumentTypes, argumentValues);
+		final ListMethodConnector connector = conFactory.createListMethodConnector(mediator.getContextType(), name, argumentTypes, argumentValues);
 		// TODO: process nestedProperties from field annotation
 		
 		return bindConnector(connector, name);

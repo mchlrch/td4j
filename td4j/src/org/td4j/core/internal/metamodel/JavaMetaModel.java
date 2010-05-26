@@ -46,7 +46,7 @@ public class JavaMetaModel extends MutableMetaModel {
 		
 		final JavaModelInspector.FeatureContainer features = featureFactory.createFeatures(cls);
 		
-		metaClass.setScalarProperties(features.scalarProperties);
+		metaClass.setIndividualProperties(features.individualProperties);
 		metaClass.setListProperties(features.listProperties);
 		metaClass.setOperations(features.operations);
 		
