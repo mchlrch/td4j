@@ -27,8 +27,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,11 +41,11 @@ import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.CollectionDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeSupport;
@@ -75,17 +75,17 @@ public class ChoiceUISwing extends JPanel {
 		final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 		
 		// direct mit proxy
-		final ScalarDataConnector addressFieldPlug = connectorFactory.createScalarFieldConnector(Person.class, "address");
-		final ScalarDataProxy addressFieldProxy = new ScalarDataProxy(addressFieldPlug, "address");
+		final IndividualDataConnector addressFieldPlug = connectorFactory.createIndividualFieldConnector(Person.class, "address");
+		final IndividualDataProxy addressFieldProxy = new IndividualDataProxy(addressFieldPlug, "address");
 		final TextController adrTextController = new TextController(addressText, addressFieldProxy, false);
-		addressFieldProxy.setModel(Person.BART);
+		addressFieldProxy.setContext(Person.BART);
 
 		// list: direct mit proxy
 		final JList addressList = new JList();
-		final CollectionDataConnector addressListFieldPlug = connectorFactory.createCollectionFieldConnector(Person.class, "addressChoice");
+		final ListDataConnector addressListFieldPlug = connectorFactory.createListFieldConnector(Person.class, "addressChoice");
 
 		final MyFilter myFilter = new MyFilter();
-		final FilteredCollectionDataConnector addressFilteredPlug = new FilteredCollectionDataConnector(addressListFieldPlug, myFilter);
+		final FilteredListDataConnector addressFilteredPlug = new FilteredListDataConnector(addressListFieldPlug, myFilter);
 
 		// PEND: mit IUpdateHandler interface wäre schöneres proxy machen möglich
 		// final UpdateHandler origUpdateHandler =
@@ -149,7 +149,7 @@ public class ChoiceUISwing extends JPanel {
 		// PEND: selection auch mit Doppelclick ausführbar
 
 		new ListController(addressList, addressListFieldProxy);
-		addressListFieldProxy.setModel(Person.BART);
+		addressListFieldProxy.setContext(Person.BART);
 
 		add(addressList, new GridBagConstraints(1, - 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, insets, 0, 0));
 	}
@@ -179,11 +179,11 @@ public class ChoiceUISwing extends JPanel {
 	}
 
 
-	private static class FilteredCollectionDataConnector implements CollectionDataConnector {
-		private final CollectionDataConnector delegate;
+	private static class FilteredListDataConnector implements ListDataConnector {
+		private final ListDataConnector delegate;
 		private final IPlugFilter filter;
 
-		FilteredCollectionDataConnector(CollectionDataConnector delegate, IPlugFilter filter) {
+		FilteredListDataConnector(ListDataConnector delegate, IPlugFilter filter) {
 			this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
 			this.filter = filter;
 		}
@@ -202,17 +202,13 @@ public class ChoiceUISwing extends JPanel {
 			return delegate.canRead(model);
 		}
 
-		public Class<?> getCollectionType() {
-			return delegate.getCollectionType();
-		}
-
-		public Collection<?> readValue(Object ctx) {
-			Collection<?> origColl = delegate.readValue(ctx);
+		public List<?> readValue(Object ctx) {
+			List<?> origColl = delegate.readValue(ctx);
 			if (origColl == null)
 				return null;
 			else if (origColl.isEmpty()) return Collections.emptyList();
 
-			Collection<Object> filteredColl = new ArrayList<Object>(origColl.size());
+			List<Object> filteredColl = new ArrayList<Object>(origColl.size());
 			for (Object o : origColl) {
 				if (filter.accept(o)) filteredColl.add(o);
 			}

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.reflect.Executable;
+import org.td4j.core.reflect.Operation;
 import org.td4j.core.tk.ObjectTK;
 
 public class Order {
@@ -40,7 +40,7 @@ public class Order {
 		this.number = "" + System.currentTimeMillis();
 	}
 
-	@Executable
+	@Operation
 	public void addItem(AddItemInput input) {
 		addItem(input.article, input.quantity);
 	}
@@ -50,12 +50,12 @@ public class Order {
 		return this;
 	}
 	
-	@Executable
+	@Operation
 	public void removeItem(LineItem item) {
 		lineItems.remove(item);
 	}
 	
-	@Executable
+	@Operation
 	public void editItem(EditItemInput input) {
 		final LineItem item = input.getItem();
 		item.quantity = input.quantity;

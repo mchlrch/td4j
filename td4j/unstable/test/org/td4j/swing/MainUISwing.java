@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,12 +34,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.binding.model.ScalarDataRelay;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.binding.model.IndividualDataRelay;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.examples.order.Address;
 import org.td4j.examples.order.Person;
@@ -71,18 +71,18 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		final DataConnectorFactory conFactory = new JavaDataConnectorFactory();
 
 		// direct
-		final ScalarDataConnector nameFieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
-		final ScalarDataProxy nameFieldProxy = new ScalarDataProxy(nameFieldPlug, "firstName");
+		final IndividualDataConnector nameFieldPlug = conFactory.createIndividualFieldConnector(Person.class, "firstName");
+		final IndividualDataProxy nameFieldProxy = new IndividualDataProxy(nameFieldPlug, "firstName");
 		new TextController(nameText, nameFieldProxy);
-		nameFieldProxy.setModel(homer);
+		nameFieldProxy.setContext(homer);
 
 		// with mediator
-		final ScalarDataConnector name2FieldPlug = conFactory.createScalarFieldConnector(Person.class, "firstName");
+		final IndividualDataConnector name2FieldPlug = conFactory.createIndividualFieldConnector(Person.class, "firstName");
 		final Mediator<Person> mediator = new Mediator<Person>(Person.class);
-		final ScalarDataProxy name2FieldProxy = new ScalarDataProxy(name2FieldPlug, "firstName");
-		mediator.addModelSocket(name2FieldProxy);
+		final IndividualDataProxy name2FieldProxy = new IndividualDataProxy(name2FieldPlug, "firstName");
+		mediator.addContextSocket(name2FieldProxy);
 		new TextController(name2Text, name2FieldProxy);
-		mediator.setModel(homer);
+		mediator.setContext(homer);
 
 		// WidgetBuilder
 		final WidgetBuilder<Person> builder = new WidgetBuilder<Person>(mediator, null);
@@ -106,31 +106,31 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		addLabel(active2Controller,  0, 4, _W_, _none);
 		addWidget(active2Controller, 1, 4, _W_, _horz);
 
-		final ScalarDataConnector indexedConnector = conFactory.createScalarMethodConnector(Person.class, "prefixedName", new Class[] { String.class }, new Object[] { "Mr." });
+		final IndividualDataConnector indexedConnector = conFactory.createIndividualMethodConnector(Person.class, "prefixedName", new Class[] { String.class }, new Object[] { "Mr." });
 		final TextController indexedTextController = builder.text().bindConnector(indexedConnector, "prefixedName"); 
 		addLabel(indexedTextController,  0, 5, _W_, _none);
 		addWidget(indexedTextController, 1, 5, _W_, _horz);
 
 		// cascaded properties: person.address.city
-		final ScalarDataConnector addressConnector = conFactory.createScalarFieldConnector(Person.class, "address");
-		final ScalarDataProxy addressProxy          = new ScalarDataProxy(addressConnector, "address");
-		final ScalarDataConnector cityConnector    = conFactory.createScalarFieldConnector(Address.class, "city");
-		final ScalarDataProxy cityProxy             = new ScalarDataProxy(cityConnector, "city");
-		new ScalarDataRelay(addressProxy, cityProxy);
+		final IndividualDataConnector addressConnector = conFactory.createIndividualFieldConnector(Person.class, "address");
+		final IndividualDataProxy addressProxy          = new IndividualDataProxy(addressConnector, "address");
+		final IndividualDataConnector cityConnector    = conFactory.createIndividualFieldConnector(Address.class, "city");
+		final IndividualDataProxy cityProxy             = new IndividualDataProxy(cityConnector, "city");
+		new IndividualDataRelay(addressProxy, cityProxy);
 		final JLabel cityLabel = new JLabel("city(cascaded)");
 		final JTextField cityText = new JTextField("-city-");
 		new TextController(cityText, cityProxy);
-		addressProxy.setModel(homer);
+		addressProxy.setContext(homer);
 
 		add(cityLabel, 0, 6, _W_, _none);
 		add(cityText,  1, 6, _W_, _horz);
 
 		// list: direct mit proxy
 		final JList orderList = new JList();
-		final CollectionDataConnector orderListConnector = conFactory.createCollectionFieldConnector(Person.class, "orders");
+		final ListDataConnector orderListConnector = conFactory.createListFieldConnector(Person.class, "orders");
 		final ListDataProxy orderListProxy = new ListDataProxy(orderListConnector, "orders");
 		new ListController(orderList, orderListProxy);
-		mediator.addModelSocket(orderListProxy); // use LoopbackUpdateHandler
+		mediator.addContextSocket(orderListProxy); // use LoopbackUpdateHandler
 
 		final Action addOrderAction = new AbstractAction("addOrder") {
 			private static final long serialVersionUID = 1L;

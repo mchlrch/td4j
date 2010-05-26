@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2009 Michael Rauch
+  Copyright (C) 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package org.td4j.examples.person;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.td4j.core.reflect.Executable;
-import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.ShowProperties;
 
 
 /**
@@ -33,21 +33,29 @@ import org.td4j.core.reflect.ExposeProperties;
  */
 public class PersonExample2 {
 	
+	public static void main(String[] args) {
+		Person homer = new Person("Homer", "Simpson");
+		homer.addAddress("742 Evergreen Terrace", "99001", "Springfield");
+
+		org.td4j.swing.workbench.Workbench.start(homer, Person.class, Address.class);
+	}
+	
+	
 	public static class Person {
 		
 		public String firstName;
 		public String lastName;
 		
-		@ExposeProperties({"street", "zip", "city"})
+		@ShowProperties({"street", "zip", "city"})
 		public List<Address> addresses = new ArrayList<Address>();
 		
-		@Executable(paramNames = { "firstName", "lastName" })
+		@Operation(paramNames = { "firstName", "lastName" })
 		Person(String firstName, String lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;
 		}		
 		
-		@Executable(paramNames = { "street", "zip", "city" })
+		@Operation(paramNames = { "street", "zip", "city" })
 		public void addAddress(String street, String zip, String city) {
 			final Address address = new Address(this, street, zip, city);
 			addresses.add(address);
@@ -82,7 +90,7 @@ public class PersonExample2 {
 		public String getZip() {		return zip;    }
 		public String getCity() {		return city;   }
 		
-		@Executable
+		@Operation
 		public void delete() {
 			person.removeAddress(this);
 			this.person = null;
@@ -94,11 +102,6 @@ public class PersonExample2 {
 	}
 	
 	
-	public static void main(String[] args) {
-		Person homer = new Person("Homer", "Simpson");
-		homer.addAddress("742 Evergreen Terrace", "99001", "Springfield");
 
-		org.td4j.swing.workbench.Workbench.start(homer, Person.class, Address.class);
-	}
 
 }

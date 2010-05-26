@@ -30,11 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.examples.AppLauncher;
 import org.td4j.swing.binding.ListController;
@@ -54,7 +54,7 @@ public class HelloPanel extends JPanel {
 
 	public HelloPanel() {
 		initUI();
-		mediator.setModel(new HelloModel());
+		mediator.setContext(new HelloModel());
 	}
 
 	private void initUI() {
@@ -71,29 +71,29 @@ public class HelloPanel extends JPanel {
 
 		// bind widgets
 		final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
-		final ScalarDataConnector nameConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "name");
-		final ScalarDataProxy nameProxy = new ScalarDataProxy(nameConnector, "name");
-		mediator.addModelSocket(nameProxy);
+		final IndividualDataConnector nameConnector = connectorFactory.createIndividualMethodConnector(HelloModel.class, "name");
+		final IndividualDataProxy nameProxy = new IndividualDataProxy(nameConnector, "name");
+		mediator.addContextSocket(nameProxy);
 		new TextController(nameText, nameProxy);
 
 		// PEND:
 		// final ICollectionValuePlug localeChoicePlug =
 		// DefaultModelInspector.createCollectionMethodPlug(HelloModel.class,
 		// "localeChoice");
-		final CollectionDataConnector localeChoiceConnector = connectorFactory.createCollectionFieldConnector(HelloModel.class, "localeChoiceField");
+		final ListDataConnector localeChoiceConnector = connectorFactory.createListFieldConnector(HelloModel.class, "localeChoiceField");
 		final ListDataProxy localeChoiceProxy = new ListDataProxy(localeChoiceConnector, "localeChoiceField");
-		mediator.addModelSocket(localeChoiceProxy); // use LoopbackUpdateHandler
+		mediator.addContextSocket(localeChoiceProxy); // use LoopbackUpdateHandler
 		new ListController(localeChooser, localeChoiceProxy);
 
 		// PEND: localeChoice selection auf "locale" binden
-		final ScalarDataConnector localeConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "locale");
-		final ScalarDataProxy localeProxy = new ScalarDataProxy(localeConnector, "locale");
-		mediator.addModelSocket(localeProxy);
+		final IndividualDataConnector localeConnector = connectorFactory.createIndividualMethodConnector(HelloModel.class, "locale");
+		final IndividualDataProxy localeProxy = new IndividualDataProxy(localeConnector, "locale");
+		mediator.addContextSocket(localeProxy);
 		new SelectionController(localeChooser.getSelectionModel(), new ListModelAdapter(localeChooser.getModel()), localeProxy);
 
-		final ScalarDataConnector messageConnector = connectorFactory.createScalarMethodConnector(HelloModel.class, "message");
-		final ScalarDataProxy messageProxy = new ScalarDataProxy(messageConnector, "message");
-		mediator.addModelSocket(messageProxy);
+		final IndividualDataConnector messageConnector = connectorFactory.createIndividualMethodConnector(HelloModel.class, "message");
+		final IndividualDataProxy messageProxy = new IndividualDataProxy(messageConnector, "message");
+		mediator.addContextSocket(messageProxy);
 		new TextController(messageText, messageProxy);
 
 		// add widgets to panel

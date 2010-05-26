@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.td4j.core.reflect.Executable;
+import org.td4j.core.reflect.Operation;
 import org.td4j.swing.workbench.Workbench;
 
 
@@ -47,13 +47,13 @@ public class ProjectExample {
 		public File licenseFile;
 		public URL website;
 		
-		@Executable(paramNames = { "projectName", "licenseFilePath", "websiteURL" })
+		@Operation(paramNames = { "projectName", "licenseFilePath", "websiteURL" })
 		public Project(String projectName, String licenseFilePath, String websiteURL) throws MalformedURLException, FileNotFoundException {
 			this.name = projectName;
 			editDetails(licenseFilePath, websiteURL);
 		}
 		
-		@Executable(paramNames = {"licenseFilePath", "websiteURL" })
+		@Operation(paramNames = {"licenseFilePath", "websiteURL" })
 		public void editDetails(String licenseFilePath, String websiteURL) throws MalformedURLException, FileNotFoundException {
 			this.licenseFile = new File(licenseFilePath);
 			if ( ! licenseFile.exists()) throw new FileNotFoundException(licenseFile.getAbsolutePath());
