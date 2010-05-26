@@ -21,16 +21,16 @@ package org.td4j.core.metamodel.container;
 
 import java.util.List;
 
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 
-public class ScalarProperties extends NamedItemsContainer<ScalarProperty> {
+public class IndividualProperties extends NamedItemsContainer<IndividualProperty> {
 	
-	public ScalarProperties(List<ScalarProperty> props) {
+	public IndividualProperties(List<IndividualProperty> props) {
 		super(props);
 	}
 	
 	@Override
-	protected String nameOfItem(ScalarProperty property) {
+	protected String nameOfItem(IndividualProperty property) {
 		return property.getName();
 	}
 
