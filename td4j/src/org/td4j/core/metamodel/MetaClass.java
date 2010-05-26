@@ -25,12 +25,12 @@ import java.util.List;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.container.ListProperties;
 import org.td4j.core.metamodel.container.Operations;
-import org.td4j.core.metamodel.container.ScalarProperties;
+import org.td4j.core.metamodel.container.IndividualProperties;
 import org.td4j.core.metamodel.feature.ListPropertiesKey;
 import org.td4j.core.metamodel.feature.OperationsKey;
-import org.td4j.core.metamodel.feature.ScalarPropertiesKey;
+import org.td4j.core.metamodel.feature.IndividualPropertiesKey;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 
 
 
@@ -43,8 +43,8 @@ public abstract class MetaClass implements FeatureRepository {
 //	public abstract MetaPackage getPackage();
 
 	
-	public List<ScalarProperty> getScalarProperties() {
-		final ScalarProperties props = getFeature(ScalarPropertiesKey.ALL);
+	public List<IndividualProperty> getIndividualProperties() {
+		final IndividualProperties props = getFeature(IndividualPropertiesKey.ALL);
 		if (props != null) {
 			return Collections.unmodifiableList(props.get());
 		} else {
@@ -52,8 +52,8 @@ public abstract class MetaClass implements FeatureRepository {
 		}
 	}
 	
-	public ScalarProperty getScalarProperty(String name) {
-		final ScalarProperties props = getFeature(ScalarPropertiesKey.ALL);
+	public IndividualProperty getIndividualProperty(String name) {
+		final IndividualProperties props = getFeature(IndividualPropertiesKey.ALL);
 		return props != null ? props.getByName(name) : null;
 	}
 	
@@ -87,9 +87,9 @@ public abstract class MetaClass implements FeatureRepository {
 	
 	// ==========================================================================
 	
-	protected void setScalarProperties(List<ScalarProperty> properties) {
-		final ScalarProperties props = new ScalarProperties(properties);
-		putFeature(ScalarPropertiesKey.ALL, props);
+	protected void setIndividualProperties(List<IndividualProperty> properties) {
+		final IndividualProperties props = new IndividualProperties(properties);
+		putFeature(IndividualPropertiesKey.ALL, props);
 	}
 	
 	protected void setListProperties(List<ListProperty> properties) {

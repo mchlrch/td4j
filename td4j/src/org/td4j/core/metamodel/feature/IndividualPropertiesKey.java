@@ -20,21 +20,21 @@
 package org.td4j.core.metamodel.feature;
 
 import org.td4j.core.metamodel.FeatureKey;
-import org.td4j.core.metamodel.container.ScalarProperties;
+import org.td4j.core.metamodel.container.IndividualProperties;
 
-public class ScalarPropertiesKey implements FeatureKey<ScalarProperties> {
+public class IndividualPropertiesKey implements FeatureKey<IndividualProperties> {
 	
-	public static final ScalarPropertiesKey ALL = new ScalarPropertiesKey();
+	public static final IndividualPropertiesKey ALL = new IndividualPropertiesKey();
 	
 	private final int hashCode;
 	
-	private ScalarPropertiesKey() {
+	private IndividualPropertiesKey() {
 		this.hashCode = getClass().hashCode();
 	}
 	
 	@Override
-	public Class<ScalarProperties> getFeatureType() {
-		return ScalarProperties.class;
+	public Class<IndividualProperties> getFeatureType() {
+		return IndividualProperties.class;
 	}
 	
 	// =============================================================
@@ -51,8 +51,8 @@ public class ScalarPropertiesKey implements FeatureKey<ScalarProperties> {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other instanceof ScalarPropertiesKey) {
-			final ScalarPropertiesKey that = (ScalarPropertiesKey) other;
+		if (other instanceof IndividualPropertiesKey) {
+			final IndividualPropertiesKey that = (IndividualPropertiesKey) other;
 			return that.canEqual(this);
 
 		} else {
@@ -61,7 +61,7 @@ public class ScalarPropertiesKey implements FeatureKey<ScalarProperties> {
 	}
 
 	public boolean canEqual(Object other) {
-		return other instanceof ScalarPropertiesKey;
+		return other instanceof IndividualPropertiesKey;
 	}
 
 }
