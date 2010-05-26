@@ -25,8 +25,8 @@ import java.util.List;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableList;
-import org.td4j.core.reflect.Executable;
-import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Workbench;
 
@@ -42,7 +42,7 @@ import org.td4j.swing.workbench.Workbench;
  * 
  */
 
-@ExposeProperties( { "firstName", "lastName", "address", "orders" })
+@ShowProperties( { "firstName", "lastName", "address", "orders" })
 public class Person extends Observable {
 
 	public String firstName;
@@ -72,14 +72,14 @@ public class Person extends Observable {
 
 	private final List<Order> orders = new ObservableList<Order>(new ArrayList<Order>(), changeSupport, "orders");
 
-	@Executable(paramNames={"firstname", "lastName"})
+	@Operation(paramNames={"firstname", "lastName"})
 	public Person(String firstName, String lastName) {
 		this.firstName = ObjectTK.enforceNotNull(firstName, "firstName");
 		this.lastName = ObjectTK.enforceNotNull(lastName, "lastName");
 		this.active = true;
 	}
 
-	@Executable(paramNames={"street", "zip", "city"})
+	@Operation(paramNames={"street", "zip", "city"})
 	public Address at(String street, String zip, String city) {
 		final Address newAddress = new Address(this, street, zip, city);
 		final ChangeEvent event = changeSupport.preparePropertyChange("address", this.address, newAddress);
@@ -88,7 +88,7 @@ public class Person extends Observable {
 		return address;
 	}
 
-	@Executable
+	@Operation
 	public Order order() {
 		final Order order = new Order(this);
 		orders.add(order);
@@ -112,24 +112,24 @@ public class Person extends Observable {
 		return "" + firstName + " " + lastName;
 	}
 	
-	@Executable
+	@Operation
 	public void printName(Boolean uppercase) {
 		final String printName = uppercase != null && uppercase.booleanValue() ? toString().toUpperCase() : toString();
 		System.out.println(printName);
 	}
 	
-	@Executable
+	@Operation
 	public static void printClass() {
 		System.out.println(Person.class.getName());
 	}
 	
-	@Executable(paramNames={"head", "tail"})
+	@Operation(paramNames={"head", "tail"})
 	public void concat(String s1, String s2) {
 		System.out.println("" + s1 + " " + s2);
 	}
 	
 	
-	@Executable
+	@Operation
 	public void clearAddress() {
 		final ChangeEvent event = changeSupport.preparePropertyChange("address", this.address, null);
 		if (event == null) return;

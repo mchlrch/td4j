@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 package org.td4j.examples.person;
 
-import org.td4j.core.reflect.Executable;
+import org.td4j.core.reflect.Operation;
 import org.td4j.swing.workbench.Workbench;
 
 
@@ -40,14 +40,16 @@ public class PersonExample {
 		public String firstName;
 		public String lastName;
 		public Address address;
+		
+		// TODO: birthdate als PrimitiveType implementieren - toString / fromString
 
-		@Executable(paramNames = { "firstname", "lastName" })
+		@Operation(paramNames = { "firstname", "lastName" })
 		public Person(String firstName, String lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;
 		}
 
-		@Executable(paramNames = { "street", "zip", "city" })
+		@Operation(paramNames = { "street", "zip", "city" })
 		public Address setAddress(String street, String zip, String city) {
 			address = new Address(this, street, zip, city);
 			return address;

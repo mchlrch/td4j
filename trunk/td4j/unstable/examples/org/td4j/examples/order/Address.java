@@ -23,12 +23,12 @@ import java.util.List;
 
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
-import org.td4j.core.reflect.Executable;
-import org.td4j.core.reflect.ExposeProperties;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.tk.ObjectTK;
 
 
-@ExposeProperties
+@ShowProperties
 public class Address extends Observable {
 
 	public Person person;
@@ -36,7 +36,7 @@ public class Address extends Observable {
 	public String zip;
 	public String city;
 
-	@Executable
+	@Operation
 	public static List<Address> findAddresses() {
 		return Person.addressChoice;
 	}
@@ -69,12 +69,12 @@ public class Address extends Observable {
 		return "bar";
 	}
 
-	@Executable
+	@Operation
 	public void printPerson() {
 		System.out.println(person);
 	}
 
-	@Executable
+	@Operation
 	public static void printClass() {
 		System.out.println(Address.class.getName());
 	}

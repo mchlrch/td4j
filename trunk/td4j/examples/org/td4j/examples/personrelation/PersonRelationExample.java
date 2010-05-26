@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ package org.td4j.examples.personrelation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.td4j.core.reflect.Executable;
-import org.td4j.core.reflect.ExposeProperties;
-import org.td4j.core.reflect.ExposePropertiesInEditorList;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.ShowProperties;
+import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.swing.workbench.Workbench;
 
 /**
@@ -43,19 +43,19 @@ public class PersonRelationExample {
 
 	// --------------------------------------
 
-	@ExposePropertiesInEditorList( { "firstName", "lastName" })
+	@ShowPropertiesInEditorList( { "firstName", "lastName" })
 	public static class Person {
 
 		public String firstName;
 		public String lastName;
 
-		@ExposeProperties( { "forwardRole", "to" })
+		@ShowProperties( { "forwardRole", "to" })
 		public List<PersonRelation> relationsOut = new ArrayList<PersonRelation>();
 
-		@ExposeProperties( { "backwardRole", "from" })
+		@ShowProperties( { "backwardRole", "from" })
 		public List<PersonRelation> relationsIn = new ArrayList<PersonRelation>();
 
-		@Executable(paramNames = { "firstName", "lastName" })
+		@Operation(paramNames = { "firstName", "lastName" })
 		public Person(String firstName, String lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;
