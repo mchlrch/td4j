@@ -24,23 +24,23 @@ import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.tk.ObjectTK;
 
 
-public class ScalarDataProxy extends DataProxy {
+public class IndividualDataProxy extends DataProxy {
 
-	private final ScalarDataConnector dataAccess;
+	private final IndividualDataConnector dataAccess;
 	private final IConverter converter;
 
-	public ScalarDataProxy(ScalarDataConnector dataConnector, String name) {
+	public IndividualDataProxy(IndividualDataConnector dataConnector, String name) {
 		this(dataConnector, name, null);
 	}
 	
-	public ScalarDataProxy(ScalarDataConnector dataConnector, String name, IConverter converter) {
+	public IndividualDataProxy(IndividualDataConnector dataConnector, String name, IConverter converter) {
 		super(name);
 		this.dataAccess = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 		this.converter = converter;
 	}
 
 	@Override
-	public Class<?> getModelType() {
+	public Class<?> getContextType() {
 		return dataAccess.getContextType();
 	}
 	
@@ -53,15 +53,15 @@ public class ScalarDataProxy extends DataProxy {
 	}
 
 	public boolean canRead() {
-		return dataAccess.canRead(getModel()) && (converter == null || converter.canConvert());
+		return dataAccess.canRead(getContext()) && (converter == null || converter.canConvert());
 	}
 
 	public boolean canWrite() {
-		return dataAccess.canWrite(getModel()) && (converter == null || converter.canUnconvert());
+		return dataAccess.canWrite(getContext()) && (converter == null || converter.canUnconvert());
 	}
 
 	public Object readValue() {
-		final Object val = dataAccess.readValue(getModel());
+		final Object val = dataAccess.readValue(getContext());
 		if (converter == null) {
 			return val;
 		} else {
@@ -75,7 +75,7 @@ public class ScalarDataProxy extends DataProxy {
 			val = converter.unconvert(val);
 		}
 
-		dataAccess.writeValue(getModel(), val);
+		dataAccess.writeValue(getContext(), val);
 
 		valueModified();
 	}

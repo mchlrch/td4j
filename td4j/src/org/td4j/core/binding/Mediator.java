@@ -31,46 +31,48 @@ import org.td4j.core.tk.ObjectTK;
 
 
 
-public class Mediator<T> extends Observable implements IModelSocket {
+public class Mediator<T> extends Observable implements ContextSocket {
 
-	private final List<IModelSocket> sockets = new ArrayList<IModelSocket>();
-	private final Class<T> modelType;
-	private T model;
+	private final List<ContextSocket> sockets = new ArrayList<ContextSocket>();
+	private final Class<T> ctxType;
+	private T ctx;
 
 	private final LoopbackObserver loopbackObserver = new LoopbackObserver(this);
 
-	public Mediator(Class<T> modelType) {
-		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
+	public Mediator(Class<T> ctxType) {
+		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
 	}
 
-	public Class<?> getModelType() {
-		return modelType;
+	public Class<?> getContextType() {
+		return ctxType;
 	}
 
-	public T getModel() {
-		return model;
+	public T getContext() {
+		return ctx;
 	}
 
-	public void setModel(Object model) {
-		final ChangeEvent changeEvent = changeSupport.preparePropertyChange("model", this.model, model);
+	public void setContext(Object ctx) {
+		
+		// TODO: rename model-2-ctx für changeEvent nicht durchgeführt :: besser spezifisches Event für Mediator machen, nicht standard changeEvent
+		final ChangeEvent changeEvent = changeSupport.preparePropertyChange("model", this.ctx, ctx);
 		if (changeEvent == null) return;
 		
-		if (model != null && ! modelType.isAssignableFrom(model.getClass())) {
-			throw new IllegalArgumentException("type mismatch: " + model.getClass().getName() + " != " + modelType.getName());
+		if (ctx != null && ! ctxType.isAssignableFrom(ctx.getClass())) {
+			throw new IllegalArgumentException("type mismatch: " + ctx.getClass().getName() + " != " + ctxType.getName());
 		}
 
-		this.model = (T) model;
+		this.ctx = (T) ctx;
 		
-		for (IModelSocket delegate : sockets) {
-			delegate.setModel(model);
+		for (ContextSocket delegate : sockets) {
+			delegate.setContext(ctx);
 		}
 		
 		changeSupport.fire(changeEvent);
 	}
 
-	public void refreshFromModel() {
-		for (IModelSocket delegate : sockets) {
-			delegate.refreshFromModel();
+	public void refreshFromContext() {
+		for (ContextSocket delegate : sockets) {
+			delegate.refreshFromContext();
 		}
 		
 		changeSupport.fireStateChange();
@@ -78,29 +80,29 @@ public class Mediator<T> extends Observable implements IModelSocket {
 
 	// interface to controller delegates
 	// PEND: ev. mit callback methode auf delegate prüfen, ob delegate nicht schon
-	// an anderem mediator angehängt ist (ScalarWidgetController.bindPlug())
-	public void addModelSocket(IModelSocket delegate) {
+	// an anderem mediator angehängt ist (IndividualWidgetController.bindPlug())
+	public void addContextSocket(ContextSocket delegate) {
 		if ( ! sockets.contains(delegate)) {
 			addLoopbackObserver(delegate);
 			sockets.add(delegate);
-			delegate.setModel(model);
+			delegate.setContext(ctx);
 		}
 	}
 
-	public void removeModelSocket(IModelSocket delegate) {
+	public void removeContextSocket(ContextSocket delegate) {
 		sockets.remove(delegate);
 		removeLoopbackObserver(delegate);
-		delegate.setModel(null);
+		delegate.setContext(null);
 	}
 
-	private void addLoopbackObserver(IModelSocket delegate) {
+	private void addLoopbackObserver(ContextSocket delegate) {
 		if (delegate instanceof DataProxy) {
 			final DataProxy proxy = (DataProxy) delegate;
 			proxy.addObserver(loopbackObserver, new ChangeEventFilter(proxy, ChangeEvent.Type.Custom));
 		}
 	}
 
-	private void removeLoopbackObserver(IModelSocket delegate) {
+	private void removeLoopbackObserver(ContextSocket delegate) {
 		if (delegate instanceof DataProxy) {
 			final DataProxy proxy = (DataProxy) delegate;
 			proxy.removeObserver(loopbackObserver);
@@ -117,7 +119,7 @@ public class Mediator<T> extends Observable implements IModelSocket {
 
 		public void observableChanged(ChangeEvent event) {
 			if (DataProxy.DataProxyChangeEvent.CustomEvent.ValueModified == event.getCustomPayload() && mediator.sockets.contains(event.getSource())) {
-				mediator.refreshFromModel();
+				mediator.refreshFromContext();
 			}
 		}
 	}

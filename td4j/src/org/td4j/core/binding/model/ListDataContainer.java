@@ -22,14 +22,14 @@ package org.td4j.core.binding.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.td4j.core.internal.binding.model.CollectionDataContainerConnector;
+import org.td4j.core.internal.binding.model.ListDataContainerConnector;
 import org.td4j.core.model.Observable;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
 
 
-public class CollectionDataContainer<T> extends Observable {
+public class ListDataContainer<T> extends Observable {
 
 	private final Class<T> contentType;	
 	private final boolean canRead;
@@ -38,11 +38,11 @@ public class CollectionDataContainer<T> extends Observable {
 
 	private List<T> content;
 
-	public CollectionDataContainer(Class<T> contentType, String propertyName) {
+	public ListDataContainer(Class<T> contentType, String propertyName) {
 		this(contentType, propertyName, true, true);
 	}
 
-	public CollectionDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
+	public ListDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
 		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
 		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
 
@@ -54,10 +54,6 @@ public class CollectionDataContainer<T> extends Observable {
 		return contentType;
 	}
 	
-	public Class<?> getCollectionType() {
-		return List.class;
-	}
-
 	public boolean canRead() {
 		return canRead;
 	}
@@ -107,9 +103,9 @@ public class CollectionDataContainer<T> extends Observable {
 	}
 
 	public ListDataProxy createProxy() {
-		final CollectionDataContainerConnector con = new CollectionDataContainerConnector(getContentType(), getCollectionType());
+		final ListDataContainerConnector con = new ListDataContainerConnector(getContentType());
 		final ListDataProxy proxy = new ListDataProxy(con, getPropertyName());
-		proxy.setModel(this);
+		proxy.setContext(this);
 		return proxy;
 	}
 

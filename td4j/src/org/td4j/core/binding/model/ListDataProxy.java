@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 
 
@@ -36,20 +36,20 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 	
 	// TODO: cleanup this hack
 	private final NestedPropertiesProvider nestedPropertyProvider;
-	private ScalarProperty[] nestedProperties;
+	private IndividualProperty[] nestedProperties;
 	
-	public ListDataProxy(CollectionDataConnector dataConnector, String name) {
+	public ListDataProxy(ListDataConnector dataConnector, String name) {
 		this(dataConnector, name, null);
 	}
 	
-	public ListDataProxy(CollectionDataConnector dataConnector, String name, NestedPropertiesProvider nestedPropertyProvider) {
+	public ListDataProxy(ListDataConnector dataConnector, String name, NestedPropertiesProvider nestedPropertyProvider) {
 		super(name);		
 		this.dataAccess = new ListDataAccessAdapter(dataConnector); 
 		this.nestedPropertyProvider = nestedPropertyProvider;
 	}
 	
 	@Override
-	public Class<?> getModelType() {
+	public Class<?> getContextType() {
 		return dataAccess.getContextType();
 	}
 	
@@ -58,14 +58,14 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 	}
 
 	public boolean canRead() {
-		return dataAccess.canRead(getModel());
+		return dataAccess.canRead(getContext());
 	}
 
 	public List<?> readValue() {
-		return dataAccess.readValue(getModel());
+		return dataAccess.readValue(getContext());
 	}
 	
-	public void setNestedProperties(ScalarProperty[] nestedProperties) {
+	public void setNestedProperties(IndividualProperty[] nestedProperties) {
 		this.nestedProperties = nestedProperties;
 	}
 
@@ -77,13 +77,13 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 	}
 	
 	@Override
-	public ScalarProperty[] getNestedProperties() {
+	public IndividualProperty[] getNestedProperties() {
 		if (nestedProperties != null && nestedProperties.length > 0) {
 			return nestedProperties;
 		} else if (nestedPropertyProvider != null) {
 			return nestedPropertyProvider.getNestedProperties();
 		} else {
-			return new ScalarProperty[0];
+			return new IndividualProperty[0];
 		}
 	}	
 
@@ -97,9 +97,9 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 	
 	private static class ListDataAccessAdapter {
 
-		private final CollectionDataConnector connector;
+		private final ListDataConnector connector;
 		
-		private ListDataAccessAdapter(CollectionDataConnector connector) {
+		private ListDataAccessAdapter(ListDataConnector connector) {
 			this.connector = ObjectTK.enforceNotNull(connector, "connector");
 		}
 		

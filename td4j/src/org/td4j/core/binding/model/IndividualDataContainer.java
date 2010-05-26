@@ -19,7 +19,7 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.internal.binding.model.ScalarDataContainerConnector;
+import org.td4j.core.internal.binding.model.IndividualDataContainerConnector;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.model.Observable;
@@ -28,7 +28,7 @@ import org.td4j.core.tk.StringTK;
 
 
 
-public class ScalarDataContainer<T> extends Observable {
+public class IndividualDataContainer<T> extends Observable {
 
 	private final Class<T> contentType;
 	private final boolean canRead;
@@ -37,11 +37,11 @@ public class ScalarDataContainer<T> extends Observable {
 
 	private T content;
 
-	public ScalarDataContainer(Class<T> contentType, String propertyName) {
+	public IndividualDataContainer(Class<T> contentType, String propertyName) {
 		this(contentType, propertyName, true, true);
 	}
 
-	public ScalarDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
+	public IndividualDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
 		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
 		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
 
@@ -76,16 +76,16 @@ public class ScalarDataContainer<T> extends Observable {
 		changeSupport.fireStateChange();
 	}
 
-	public ScalarDataProxy createProxy() {
-		final ScalarDataContainerConnector con = new ScalarDataContainerConnector(getContentType());
+	public IndividualDataProxy createProxy() {
+		final IndividualDataContainerConnector con = new IndividualDataContainerConnector(getContentType());
 
 		// PEND: fix this, temporary only conversion to String supported !!
 		final Class<?> fromType = getContentType();
 		final Class<?> toType = String.class;
 		final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
 
-		final ScalarDataProxy proxy = new ScalarDataProxy(con, getPropertyName(), converter);
-		proxy.setModel(this);
+		final IndividualDataProxy proxy = new IndividualDataProxy(con, getPropertyName(), converter);
+		proxy.setContext(this);
 
 		return proxy;
 	}

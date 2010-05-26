@@ -19,25 +19,25 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.binding.IModelSocket;
+import org.td4j.core.binding.ContextSocket;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.tk.ObjectTK;
 
 
-public class ScalarDataRelay implements IObserver {
+public class IndividualDataRelay implements IObserver {
 
-	private ScalarDataProxy master;
-	private IModelSocket slave;
+	private IndividualDataProxy master;
+	private ContextSocket slave;
 
-	public ScalarDataRelay(ScalarDataProxy master, IModelSocket slave) {
+	public IndividualDataRelay(IndividualDataProxy master, ContextSocket slave) {
 		this.master = ObjectTK.enforceNotNull(master, "master");
 		this.slave = ObjectTK.enforceNotNull(slave, "slave");
 
-		final Class<?> slaveType = slave.getModelType();
+		final Class<?> slaveType = slave.getContextType();
 		if ( ! slaveType.isAssignableFrom(master.getValueType())) {
-			throw new IllegalArgumentException("type mismatch: " + master.getValueType().getName() + " cannot be cascaded with " + slave.getModelType().getName());
+			throw new IllegalArgumentException("type mismatch: " + master.getValueType().getName() + " cannot be cascaded with " + slave.getContextType().getName());
 		}
 
 		master.addObserver(this, new ChangeEventFilter(master, ChangeEvent.Type.StateChange));
@@ -46,7 +46,7 @@ public class ScalarDataRelay implements IObserver {
 	}
 
 	private void updateSlave() {
-		slave.setModel(master.readValue());
+		slave.setContext(master.readValue());
 	}
 
 	public void dispose() {
