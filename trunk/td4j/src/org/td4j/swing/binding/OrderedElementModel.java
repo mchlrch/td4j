@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,24 +19,10 @@
 
 package org.td4j.swing.binding;
 
-import java.awt.Component;
+public interface OrderedElementModel {
 
-import javax.swing.JLabel;
+	public int getSize();
 
-import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarWidgetController;
-
-
-public abstract class ScalarSwingWidgetController<W extends Component> extends ScalarWidgetController<W> {
-
-	ScalarSwingWidgetController(ScalarDataProxy dataProxy) {
-		super(dataProxy);
-	}
-
-	public JLabel getLabel() {
-		final ICaption caption = getCaption();
-		return caption instanceof Caption ? ((Caption) caption).getLabel() : null;
-	}
+	public Object getElementAt(int index);
 
 }

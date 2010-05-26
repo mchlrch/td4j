@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,20 +17,28 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.reflect;
+package org.td4j.swing.binding;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.swing.JLabel;
 
-import org.td4j.core.internal.metamodel.JavaModelInspector;
+import org.td4j.core.binding.model.Caption;
+import org.td4j.core.tk.ObjectTK;
 
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface ExposeProperties {
-	String[] value() default {};
+public class LabelCaption implements Caption {
 
-	JavaModelInspector.Level level() default JavaModelInspector.Level.XRAY;
+	private final JLabel label;
+
+	public LabelCaption(JLabel label) {
+		this.label = ObjectTK.enforceNotNull(label, "label");
+	}
+
+	public void setText(String caption) {
+		label.setText(caption != null ? caption : "");
+	}
+
+	public JLabel getLabel() {
+		return label;
+	}
+
 }

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,8 +24,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.td4j.core.internal.metamodel.JavaModelInspector;
+
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target( { ElementType.FIELD, ElementType.METHOD })
-public @interface Expose {
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
+public @interface ShowProperties {
+	String[] value() default {};
+
+	JavaModelInspector.Level level() default JavaModelInspector.Level.XRAY;
 }

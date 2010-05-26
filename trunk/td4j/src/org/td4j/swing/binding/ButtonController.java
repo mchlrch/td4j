@@ -23,11 +23,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.tk.ObjectTK;
 
 
-public class ButtonController extends ScalarSwingWidgetController<AbstractButton> {
+public class ButtonController extends IndividualSwingWidgetController<AbstractButton> {
 
 	private AbstractButton widget;
 
@@ -37,7 +37,7 @@ public class ButtonController extends ScalarSwingWidgetController<AbstractButton
 		};
 	};
 
-	public ButtonController(AbstractButton widget, ScalarDataProxy proxy) {
+	public ButtonController(AbstractButton widget, IndividualDataProxy proxy) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 		

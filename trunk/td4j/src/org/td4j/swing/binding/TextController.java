@@ -28,11 +28,11 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
 
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.tk.ObjectTK;
 
 
-public class TextController extends ScalarSwingWidgetController<JTextField> {
+public class TextController extends IndividualSwingWidgetController<JTextField> {
 
 	private final JTextField widget;
 
@@ -51,11 +51,11 @@ public class TextController extends ScalarSwingWidgetController<JTextField> {
 		}
 	};
 
-	public TextController(JTextField widget, ScalarDataProxy proxy) {
+	public TextController(JTextField widget, IndividualDataProxy proxy) {
 		this(widget, proxy, true);
 	}
 
-	public TextController(JTextField widget, ScalarDataProxy proxy, boolean registerListeners) {
+	public TextController(JTextField widget, IndividualDataProxy proxy, boolean registerListeners) {
 		super(proxy);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");

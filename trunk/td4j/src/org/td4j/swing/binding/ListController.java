@@ -20,7 +20,6 @@
 package org.td4j.swing.binding;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -31,7 +30,7 @@ import org.td4j.core.tk.ObjectTK;
 
 
 
-public class ListController extends CollectionSwingWidgetController<JList> {
+public class ListController extends ListSwingWidgetController<JList> {
 
 	private final JList widget;
 	private final MyListModel model;
@@ -47,8 +46,8 @@ public class ListController extends CollectionSwingWidgetController<JList> {
 		updateView();
 	}
 
-	protected void updateView0(Collection<?> newValue) {
-		model.setCollection(newValue);
+	protected void updateView0(List<?> newValue) {
+		model.setContent(newValue);
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class ListController extends CollectionSwingWidgetController<JList> {
 			return list.get(index);
 		}
 
-		private void setCollection(Collection<?> newValue) {
+		private void setContent(List<?> newValue) {
 			list = newValue != null ? new ArrayList<Object>(newValue) : null;
 
 			// PEND: only fire for range that actually changed

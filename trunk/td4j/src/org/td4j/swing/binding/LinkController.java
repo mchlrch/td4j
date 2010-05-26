@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ import java.net.URL;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
@@ -43,7 +43,7 @@ import org.td4j.swing.workbench.Navigator;
 
 
 
-public class LinkController extends ScalarSwingWidgetController<JLabel> {
+public class LinkController extends IndividualSwingWidgetController<JLabel> {
 
 	private static final LinkHandler linkHandler = new LinkHandler();
 	
@@ -51,7 +51,7 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 	private final Navigator navigator;
 	private final LinkTargetObserver linkTargetObserver = new LinkTargetObserver(this);
 	
-	public LinkController(final JLabel widget, ScalarDataProxy proxy, final Navigator navigator) {
+	public LinkController(final JLabel widget, IndividualDataProxy proxy, final Navigator navigator) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");		
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
@@ -77,7 +77,7 @@ public class LinkController extends ScalarSwingWidgetController<JLabel> {
 	}
 	
 	protected void doNavigate() {
-		final ScalarDataProxy dataProxy = getDataProxy();
+		final IndividualDataProxy dataProxy = getDataProxy();
 		final Class<?> valueType = dataProxy.getValueType();
 		final Object value = dataProxy.readValue();
 		
