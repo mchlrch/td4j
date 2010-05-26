@@ -19,50 +19,46 @@
 
 package org.td4j.core.internal.binding.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
+import org.td4j.core.binding.model.IndividualDataContainer;
 import org.td4j.core.tk.ObjectTK;
 
 
+public class IndividualDataContainerConnector extends AbstractIndividualDataConnector {
 
-public class ScalarFieldConnector extends AbstractScalarDataConnector {
-
-	private final Field field;
-
-	public ScalarFieldConnector(Class<?> modelType, Field field) {
-		super(modelType, field.getType());
-
-		this.field = field;
-	}
-	
-	public Field getField() {
-		return field;
+	public IndividualDataContainerConnector(Class<?> valueType) {
+		super(IndividualDataContainer.class, valueType);
 	}
 
 	public boolean canRead(Object ctx) {
-		return ctx != null;
+		return ctx != null && contextAsContainer(ctx).canRead();
 	}
 
 	public boolean canWrite(Object ctx) {
-		return ! Modifier.isFinal(field.getModifiers());
+		return ctx != null && contextAsContainer(ctx).canWrite();
 	}
 
 	@Override
 	protected Object readValue0(Object ctx) throws Exception {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		return field.get(ctx);
+		return contextAsContainer(ctx).getContent();
 	}
 
 	@Override
 	protected void writeValue0(Object ctx, Object val) throws Exception {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		field.set(ctx, val);
+		contextAsContainer(ctx).setContent(val);
 	}
 
 	@Override
 	public String toString() {
-		return getContextType().getName() + "#" + field.getName();
+		return getClass().getName() + ": valueType=" + getValueType();
+	}
+
+	protected IndividualDataContainer<Object> contextAsContainer(Object ctx) {
+		@SuppressWarnings("unchecked")
+		final IndividualDataContainer<Object> container = (IndividualDataContainer<Object>) ctx;
+
+		return container;
 	}
 
 }

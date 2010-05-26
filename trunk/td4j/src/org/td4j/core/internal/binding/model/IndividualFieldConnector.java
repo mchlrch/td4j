@@ -19,62 +19,50 @@
 
 package org.td4j.core.internal.binding.model;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
-import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.tk.ObjectTK;
 
 
 
-public class ScalarMethodConnector extends AbstractScalarDataConnector {
+public class IndividualFieldConnector extends AbstractIndividualDataConnector {
 
-	private final Method getterMethod;
-	private final Method setterMethod;
-	private final Object[] argumentValues;
+	private final Field field;
 
-	public ScalarMethodConnector(Class<?> modelType, Method getter, Method setter) {
-		this(modelType, getter, setter, new Object[0]);
-	}
+	public IndividualFieldConnector(Class<?> ctxType, Field field) {
+		super(ctxType, field.getType());
 
-	public ScalarMethodConnector(Class<?> modelType, Method getter, Method setter, Object[] argumentValues) {
-		super(modelType, getter.getReturnType());
-
-		this.getterMethod = getter;
-		this.setterMethod = setter;
-		this.argumentValues = argumentValues;
+		this.field = field;
 	}
 	
-	public Method getGetterMethod() {
-		return getterMethod;
-	}
-	
-	public Method getSetterMethod() {
-		return setterMethod;
+	public Field getField() {
+		return field;
 	}
 
 	public boolean canRead(Object ctx) {
-		return getterMethod != null && ctx != null;
+		return ctx != null;
 	}
 
 	public boolean canWrite(Object ctx) {
-		return setterMethod != null && ctx != null;
+		return ! Modifier.isFinal(field.getModifiers());
 	}
 
 	@Override
 	protected Object readValue0(Object ctx) throws Exception {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		return getterMethod.invoke(ctx, argumentValues);
+		return field.get(ctx);
 	}
 
 	@Override
 	protected void writeValue0(Object ctx, Object val) throws Exception {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		setterMethod.invoke(ctx, ReflectionTK.composeArray(argumentValues, val));
+		field.set(ctx, val);
 	}
 
 	@Override
 	public String toString() {
-		return getContextType().getName() + "." + getterMethod.getName() + ":" + getterMethod.getReturnType().getName();
+		return getContextType().getName() + "#" + field.getName();
 	}
 
 }

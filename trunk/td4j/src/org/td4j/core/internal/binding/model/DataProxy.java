@@ -19,7 +19,7 @@
 
 package org.td4j.core.internal.binding.model;
 
-import org.td4j.core.binding.IModelSocket;
+import org.td4j.core.binding.ContextSocket;
 import org.td4j.core.internal.model.ChangeEventImpl;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
@@ -28,10 +28,10 @@ import org.td4j.core.model.ObservableTK;
 import org.td4j.core.tk.ObjectTK;
 
 
-public abstract class DataProxy extends Observable implements IModelSocket, IObserver {
+public abstract class DataProxy extends Observable implements ContextSocket, IObserver {
 
 	private final String name;
-	private Object model;
+	private Object ctx;
 
 	/**
 	 * @param name is used to filter out propertyChangeEvents for this propertyName. May be null
@@ -40,37 +40,37 @@ public abstract class DataProxy extends Observable implements IModelSocket, IObs
 		this.name = name;
 	}
 
-	public Object getModel() {
-		return model;
+	public Object getContext() {
+		return ctx;
 	}
 
-	public void setModel(Object model) {
-		modelChanged(getModel(), model);
+	public void setContext(Object ctx) {
+		contextChanged(getContext(), ctx);
 	}
 
-	private void modelChanged(Object prevModel, Object model) {
-		final Class<?> modelType = getModelType();
+	private void contextChanged(Object prevCtx, Object ctx) {
+		final Class<?> ctxType = getContextType();
 
-		if (model != null && ! modelType.isAssignableFrom(model.getClass())) {
-			throw new IllegalArgumentException("type mismatch: " + model.getClass().getName() + " != " + modelType.getName());
+		if (ctx != null && ! ctxType.isAssignableFrom(ctx.getClass())) {
+			throw new IllegalArgumentException("type mismatch: " + ctx.getClass().getName() + " != " + ctxType.getName());
 		}
 
-		if ( ! ObjectTK.equal(prevModel, model)) {
-			if (prevModel != null) {
-				ObservableTK.detachObserverFromModel(prevModel, this);
+		if ( ! ObjectTK.equal(prevCtx, ctx)) {
+			if (prevCtx != null) {
+				ObservableTK.detachObserverFromModel(prevCtx, this);
 			}
 
-			this.model = model;
+			this.ctx = ctx;
 
-			if (model != null) {
-				ObservableTK.attachObserverToModel(model, this);
+			if (ctx != null) {
+				ObservableTK.attachObserverToModel(ctx, this);
 			}
 
 			changeSupport.fireStateChange();
 		}
 	}
 
-	public void refreshFromModel() {
+	public void refreshFromContext() {
 		changeSupport.fireStateChange();
 	}
 
@@ -81,7 +81,7 @@ public abstract class DataProxy extends Observable implements IModelSocket, IObs
 	}
 
 	public void observableChanged(ChangeEvent event) {
-		if (event.getSource() != model) return;
+		if (event.getSource() != ctx) return;
 
 		switch (event.getType()) {
 		case StateChange:

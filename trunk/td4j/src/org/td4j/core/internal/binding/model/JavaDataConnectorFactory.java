@@ -45,12 +45,12 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 		return createFieldConnector(cls, name);
 	}
 	
-	public ScalarFieldConnector createScalarFieldConnector(Class<?> cls, String name) {
-		return (ScalarFieldConnector) createFieldConnector(cls, name);
+	public IndividualFieldConnector createIndividualFieldConnector(Class<?> cls, String name) {
+		return (IndividualFieldConnector) createFieldConnector(cls, name);
 	}
 	
-	public CollectionFieldConnector createCollectionFieldConnector(Class<?> cls, String name) {
-		return (CollectionFieldConnector) createFieldConnector(cls, name);
+	public ListFieldConnector createListFieldConnector(Class<?> cls, String name) {
+		return (ListFieldConnector) createFieldConnector(cls, name);
 	}
 	
 	public DataConnector createFieldConnector(Class<?> cls, String name) {
@@ -74,27 +74,27 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
 			final Class<?> itemType = ReflectionTK.getItemType(field);
-			final CollectionFieldConnector connector = new CollectionFieldConnector(cls, field, itemType);
+			final ListFieldConnector connector = new ListFieldConnector(cls, field, itemType);
 			return connector;
 		} else {
-			return new ScalarFieldConnector(cls, field);
+			return new IndividualFieldConnector(cls, field);
 		}
 	}
 
-	public ScalarMethodConnector createScalarMethodConnector(Class<?> cls, String name) {
-		return (ScalarMethodConnector) createMethodConnector(cls, name);
+	public IndividualMethodConnector createIndividualMethodConnector(Class<?> cls, String name) {
+		return (IndividualMethodConnector) createMethodConnector(cls, name);
 	}
 	
-	public ScalarMethodConnector createScalarMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		return (ScalarMethodConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
+	public IndividualMethodConnector createIndividualMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
+		return (IndividualMethodConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
 	}
 	
-	public CollectionMethodConnector createCollectionMethodConnector(Class<?> cls, String name) {
-		return (CollectionMethodConnector) createMethodConnector(cls, name);
+	public ListMethodConnector createListMethodConnector(Class<?> cls, String name) {
+		return (ListMethodConnector) createMethodConnector(cls, name);
 	}
 
-	public CollectionMethodConnector createCollectionMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
-		return (CollectionMethodConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
+	public ListMethodConnector createListMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues) {
+		return (ListMethodConnector) createMethodConnector(cls, name, argumentTypes, argumentValues);
 	}
 	
 	public DataConnector createMethodConnector(Class<?> cls, String name) {
@@ -122,11 +122,11 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 
 		if (Collection.class.isAssignableFrom(valueType)) {
 			final Class<?> itemType = ReflectionTK.getItemType(getter);
-			final CollectionMethodConnector connector = new CollectionMethodConnector(cls, getter, itemType, argumentValues); 
+			final ListMethodConnector connector = new ListMethodConnector(cls, getter, itemType, argumentValues); 
 			return connector;
 
 		} else {
-			return new ScalarMethodConnector(cls, getter, setter, argumentValues);
+			return new IndividualMethodConnector(cls, getter, setter, argumentValues);
 		}
 	}
 
