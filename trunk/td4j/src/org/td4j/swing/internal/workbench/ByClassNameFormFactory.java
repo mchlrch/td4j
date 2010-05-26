@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
-import org.td4j.swing.workbench.IFormFactory;
+import org.td4j.swing.workbench.FormFactory;
 
 
-public class ByClassNameFormFactory implements IFormFactory {
+public class ByClassNameFormFactory implements FormFactory {
 
 	@Override
 	public Form createForm(Editor editor, Class<?> modelType) {

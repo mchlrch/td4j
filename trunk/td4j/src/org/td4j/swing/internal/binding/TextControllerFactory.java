@@ -22,21 +22,21 @@ package org.td4j.swing.internal.binding;
 import javax.swing.JTextField;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarWidgetControllerFactory;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
 import org.td4j.swing.binding.TextController;
 
 
-public class TextControllerFactory extends ScalarWidgetControllerFactory<TextController, JTextField> {
+public class TextControllerFactory extends IndividualWidgetControllerFactory<TextController, JTextField> {
 
-	public TextControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JTextField widget, ICaption caption) {
+	public TextControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JTextField widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 
 	@Override
-	protected TextController createController(ScalarDataProxy dataProxy, JTextField widget) {
+	protected TextController createController(IndividualDataProxy dataProxy, JTextField widget) {
 		return new TextController(widget, dataProxy);
 	}
 

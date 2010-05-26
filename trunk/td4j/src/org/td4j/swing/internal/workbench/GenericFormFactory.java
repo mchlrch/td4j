@@ -23,10 +23,10 @@ import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
-import org.td4j.swing.workbench.IFormFactory;
+import org.td4j.swing.workbench.FormFactory;
 
 
-public class GenericFormFactory implements IFormFactory {
+public class GenericFormFactory implements FormFactory {
 
 	private final MetaModel metaModel;
 

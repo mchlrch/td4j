@@ -25,25 +25,25 @@ import javax.swing.JTable;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ScalarDataConnector;
 import org.td4j.core.internal.binding.model.ToStringConnector;
-import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
+import org.td4j.core.internal.binding.ui.ListWidgetControllerFactory;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.workbench.Navigator;
 
 
-public class TableControllerFactory extends CollectionWidgetControllerFactory<TableController, JTable> {
+public class TableControllerFactory extends ListWidgetControllerFactory<TableController, JTable> {
 
 	private final Navigator navigator;
 	private final MetaModel metaModel;
 
-	public TableControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, ICaption caption, Navigator navigator) {
+	public TableControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, Caption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
 		this.navigator = navigator;		
@@ -51,7 +51,7 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 
 	@Override
 	protected TableController createController(ListDataProxy dataProxy, JTable widget) {
-		final ScalarProperty[] columnProperties = createColumnProperties(dataProxy);
+		final IndividualProperty[] columnProperties = createColumnProperties(dataProxy);
 		return new TableController(widget, dataProxy, columnProperties, navigator);
 	}
 	
@@ -59,25 +59,25 @@ public class TableControllerFactory extends CollectionWidgetControllerFactory<Ta
 	// -----------------------------------------------------------------------
 	
 	// TODO: this code is not Swing specific and should be refactored to another place
-	private ScalarProperty[] createColumnProperties(ListDataProxy proxy) {
+	private IndividualProperty[] createColumnProperties(ListDataProxy proxy) {
 
 		// use nestedProperties from proxy, if available
 		if (proxy.isNestedPropertiesDefined()) {
-			final ScalarProperty[] nestedProperties = proxy.getNestedProperties();
+			final IndividualProperty[] nestedProperties = proxy.getNestedProperties();
 			return nestedProperties;
 			
-		// otherwise use all scalar properties
+		// otherwise use all individual properties
 		} else {
 			final MetaClass metaClass = metaModel.getMetaClass(proxy.getValueType());
-			final List<ScalarProperty> scalarProperties = metaClass.getScalarProperties();
+			final List<IndividualProperty> individualProperties = metaClass.getIndividualProperties();
 			
-			if ( ! scalarProperties.isEmpty()) {
-				return scalarProperties.toArray(new ScalarProperty[scalarProperties.size()]);			
+			if ( ! individualProperties.isEmpty()) {
+				return individualProperties.toArray(new IndividualProperty[individualProperties.size()]);			
 				
 			// primitive rowTypes have no properties - fallback to toString connector to make sure that the table is not blank
 			} else {
-				final ScalarDataConnector toStringConnector = new ToStringConnector(proxy.getValueType());	
-				return new ScalarProperty[] {new ScalarProperty("toString", toStringConnector)};
+				final IndividualDataConnector toStringConnector = new ToStringConnector(proxy.getValueType());	
+				return new IndividualProperty[] {new IndividualProperty("toString", toStringConnector)};
 			}
 		}
 	}

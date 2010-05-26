@@ -23,19 +23,19 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataProxy;
-import org.td4j.core.internal.binding.ui.ScalarControllerFactory;
+import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.internal.binding.ui.IndividualControllerFactory;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.swing.binding.IOrderedElementModel;
+import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.SelectionController;
 
 
-public class SelectionControllerFactory extends ScalarControllerFactory<SelectionController> {
+public class SelectionControllerFactory extends IndividualControllerFactory<SelectionController> {
 
 	private final ListSelectionModel selectionModel;
-	private final IOrderedElementModel dataModel;
+	private final OrderedElementModel dataModel;
 
-	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, IOrderedElementModel dataModel) {
+	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel) {
 		super(mediator, connectorFactory);
 
 		this.selectionModel = ObjectTK.enforceNotNull(selectionModel, "selectionModel");
@@ -43,7 +43,7 @@ public class SelectionControllerFactory extends ScalarControllerFactory<Selectio
 	}
 
 	@Override
-	protected SelectionController createController(ScalarDataProxy dataProxy) {
+	protected SelectionController createController(IndividualDataProxy dataProxy) {
 		return new SelectionController(selectionModel, dataModel, dataProxy);
 	}
 }

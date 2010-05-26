@@ -47,8 +47,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.ScalarDataConnector;
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataConnector;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
@@ -109,7 +109,7 @@ public class InvokationParameterDialog extends JDialog {
 		ListTK.enforceNotEmpty(params, "params");
 		this.parameterList = new ArrayList<InvokationParameter>(params);
 
-		wBuilder.getMediator().setModel(this);
+		wBuilder.getMediator().setContext(this);
 
 		clearParamValueMap(); // init to null values
 
@@ -130,7 +130,7 @@ public class InvokationParameterDialog extends JDialog {
 		for (InvokationParameter param : parameterList) {
 			paramValueMap.put(param, null);
 		}
-		wBuilder.getMediator().refreshFromModel();
+		wBuilder.getMediator().refreshFromContext();
 	}
 
 	private void initUI() {
@@ -141,14 +141,14 @@ public class InvokationParameterDialog extends JDialog {
 		
 		FocusRequester focusRequester = null;
 		for (InvokationParameter param : parameterList) {
-			final ScalarDataConnector connector = connectorFactory.createScalarMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
+			final IndividualDataConnector connector = connectorFactory.createIndividualMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
 			
       // PEND: fix this, temporary only conversion to String supported !!
       final Class<?> fromType = param.getType();
       final Class<?> toType = String.class;
       final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-			final ScalarDataProxy dataProxy = new ScalarDataProxy(connector, param.getName(), converter);
-			wBuilder.getMediator().addModelSocket(dataProxy);
+			final IndividualDataProxy dataProxy = new IndividualDataProxy(connector, param.getName(), converter);
+			wBuilder.getMediator().addContextSocket(dataProxy);
 			
 			final JLabel caption = new JLabel(param.getName());
 			caption.setToolTipText(String.format("%1$s : %2$s", param.getType().getSimpleName(), param.getName()));

@@ -23,15 +23,15 @@ import javax.swing.JList;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.internal.binding.ui.CollectionWidgetControllerFactory;
+import org.td4j.core.internal.binding.ui.ListWidgetControllerFactory;
 import org.td4j.swing.binding.ListController;
 
 
-public class ListControllerFactory extends CollectionWidgetControllerFactory<ListController, JList> {
+public class ListControllerFactory extends ListWidgetControllerFactory<ListController, JList> {
 
-	public ListControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JList widget, ICaption caption) {
+	public ListControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JList widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 

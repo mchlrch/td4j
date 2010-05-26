@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ public abstract class Form<T> extends MediatorForwarder<T> {
 
 	private JComponent form;
 
-	protected Form(Editor editor, Class<T> modelType) {
-		super(modelType);
+	protected Form(Editor editor, Class<T> ctxType) {
+		super(ctxType);
 		this.editor = ObjectTK.enforceNotNull(editor, "editor");
 	}
 
