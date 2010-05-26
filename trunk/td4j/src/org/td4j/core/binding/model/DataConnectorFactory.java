@@ -19,29 +19,29 @@
 
 package org.td4j.core.binding.model;
 
-import org.td4j.core.internal.binding.model.CollectionFieldConnector;
-import org.td4j.core.internal.binding.model.CollectionMethodConnector;
-import org.td4j.core.internal.binding.model.ScalarFieldConnector;
-import org.td4j.core.internal.binding.model.ScalarMethodConnector;
+import org.td4j.core.internal.binding.model.ListFieldConnector;
+import org.td4j.core.internal.binding.model.ListMethodConnector;
+import org.td4j.core.internal.binding.model.IndividualFieldConnector;
+import org.td4j.core.internal.binding.model.IndividualMethodConnector;
 import org.td4j.core.reflect.DataConnector;
 
 public interface DataConnectorFactory {
 
 	public DataConnector createConnector(Class<?> cls, String name);
 	
-	public ScalarFieldConnector createScalarFieldConnector(Class<?> cls, String name);
+	public IndividualFieldConnector createIndividualFieldConnector(Class<?> cls, String name);
 	
-	public CollectionFieldConnector createCollectionFieldConnector(Class<?> cls, String name);
+	public ListFieldConnector createListFieldConnector(Class<?> cls, String name);
 	
 	public DataConnector createFieldConnector(Class<?> cls, String name);
 
-	public ScalarMethodConnector createScalarMethodConnector(Class<?> cls, String name);
+	public IndividualMethodConnector createIndividualMethodConnector(Class<?> cls, String name);
 	
-	public ScalarMethodConnector createScalarMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues);
+	public IndividualMethodConnector createIndividualMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues);
 	
-	public CollectionMethodConnector createCollectionMethodConnector(Class<?> cls, String name);
+	public ListMethodConnector createListMethodConnector(Class<?> cls, String name);
 
-	public CollectionMethodConnector createCollectionMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues);
+	public ListMethodConnector createListMethodConnector(Class<?> cls, String name, Class<?>[] argumentTypes, Object[] argumentValues);
 	
 	public DataConnector createMethodConnector(Class<?> cls, String name);
 

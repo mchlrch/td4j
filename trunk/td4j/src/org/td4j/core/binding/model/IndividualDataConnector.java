@@ -19,18 +19,20 @@
 
 package org.td4j.core.binding.model;
 
-import java.util.Collection;
-
 import org.td4j.core.reflect.DataConnector;
 
 
-public interface CollectionDataConnector extends DataConnector {
+public interface IndividualDataConnector extends DataConnector {
 
-	// List, Set, etc.
-	public Class<?> getCollectionType();
+	// TODO: implementation shall throw NPE if ctx==null -> check all subclasses
+	public Object readValue(Object ctx);
 
-	public Collection<?> readValue(Object ctx);
+	public void writeValue(Object ctx, Object val);
 
+	// TODO: implementation shall return null if ctx==null -> check all
+	// subclasses
 	public boolean canRead(Object ctx);
+
+	public boolean canWrite(Object ctx);
 
 }
