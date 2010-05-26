@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,12 +17,15 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.swing.binding;
+package org.td4j.core.reflect;
 
-public interface IOrderedElementModel {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	public int getSize();
 
-	public Object getElementAt(int index);
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target( { ElementType.FIELD, ElementType.METHOD })
+public @interface Show {
 }

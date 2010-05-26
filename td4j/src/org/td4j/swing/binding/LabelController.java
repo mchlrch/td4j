@@ -22,18 +22,18 @@ package org.td4j.swing.binding;
 import java.awt.Component;
 import java.lang.reflect.Method;
 
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.tk.ObjectTK;
 
 
 
 // PEND: refactor into common superclass with swt.LabelAdapter
-public class LabelController<T extends Component> extends ScalarSwingWidgetController<T> {
+public class LabelController<T extends Component> extends IndividualSwingWidgetController<T> {
 
 	private final T widget;
 	private Method setTextMethod;
 
-	public LabelController(T widget, ScalarDataProxy proxy) {
+	public LabelController(T widget, IndividualDataProxy proxy) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
 

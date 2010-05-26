@@ -36,7 +36,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ICaption;
+import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.metamodel.JavaMetaModel;
@@ -68,7 +68,7 @@ public class WidgetBuilder<T> {
 	private final Navigator navigator;
 
 	private boolean autoCaptions = true;
-	private ICaption currentCaption;
+	private Caption currentCaption;
 
 	public WidgetBuilder(Class<?> observableType) {
 		this(observableType, null);
@@ -94,12 +94,12 @@ public class WidgetBuilder<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getModel() {
-		return (T) mediator.getModel();
+	public T getContext() {
+		return (T) mediator.getContext();
 	}
 
-	public void setModel(T model) {
-		mediator.setModel(model);
+	public void setContext(T ctx) {
+		mediator.setContext(ctx);
 	}
 
 	public Navigator getNavigator() {
@@ -174,11 +174,11 @@ public class WidgetBuilder<T> {
 
 	public WidgetBuilder<T> caption(JLabel widget) {
 		if (currentCaption != null) throw new IllegalStateException("caption pending");
-		this.currentCaption = new Caption(widget);
+		this.currentCaption = new LabelCaption(widget);
 		return this;
 	}
 
-	public WidgetBuilder<T> caption(ICaption widget) {
+	public WidgetBuilder<T> caption(Caption widget) {
 		if (currentCaption != null) throw new IllegalStateException("caption pending");
 		this.currentCaption = ObjectTK.enforceNotNull(widget, "widget");
 		return this;
@@ -261,8 +261,8 @@ public class WidgetBuilder<T> {
 		}
 	}
 
-	private ICaption useCurrentCaption() {
-		final ICaption result = currentCaption;
+	private Caption useCurrentCaption() {
+		final Caption result = currentCaption;
 		currentCaption = null;
 		return result;
 	}

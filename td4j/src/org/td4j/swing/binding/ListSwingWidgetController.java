@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,19 +24,19 @@ import java.awt.Component;
 import javax.swing.JLabel;
 
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.binding.model.ICaption;
-import org.td4j.core.internal.binding.ui.CollectionWidgetController;
+import org.td4j.core.binding.model.Caption;
+import org.td4j.core.internal.binding.ui.ListWidgetController;
 
 
-public abstract class CollectionSwingWidgetController<W extends Component> extends CollectionWidgetController<W> {
+public abstract class ListSwingWidgetController<W extends Component> extends ListWidgetController<W> {
 
-	CollectionSwingWidgetController(ListDataProxy dataProxy) {
+	ListSwingWidgetController(ListDataProxy dataProxy) {
 		super(dataProxy);
 	}
 
 	public JLabel getLabel() {
-		final ICaption caption = getCaption();
-		return caption instanceof Caption ? ((Caption) caption).getLabel() : null;
+		final Caption caption = getCaption();
+		return caption instanceof LabelCaption ? ((LabelCaption) caption).getLabel() : null;
 	}
 
 }

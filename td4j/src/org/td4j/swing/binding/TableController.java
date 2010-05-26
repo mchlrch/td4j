@@ -22,7 +22,6 @@ package org.td4j.swing.binding;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -35,19 +34,19 @@ import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
-import org.td4j.core.reflect.ScalarProperty;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ArrayTK;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
 
-public class TableController extends CollectionSwingWidgetController<JTable> {
+public class TableController extends ListSwingWidgetController<JTable> {
   
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final ListDataProxy proxy, ScalarProperty[] columnProperties, final Navigator navigator) {
+	public TableController(final JTable table, final ListDataProxy proxy, IndividualProperty[] columnProperties, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
 		this.model = new MyTableModel(proxy, columnProperties);
@@ -75,8 +74,8 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 		updateView();
 	}
 
-	protected void updateView0(Collection<?> newValue) {
-		model.setCollection(newValue);
+	protected void updateView0(List<?> newValue) {
+		model.setContent(newValue);
 	}
 
 	@Override
@@ -99,12 +98,12 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 		private static final long serialVersionUID = 1L;
 
 		private final Class<?> rowType;
-		private final ScalarProperty[] columnProperties;
+		private final IndividualProperty[] columnProperties;
 		private final List<Object> rowObjects = new ArrayList<Object>();
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(final ListDataProxy proxy, ScalarProperty[] columnProperties) {			
+		private MyTableModel(final ListDataProxy proxy, IndividualProperty[] columnProperties) {			
 			this.rowType = ObjectTK.enforceNotNull(proxy.getValueType(), "proxy.getType()");
 			this.columnProperties = ArrayTK.enforceNotEmpty(columnProperties, "columnProperties");
 		}
@@ -129,13 +128,13 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 	    public String getColumnName(int columnIndex) {
-		    final ScalarProperty prop = columnProperties[columnIndex];
+		    final IndividualProperty prop = columnProperties[columnIndex];
 		    return prop.getName();
 		}
 		
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			final ScalarProperty prop = columnProperties[columnIndex];
+			final IndividualProperty prop = columnProperties[columnIndex];
 			final Class<?> valueType = prop.getValueType();
 			
 			// TODO _this is a workaround to make primitive types work 
@@ -150,12 +149,12 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
-			final ScalarProperty prop = columnProperties[columnIndex];
+			final IndividualProperty prop = columnProperties[columnIndex];
 			final Object value = prop.readValue(rowObjects.get(rowIndex));
 			return value;
 		}
 
-		private void setCollection(Collection<?> newValue) {
+		private void setContent(List<?> newValue) {
 			rowObjects.clear();
 
 			if (newValue != null) {
@@ -179,7 +178,7 @@ public class TableController extends CollectionSwingWidgetController<JTable> {
 			this.tableModel = ObjectTK.enforceNotNull(tableModel, "tableModel");
 		}
 
-		private void attachToTargets(Collection<?> targets) {
+		private void attachToTargets(List<?> targets) {
 			final Set<Object> newTargets = new HashSet<Object>(targets);
 
 			// detach from obsolete targets

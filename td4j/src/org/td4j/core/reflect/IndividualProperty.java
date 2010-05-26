@@ -19,16 +19,16 @@
 
 package org.td4j.core.reflect;
 
-import org.td4j.core.binding.model.ScalarDataConnector;
+import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class ScalarProperty implements ScalarDataConnector, Property {
+public class IndividualProperty implements IndividualDataConnector, Property {
 	
 	private final String name;
-	private final ScalarDataConnector dataConnector;
+	private final IndividualDataConnector dataConnector;
 	
-	public ScalarProperty(String name, ScalarDataConnector dataConnector) {
+	public IndividualProperty(String name, IndividualDataConnector dataConnector) {
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 	}
@@ -45,7 +45,6 @@ public class ScalarProperty implements ScalarDataConnector, Property {
 		return dataConnector.getValueType();
 	}
 	
-	// PEND: is context better than model? if yes, change dataConnector sourcecode
 	public Object readValue(Object ctx) {
 		ObjectTK.enforceNotNull(ctx, "ctx");
 		return dataConnector.readValue(ctx);

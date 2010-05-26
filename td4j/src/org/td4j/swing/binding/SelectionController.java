@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.td4j.core.binding.model.ScalarDataProxy;
+import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.tk.ObjectTK;
@@ -33,12 +33,12 @@ import org.td4j.core.tk.ObjectTK;
 public class SelectionController implements ListSelectionListener, IObserver {
 
 	private final ListSelectionModel selectionModel;
-	private final IOrderedElementModel dataModel;
-	private final ScalarDataProxy proxy;
+	private final OrderedElementModel dataModel;
+	private final IndividualDataProxy proxy;
 
 	private boolean proxyToSelectionSyncInProgress;
 
-	public SelectionController(ListSelectionModel selectionModel, IOrderedElementModel dataModel, ScalarDataProxy proxy) {
+	public SelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy) {
 		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
 		this.proxy = ObjectTK.enforceNotNull(proxy, "proxy");
 
@@ -48,7 +48,7 @@ public class SelectionController implements ListSelectionListener, IObserver {
 		proxy.addObserver(this);
 	}
 
-	public ScalarDataProxy getDataProxy() {
+	public IndividualDataProxy getDataProxy() {
 		return proxy;
 	}
 

@@ -19,23 +19,21 @@
 
 package org.td4j.core.reflect;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.binding.model.CollectionDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
-public class ListProperty implements CollectionDataConnector, NestedPropertiesProvider, Property {
+public class ListProperty implements ListDataConnector, NestedPropertiesProvider, Property {
 	
 	private final String name;
-	private final CollectionDataConnector dataConnector;
-	private final ScalarProperty[] nestedProperties;
+	private final ListDataConnector dataConnector;
+	private final IndividualProperty[] nestedProperties;
 	
-	public ListProperty(String name, CollectionDataConnector dataConnector, ScalarProperty[] nestedProperties) {
+	public ListProperty(String name, ListDataConnector dataConnector, IndividualProperty[] nestedProperties) {
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 		this.nestedProperties = ObjectTK.enforceNotNull(nestedProperties, "nestedProperties");
@@ -44,12 +42,7 @@ public class ListProperty implements CollectionDataConnector, NestedPropertiesPr
 	public String getName() {
 		return name;
 	}
-	
-	@Override
-	public Class<?> getCollectionType() {
-		return List.class;
-	}
-	
+		
 	public Class<?> getContextType() {
 		return dataConnector.getContextType();
 	}
@@ -60,11 +53,11 @@ public class ListProperty implements CollectionDataConnector, NestedPropertiesPr
 	
 	public List<?> readValue(Object ctx) {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		final Collection<?> values = dataConnector.readValue(ctx);
+		final List<?> values = dataConnector.readValue(ctx);
 		
-		List<Object> result = Collections.emptyList(); 
+		List<?> result = Collections.emptyList(); 
 		if (values != null) {
-			result = new ArrayList<Object>(values); 
+			result = values; 
 		}
 		
 		return result;
@@ -76,7 +69,7 @@ public class ListProperty implements CollectionDataConnector, NestedPropertiesPr
 	}
 	
 	
-	public ScalarProperty[] getNestedProperties() {
+	public IndividualProperty[] getNestedProperties() {
 		return nestedProperties;
 	}
 	
