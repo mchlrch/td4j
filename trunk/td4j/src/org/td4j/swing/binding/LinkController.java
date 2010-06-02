@@ -23,11 +23,8 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 
@@ -232,30 +229,11 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 		private void invokeXdgOpen(String argument) {
 			try {
 				final String cmd = xdgOpenCmd + " " + argument;
+				
+				System.out.println("Invoke: " + cmd);
+				
 				final Process proc = Runtime.getRuntime().exec(cmd);
-				
-				final BufferedReader outReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(proc.getInputStream())));
-				final BufferedReader errReader = new BufferedReader(new InputStreamReader(new BufferedInputStream(proc.getErrorStream())));
-
-				final StringBuilder sbOut = new StringBuilder();
-				for (String line = outReader.readLine(); line != null; line = outReader.readLine()) {
-					if (sbOut.length() == 0) sbOut.append(":: Out");
-					sbOut.append("\n").append(line);
-				}
-
-				final StringBuilder sbErr = new StringBuilder();
-				for (String line = errReader.readLine(); line != null; line = errReader.readLine()) {
-					if (sbErr.length() == 0) sbErr.append(":: Error");
-					sbErr.append("\n").append(line);
-				}
-				
-				if (sbOut.length() > 0 || sbErr.length() > 0) {
-					System.out.println("=============================================================");
-					System.out.println("Invoke: " + cmd);
-					System.out.println(sbOut.toString());
-					System.out.println(sbErr.toString());
-				}
-				
+								
 			} catch (IOException ioex) {
 				throw new RuntimeException(ioex);
 			}

@@ -33,7 +33,11 @@ abstract class NamedItemsContainer<T> extends OrderedContainer<T> {
 		for (T item : items) {
 			final String name = nameOfItem(item);
 			
-			if (dictionary.containsKey(name)) throw new IllegalStateException("duplicate name: " + name);
+			if (dictionary.containsKey(name)) {
+				throw new IllegalStateException("duplicate name: " + name);
+			} else {
+				dictionary.put(name, item);
+			}
 		}
 	}
 	
