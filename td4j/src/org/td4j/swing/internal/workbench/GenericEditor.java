@@ -24,8 +24,12 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -69,6 +73,23 @@ public class GenericEditor extends Editor<Object> {
 	private final JSplitPane splitPane;
 	private final TableController listTableController;
 	private final Form<?> form;
+
+	private static Icon operationsIcon;
+	
+	private static Icon getOperationsIcon() {
+		if (operationsIcon == null) {
+			final InputStream iconStream = GenericEditor.class.getResourceAsStream("operations.png");
+			final byte[] iconData = new byte[1000];
+			try {
+				iconStream.read(iconData);
+			} catch(Exception ex) {
+				ex.printStackTrace(System.err);				
+				return null;
+			}
+			operationsIcon = new ImageIcon(iconData);
+		}
+		return operationsIcon;
+	}
 	
 	// PEND: muss die connectorFactory in der Signatur sein - jetzt wird WidgetBuilder gebraucht um die Tabelle zu erzeugen
 
@@ -87,7 +108,15 @@ public class GenericEditor extends Editor<Object> {
 		header.add(new JLabel(), new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		
 		final MetaClass metaClass = model.getMetaClass(modelType); 
-		final JMenu executableMenu = new JMenu("executables");
+		final JMenu executableMenu = new JMenu();
+		executableMenu.setToolTipText("Operations");
+		final Icon opIcon = getOperationsIcon();
+		if (opIcon != null) {
+			executableMenu.setIcon(opIcon);
+		} else {
+			executableMenu.setText("Operations");
+		}		
+		
 		for (AbstractExecutable executable : metaClass.getOperations()) {
 			executableMenu.add(new InvokeExecutableAction(this, executable));
 		}
