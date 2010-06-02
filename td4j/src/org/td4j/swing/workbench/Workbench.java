@@ -37,6 +37,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
@@ -97,7 +99,8 @@ public class Workbench extends JFrame {
   public static void start(final EditorFactory editorFactory, final Object initialNavigation,
       final Class<?>... sidebarEntries) {
     SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
+      public void run() {      	
+      	setLookAndFeel();      	
         final Workbench wb = setup(editorFactory, Arrays.asList(sidebarEntries));
 
         if (initialNavigation != null) {
@@ -109,6 +112,19 @@ public class Workbench extends JFrame {
         wb.setVisible(true);
       }
     });
+  }
+  
+  private static void setLookAndFeel() {
+  	try {
+      for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+          if ("Nimbus".equals(info.getName())) {
+              UIManager.setLookAndFeel(info.getClassName());
+              break;
+          }
+      }
+	  } catch (Exception e) {
+	      // use default l&f
+	  }
   }
 
   private static Workbench setup(final EditorFactory editorFactory,
