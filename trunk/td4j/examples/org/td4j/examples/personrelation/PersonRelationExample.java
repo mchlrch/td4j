@@ -37,6 +37,7 @@ public class PersonRelationExample {
 		final Person homer = new Person("Homer", "Simpson");
 		final Person bart = new Person("Bart", "Simpson");
 		final PersonRelation homerToBart = new PersonRelation(homer, bart, "is-father-of", "is-son-of");
+		final PersonRelation bartToHomer = new PersonRelation(bart, homer, "admires", "is-admired-by");
 
 		Workbench.start(homer, Person.class);
 	}
