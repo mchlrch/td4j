@@ -83,7 +83,7 @@ public class GenericForm<T> extends Form<T> {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 			
-			final IndividualDataProxy individualProxy = new IndividualDataProxy(individualProperty, individualProperty.getName());
+			final IndividualDataProxy individualProxy = new IndividualDataProxy(individualProperty, individualProperty.getName(), converter);
 			getMediator().addContextSocket(individualProxy);
 			if (type == Boolean.class || type == boolean.class) {
 				final ButtonController btnController = wBuilder.caption(label).button().bind(individualProxy);

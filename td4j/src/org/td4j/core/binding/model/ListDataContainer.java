@@ -20,6 +20,7 @@
 package org.td4j.core.binding.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.ListDataContainerConnector;
@@ -67,7 +68,11 @@ public class ListDataContainer<T> extends Observable {
 	}
 
 	public List<T> getContent() {
-		return content;
+		if (content != null) {
+			return content;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	public void setContent(List<T> newContent) {

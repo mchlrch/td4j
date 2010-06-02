@@ -73,7 +73,7 @@ public class NestedPropertiesInEditorListFactory {
 			
 		// accept all properties
 		} else {
-			return result.toArray(new IndividualProperty[individualProps.size()]);
+			return individualProps.toArray(new IndividualProperty[individualProps.size()]);
 		}		
 	}
 	

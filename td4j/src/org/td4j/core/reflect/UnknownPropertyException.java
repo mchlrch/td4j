@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,14 +32,13 @@ public class UnknownPropertyException extends RuntimeException {
 	
 	private static String prepareMultiPropertiesMsg(Class<?> cls, String... propertyNames) {
 		ArrayTK.enforceNotEmpty(propertyNames, "propertyNames");
-		final StringBuilder sb = new StringBuilder("Properties not found: ");
+		final StringBuilder sb = new StringBuilder("Properties not found " + cls.getName() + ": ");
 		boolean firstElement = true;
 		for (String pName : propertyNames) {
-			if ( ! firstElement) {
-				sb.append(", ");
-				firstElement = false;
-			}
-			sb.append(String.format("%1$s#%2$s", cls.getName(), pName));
+			if ( ! firstElement) sb.append(", ");
+			firstElement = false;
+
+			sb.append(String.format("#%1$s", pName));
 		}
 		
 		return sb.toString();
