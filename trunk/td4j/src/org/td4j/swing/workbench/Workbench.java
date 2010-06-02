@@ -19,6 +19,7 @@
 
 package org.td4j.swing.workbench;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -37,14 +38,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.plaf.ColorUIResource;
 
-import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
-import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.binding.model.ListDataConnector;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.metamodel.JavaMetaModel;
 import org.td4j.core.metamodel.MetaModel;
@@ -99,8 +102,11 @@ public class Workbench extends JFrame {
   public static void start(final EditorFactory editorFactory, final Object initialNavigation,
       final Class<?>... sidebarEntries) {
     SwingUtilities.invokeLater(new Runnable() {
-      public void run() {      	
-      	setLookAndFeel();      	
+      public void run() {
+      	
+      	// PEND: Nimbus doesn't use a different bgcolor for Textfield disabled
+//      	setLookAndFeel();
+      	
         final Workbench wb = setup(editorFactory, Arrays.asList(sidebarEntries));
 
         if (initialNavigation != null) {
@@ -118,7 +124,10 @@ public class Workbench extends JFrame {
   	try {
       for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
           if ("Nimbus".equals(info.getName())) {
-              UIManager.setLookAndFeel(info.getClassName());
+              UIManager.setLookAndFeel(info.getClassName());  
+              final UIDefaults defaults = UIManager.getLookAndFeel().getDefaults();
+              defaults.put("TextField.background", new ColorUIResource(Color.YELLOW));
+              defaults.put("TextField.inactiveBackground", new ColorUIResource(Color.RED));
               break;
           }
       }
