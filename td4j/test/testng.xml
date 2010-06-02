@@ -13,13 +13,7 @@
       <package name="org.td4j.core.model" />
    </packages>
  </test>
- 
- <test name="reflect"   >
-    <packages>
-      <package name="org.td4j.core.reflect" />      
-   </packages>
- </test>
- 
+  
  <test name="metamodel"   >
     <packages>
       <package name="org.td4j.core.internal.metamodel" />      
