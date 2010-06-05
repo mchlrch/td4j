@@ -29,4 +29,24 @@
 			  classname="org.td4j.examples.person.PersonExample"/>
 	</target>
 	
+	<target name="person2" description="Run Person-Multi-Address example">
+		<java classpathref="classpath" fork="true" spawn="true"
+			  classname="org.td4j.examples.person.PersonExample2"/>
+	</target>
+	
+	<target name="relation" description="Run Person-Relation example">
+		<java classpathref="classpath" fork="true" spawn="true"
+			  classname="org.td4j.examples.personrelation.PersonRelationExample"/>
+	</target>
+	
+	<target name="project" description="Run Project example">
+		<java classpathref="classpath" fork="true" spawn="true"
+			  classname="org.td4j.examples.project.ProjectExample"/>
+	</target>
+	
+	<target name="zen" description="Run Zen example">
+		<java classpathref="classpath" fork="true" spawn="true"
+			  classname="org.td4j.examples.zen.ZenExample"/>
+	</target>
+	
 </project>
