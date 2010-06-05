@@ -60,21 +60,25 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (executable.getParameters().isEmpty()) {
-			doInvoke();
-
-		} else {
-			if (dialog == null) {
-				dialog = createDialog(executable);
+		try {
+			if (executable.getParameters().isEmpty()) {
+				doInvoke();
+	
+			} else {
+				if (dialog == null) {
+					dialog = createDialog(executable);
+				}
+				dialog.setVisible(true);
+				if (dialog.getOptionType() == JOptionPane.OK_OPTION) {
+					doInvoke(dialog.getParameterValues());
+				}
 			}
-			dialog.setVisible(true);
-			if (dialog.getOptionType() == JOptionPane.OK_OPTION) {
-				doInvoke(dialog.getParameterValues());
-			}
+			
+		} finally {
+			
+			// force form refresh to update data from models that are not Observable
+			editor.getForm().refreshFromContext();
 		}
-		
-		// force form refresh to update data from models that are not Observable
-		editor.getForm().refreshFromContext();
 	}
 
 	private InvokationParameterDialog createDialog(AbstractExecutable executable) {
