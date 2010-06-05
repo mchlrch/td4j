@@ -1,6 +1,11 @@
 :: 10.xy
-- LinkController: fallback on xdg-open if Desktop.browse() or Desktop.open() not supported
-- SvcRepo
 - Companion object support
+- (SvcRepo)
+- (Default to Nimbus theme?)
+
+:: 10.6
+- LinkController: fallback on xdg-open if Desktop.browse() or Desktop.open() not supported
+- Checkbox for boolean values
+- Re-Naming: @Executable VS @Operation, @Expose VS @Show, @ExposeProperties VS @ShowProperties
 
 :: 9.8
