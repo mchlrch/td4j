@@ -2,8 +2,7 @@
 <project name="td4j" default="build">
 
     <tstamp>
-        <!-- 'y.MM' gets two-digit year ... so we use hardcoded year for the next five months -->
-        <format property="version" pattern="9.M" />
+        <format property="version" pattern="y.M" />
         <format property="date" pattern="yyyy-MM-dd" />
     </tstamp>
 
