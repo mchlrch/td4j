@@ -20,6 +20,7 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,8 +35,25 @@ public class DefaultConverterRepository implements IConverterRepository {
   private final Map<ConverterKey, IConverter> map = new HashMap<ConverterKey, IConverter>();
 
   public DefaultConverterRepository() {
+  	addConverter(String.class, Byte.class, new String2ByteConverter());
+    addConverter(String.class, byte.class, new String2ByteConverter());
+    
+    addConverter(String.class, Short.class, new String2ShortConverter());
+    addConverter(String.class, short.class, new String2ShortConverter());
+  	
     addConverter(String.class, Integer.class, new String2IntConverter());
     addConverter(String.class, int.class, new String2IntConverter());
+    
+    addConverter(String.class, Long.class, new String2LongConverter());
+    addConverter(String.class, long.class, new String2LongConverter());
+    
+    addConverter(String.class, Float.class, new String2FloatConverter());
+    addConverter(String.class, float.class, new String2FloatConverter());
+    
+    addConverter(String.class, Double.class, new String2DoubleConverter());
+    addConverter(String.class, double.class, new String2DoubleConverter());    
+    
+    addConverter(String.class, BigDecimal.class, new String2BigDecimalConverter());
   }
 
   private void addConverter(Class<?> fromType, Class<?> toType, IConverter converter) {
