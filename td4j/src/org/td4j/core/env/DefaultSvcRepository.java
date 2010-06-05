@@ -84,7 +84,7 @@ public class DefaultSvcRepository implements SvcRepository {
 	private <T> T createByImplConstructor(Class<T> svcDef) {
 		final Konstruktor konstruktor = implConstructorMap.get(svcDef);
 		if (konstruktor != null) {
-			final T svc = konstruktor.newInstance(this);
+			final T svc = (T) konstruktor.newInstance(this);
 			return svc;
 		}
 		
