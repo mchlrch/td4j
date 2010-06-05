@@ -85,10 +85,11 @@ public abstract class IndividualWidgetController<W> implements IObserver {
 			dataProxy.writeValue(updateModel0());
 		} finally {
 			modelUpdateInProgress = false;
+			
+			// refetch the display value from the model
+			updateView();
 		}
 
-		// refetch the display value from the model
-		updateView();
 	}
 
 	protected boolean isViewUpdateInProgress() {
