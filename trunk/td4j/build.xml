@@ -8,6 +8,7 @@
 
     <property name="base.dir" value="." />
     <property name="src.dir" value="${base.dir}/src" />
+	<property name="rsc.dir" value="${base.dir}/resources" />
     <property name="lib.dir" value="${base.dir}/lib" />
     <property name="classes.dir" value="${base.dir}/classes" />
 
@@ -45,6 +46,9 @@
         <javac destdir="${classes.dir}" classpathref="classpath" debug="on" fork="true">
             <src path="${src.dir}" />
         </javac>
+    	<copy todir="${classes.dir}">
+    		<fileset dir="${rsc.dir}" />
+    	</copy>
     </target>
 
 
@@ -53,11 +57,15 @@
         <jar destfile="${release.dir}/td4j-${version}.jar">
             <fileset dir="${classes.dir}">
                 <include name="**/*.class" />
+            	<include name="**/*.png" />
             </fileset>
         </jar>
         <jar destfile="${release.dir}/td4j-${version}-src.jar">
             <fileset dir="${src.dir}">
                 <include name="**/*.java" />
+            </fileset>
+        	<fileset dir="${rsc.dir}">
+            	<include name="**/*.png" />
             </fileset>
         </jar>
     </target>
@@ -77,11 +85,13 @@
         <jar destfile="${release.dir}/td4j-${version}-examples.jar">
             <fileset dir="${ex.classes.dir}">
                 <include name="**/*.class" />
+            	<include name="**/*.png" />
             </fileset>
         </jar>
         <jar destfile="${release.dir}/td4j-${version}-examples-src.jar">
             <fileset dir="${ex.src.dir}">
                 <include name="**/*.java" />
+            	<include name="**/*.png" />
             </fileset>
         </jar>
     </target>
