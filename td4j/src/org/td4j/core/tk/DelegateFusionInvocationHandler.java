@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 public class DelegateFusionInvocationHandler implements InvocationHandler {
 
 	private final Map<Method, Object> dispatchMap = new HashMap<Method, Object>();

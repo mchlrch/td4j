@@ -26,13 +26,14 @@ import java.util.Set;
 
 import org.td4j.core.internal.metamodel.JavaModelInspector.Level;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.reflect.Show;
-import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.Hide;
+import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.Property;
-import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.Show;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.UnknownPropertyException;
+import org.td4j.core.tk.env.SvcRepository;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -44,7 +45,7 @@ public class JavaMetaModelTest {
 
 	@BeforeClass
 	public void setup() {
-		metaModel = new JavaMetaModel();
+		metaModel = new JavaMetaModel(new SvcRepository());
 	}
 
 	@Test
