@@ -22,6 +22,7 @@ package org.td4j.core.metamodel.container;
 import java.util.List;
 
 import org.td4j.core.reflect.ListProperty;
+import org.td4j.core.tk.container.NamedItemsContainer;
 
 public class ListProperties extends NamedItemsContainer<ListProperty> {
 	
