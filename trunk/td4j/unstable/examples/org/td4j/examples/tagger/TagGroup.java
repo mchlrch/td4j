@@ -5,10 +5,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.td4j.core.reflect.Companion;
+import org.td4j.core.reflect.Companions;
 
 @Entity
-@Companion(TagGroupCO.class)
+@Companions(TagGroupCO.class)
 public class TagGroup {
 	
 	@Id @GeneratedValue private Integer id;

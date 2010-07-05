@@ -1,6 +1,7 @@
 :: 10.xy
-- Companion object support
-- (SvcRepo)
+- Companion object support (see org.td4j.examples.dispatcher)
+- SvcRepo
+- AppCtx
 - (Default to Nimbus theme?)
 
 :: 10.6

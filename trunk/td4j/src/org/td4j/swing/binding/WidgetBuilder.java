@@ -44,6 +44,7 @@ import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.core.tk.filter.AcceptAllFilter;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
@@ -79,7 +80,7 @@ public class WidgetBuilder<T> {
 	}
 
 	public WidgetBuilder(Mediator mediator, Navigator navigator) {
-		this(mediator, navigator, new JavaMetaModel());
+		this(mediator, navigator, new JavaMetaModel(new SvcRepository()));
 	}
 	
 	public WidgetBuilder(Mediator mediator, Navigator navigator, MetaModel metaModel) {
