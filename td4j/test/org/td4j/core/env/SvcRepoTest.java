@@ -19,6 +19,8 @@
 
 package org.td4j.core.env;
 
+import org.td4j.core.tk.env.SvcRepository;
+
 public class SvcRepoTest {
 	
 	public static void main(String[] args) {
@@ -28,11 +30,7 @@ public class SvcRepoTest {
 		test.testSingletonSvcByClass();
 		
 		test.testSvcWithDependency();
-		test.testSvcWithDependency2();
 		
-		// TODO
-//		test.testSvcProviderInstance();
-//		test.testSvcProviderByClass();
 	}
 
 
@@ -40,7 +38,7 @@ public class SvcRepoTest {
 	private void testSingletonSvcInstance() {
 		logDelimiter("testSingletonSvcInstance()");
 		
-		final SvcRepository repo = new DefaultSvcRepository();
+		final SvcRepository repo = new SvcRepository();
 		
 		repo.setSingletonService(HelloService.class, new HelloServiceImpl("impl instance"));
 		repo.getService(HelloService.class).sayHello();		
@@ -49,7 +47,7 @@ public class SvcRepoTest {
 	private void testSingletonSvcByClass() {
 		logDelimiter("testSingletonSvcByClass()");
 		
-		final SvcRepository repo = new DefaultSvcRepository();
+		final SvcRepository repo = new SvcRepository();
 		
 		// TODO
 		// HelloServiceImpl() OR HelloServiceImpl(Environment)
@@ -61,48 +59,13 @@ public class SvcRepoTest {
 	private void testSvcWithDependency() {
 		logDelimiter("testSvcWithDependency()");
 		
-		final SvcRepository repo = new DefaultSvcRepository();
+		final SvcRepository repo = new SvcRepository();
 		
 		repo.setSingletonService(HelloService.class, PersonalHelloServiceImpl.class);
 		repo.setSingletonService(IdentityService.class, new IdentityServiceImpl());		
 		repo.getService(HelloService.class).sayHello();		
 	}
 	
-	private void testSvcWithDependency2() {
-		logDelimiter("testSvcWithDependency2()");
-		
-		final SvcRepository repo = new DefaultSvcRepository();		
-		repo.setSingletonService(HelloService.class, PersonalHelloServiceImpl2.class);
-		repo.setSingletonService(IdentityService.class, new IdentityServiceImpl());
-		
-		SvcRepo.init(repo);
-		repo.getService(HelloService.class).sayHello();		
-	}
-	
-	
-	private void testSvcProviderInstance() {
-		logDelimiter("testSvcProviderInstance()");
-
-		final SvcRepository repo = new DefaultSvcRepository();
-		
-		// @ServiceProvider(HelloService.class)
-		repo.setServiceProvider(HelloService.class, new HelloServiceProvider());
-		repo.getService(HelloService.class).sayHello();
-		
-	}
-	
-	private void testSvcProviderByClass() {
-		logDelimiter("testSvcProviderByClass()");
-		
-		final SvcRepository repo = new DefaultSvcRepository();
-		
-		// TODO
-		// HelloServiceProvider() OR HelloServiceProvider(Environment)
-		repo.setServiceProvider(HelloService.class, HelloServiceProvider.class);
-		repo.getService(HelloService.class).sayHello();
-	}
-	
-
 	
 	private void logDelimiter(String msg) {
 		System.out.println("-------------------------------------------------");
