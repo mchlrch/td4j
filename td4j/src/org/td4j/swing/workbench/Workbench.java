@@ -27,7 +27,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,6 +53,8 @@ import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.env.SvcProvider;
+import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.internal.binding.ListModelAdapter;
@@ -69,7 +70,10 @@ public class Workbench extends JFrame {
   private static Workbench INSTANCE; // static singleton, initialized via
   // setup() method
 
+  private final AppCtx appCtx;
+  
   private final EditorFactory editorFactory;
+  
   private final HashMap<Class<?>, Editor> editorCache = new HashMap<Class<?>, Editor>();
   private final HashMap<Class<?>, EditorContent> lastContentCache = new HashMap<Class<?>, EditorContent>();
 
@@ -86,28 +90,30 @@ public class Workbench extends JFrame {
 
     return INSTANCE;
   }
+  
+	public static void start(final Object initialNavigation, final Class<?>... sidebarEntries) {
+		final AppCtx appCtx = new AppCtx();
+		appCtx.setInitialNavigation(initialNavigation);
+		appCtx.setSidebarEntries(sidebarEntries);
 
-  public static void start(final Object initialNavigation, final Class<?>... sidebarEntries) {
-    final MetaModel metaModel = new JavaMetaModel();
-
-    final GenericFormFactory genericFormFactory = new GenericFormFactory(metaModel);
-    final ByClassNameFormFactory byClassNameFormFactory = new ByClassNameFormFactory();
-    final CompositeFormFactory formFactory = new CompositeFormFactory(byClassNameFormFactory,
-        genericFormFactory);
-
-    final EditorFactory editorFactory = new GenericEditorFactory(metaModel, formFactory);
-    start(editorFactory, initialNavigation, sidebarEntries);
+    start(appCtx);
   }
 
-  public static void start(final EditorFactory editorFactory, final Object initialNavigation,
-      final Class<?>... sidebarEntries) {
-    SwingUtilities.invokeLater(new Runnable() {
+	public static void start(final AppCtx appCtx) {
+		final SvcProvider svcProvider = initSvcProvider(appCtx);
+		final MetaModel metaModel = initMetaModel(appCtx, svcProvider);
+		final EditorFactory editorFactory = initEditorFactory(appCtx, metaModel);
+		
+		final List<Class<?>> sidebarEntries = appCtx.getSidebarEntries();
+		final Object initialNavigation = appCtx.getInitialNavigation();
+		
+		SwingUtilities.invokeLater(new Runnable() {
       public void run() {
       	
       	// PEND: Nimbus doesn't use a different bgcolor for Textfield disabled
 //      	setLookAndFeel();
       	
-        final Workbench wb = setup(editorFactory, Arrays.asList(sidebarEntries));
+        final Workbench wb = setup(appCtx, editorFactory, sidebarEntries);
 
         if (initialNavigation != null) {
           wb.seek(initialNavigation);
@@ -120,28 +126,66 @@ public class Workbench extends JFrame {
     });
   }
   
-  private static void setLookAndFeel() {
-  	try {
-      for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-          if ("Nimbus".equals(info.getName())) {
-              UIManager.setLookAndFeel(info.getClassName());  
-              final UIDefaults defaults = UIManager.getLookAndFeel().getDefaults();
-              defaults.put("TextField.background", new ColorUIResource(Color.YELLOW));
-              defaults.put("TextField.inactiveBackground", new ColorUIResource(Color.RED));
-              break;
-          }
-      }
-	  } catch (Exception e) {
-	      // use default l&f
-	  }
+
+	private static SvcProvider initSvcProvider(AppCtx appCtx) {
+		SvcProvider svcProvider = appCtx.getSvcProvider();
+		if (svcProvider == null) {
+			svcProvider = new SvcRepository();
+			appCtx.setSvcProvider(svcProvider);
+		}
+		return svcProvider;
+	}
+
+	private static MetaModel initMetaModel(AppCtx appCtx, SvcProvider svcProvider) {
+  	MetaModel metaModel = appCtx.getMetamodel();
+  	if (metaModel == null) {
+  		metaModel = new JavaMetaModel(svcProvider);
+  		appCtx.setMetamodel(metaModel);
+  	}  	
+		
+		return metaModel;
+	}
+
+	private static EditorFactory initEditorFactory(AppCtx appCtx, MetaModel metaModel) {
+		EditorFactory editorFactory = appCtx.getEditorFactory();
+		if (editorFactory == null) {
+			editorFactory = createDefaultEditorFactory(metaModel);
+			appCtx.setEditorFactory(editorFactory);
+		}
+		return editorFactory;
+	}
+  
+  private static EditorFactory createDefaultEditorFactory(MetaModel metaModel) {
+  	final GenericFormFactory genericFormFactory = new GenericFormFactory(metaModel);
+  	final ByClassNameFormFactory byClassNameFormFactory = new ByClassNameFormFactory();
+  	final CompositeFormFactory formFactory = new CompositeFormFactory(byClassNameFormFactory,
+  			genericFormFactory);
+  	
+  	final EditorFactory editorFactory = new GenericEditorFactory(metaModel, formFactory);		
+  	return editorFactory;
   }
 
-  private static Workbench setup(final EditorFactory editorFactory,
-      final List<Class<?>> sidebarEntries) {
+	private static void setLookAndFeel() {
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					final UIDefaults defaults = UIManager.getLookAndFeel().getDefaults();
+					defaults.put("TextField.background", new ColorUIResource(Color.YELLOW));
+					defaults.put("TextField.inactiveBackground", new ColorUIResource(Color.RED));
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// use default l&f
+		}
+  }
+
+  private static Workbench setup(final AppCtx appCtx, final EditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
     if (INSTANCE == null) {
       synchronized (Workbench.class) {
         if (INSTANCE == null) {
-          INSTANCE = new Workbench(editorFactory, sidebarEntries);
+          INSTANCE = new Workbench(appCtx, editorFactory, sidebarEntries);
         }
       }
     }
@@ -151,7 +195,8 @@ public class Workbench extends JFrame {
     return INSTANCE;
   }
 
-  private Workbench(final EditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
+  private Workbench(final AppCtx appCtx, final EditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
+  	this.appCtx = ObjectTK.enforceNotNull(appCtx, "appCtx");
     this.editorFactory = ObjectTK.enforceNotNull(editorFactory, "editorFactory");
     this.navigator = new Navigator(this);
 
@@ -191,6 +236,10 @@ public class Workbench extends JFrame {
   public Navigator getNavigator() {
     return navigator;
   }
+  
+  public AppCtx getAppCtx() {
+		return appCtx;
+	}
 
   void show(Class<?> cls) {
     cacheVisibleModel();
