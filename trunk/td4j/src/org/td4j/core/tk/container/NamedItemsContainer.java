@@ -17,26 +17,35 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.metamodel.container;
+package org.td4j.core.tk.container;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-class OrderedContainer<T> {
+
+public abstract class NamedItemsContainer<T> extends OrderedContainer<T> {
 	
-	final List<T> elements;
+	private final Map<String, T> dictionary = new HashMap<String, T>();
 	
-	OrderedContainer(List<T> items) {
-		if (items == null || items.isEmpty()) {
-			this.elements = Collections.emptyList();
-		} else {
-			this.elements = new ArrayList<T>(items);
+	protected NamedItemsContainer(List<T> items) {
+		super(items);
+		
+		for (T item : items) {
+			final String name = nameOfItem(item);
+			
+			if (dictionary.containsKey(name)) {
+				throw new IllegalStateException("duplicate name: " + name);
+			} else {
+				dictionary.put(name, item);
+			}
 		}
 	}
 	
-	public List<T> get() {
-		return elements;
+	public T getByName(String name) {
+		return dictionary.get(name);
 	}
+	
+	protected abstract String nameOfItem(T item);
 
 }

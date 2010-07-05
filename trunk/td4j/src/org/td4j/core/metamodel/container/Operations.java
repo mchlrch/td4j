@@ -23,6 +23,7 @@ package org.td4j.core.metamodel.container;
 import java.util.List;
 
 import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.tk.container.OrderedContainer;
 
 public class Operations extends OrderedContainer<AbstractExecutable> {
 	
