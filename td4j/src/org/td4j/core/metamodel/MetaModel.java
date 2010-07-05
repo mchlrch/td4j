@@ -24,9 +24,10 @@ import java.util.Map;
 
 import org.td4j.core.metamodel.feature.MetaClassKey;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.feature.FeatureProvider;
 
 
-public abstract class MetaModel implements FeatureRepository {
+public abstract class MetaModel implements FeatureProvider {
 	
 	private final Map<Class<?>, MetaClassKey> keyCache = new HashMap<Class<?>, MetaClassKey>();
 	

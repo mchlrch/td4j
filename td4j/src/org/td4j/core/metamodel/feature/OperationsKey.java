@@ -19,8 +19,8 @@
 
 package org.td4j.core.metamodel.feature;
 
-import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.container.Operations;
+import org.td4j.core.tk.feature.FeatureKey;
 
 public class OperationsKey implements FeatureKey<Operations> {
 	

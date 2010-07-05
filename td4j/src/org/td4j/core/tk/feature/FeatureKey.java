@@ -17,31 +17,8 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.internal.metamodel;
+package org.td4j.core.tk.feature;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.td4j.core.metamodel.FeatureKey;
-import org.td4j.core.metamodel.FeatureRepository;
-
-public class DefaultFeatureRepository implements FeatureRepository {
-	
-	private final Map<FeatureKey<?>, Object> featureMap = new HashMap<FeatureKey<?>, Object>();
-
-	public <T extends Object> void putFeature(FeatureKey<T> key, T feature) {
-		featureMap.put(key, feature);
-	}
-
-	public <T> T getFeature(FeatureKey<T> key) {
-		final Object feature = featureMap.get(key);
-		return (T) feature;
-	}
-
-	public Set<FeatureKey<?>> getFeatureKeys() {
-		return Collections.unmodifiableSet(featureMap.keySet());
-	}
-
+public interface FeatureKey<F> {
+	public Class<F> getFeatureType();
 }

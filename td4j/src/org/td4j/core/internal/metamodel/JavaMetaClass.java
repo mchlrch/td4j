@@ -23,18 +23,19 @@ import java.util.List;
 import java.util.Set;
 
 import org.td4j.core.internal.reflect.AbstractExecutable;
-import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
+import org.td4j.core.tk.feature.FeatureRepository;
+import org.td4j.core.tk.feature.FeatureKey;
 
 public class JavaMetaClass<T> extends MetaClass {
 
 	private final Class<T> javaClass;
 	private final int hashCode;
 	
-	private final DefaultFeatureRepository featRepo = new DefaultFeatureRepository();
+	private final FeatureRepository featRepo = new FeatureRepository();
 
 	protected JavaMetaClass(Class<T> javaClass) {
 		this.javaClass = ObjectTK.enforceNotNull(javaClass, "javaClass");

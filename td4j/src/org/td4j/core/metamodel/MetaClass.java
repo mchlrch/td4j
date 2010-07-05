@@ -31,10 +31,12 @@ import org.td4j.core.metamodel.feature.OperationsKey;
 import org.td4j.core.metamodel.feature.IndividualPropertiesKey;
 import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.tk.feature.FeatureKey;
+import org.td4j.core.tk.feature.FeatureProvider;
 
 
 
-public abstract class MetaClass implements FeatureRepository {
+public abstract class MetaClass implements FeatureProvider {
 
 	public abstract String getName();
 	public abstract String getSimpleName();

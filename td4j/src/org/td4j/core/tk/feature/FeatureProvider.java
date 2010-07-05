@@ -17,11 +17,12 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.metamodel;
+package org.td4j.core.tk.feature;
 
 import java.util.Set;
 
-public interface FeatureRepository {
+
+public interface FeatureProvider {
 
 	public <T> T getFeature(FeatureKey<T> key);
 	public Set<FeatureKey<?>> getFeatureKeys();

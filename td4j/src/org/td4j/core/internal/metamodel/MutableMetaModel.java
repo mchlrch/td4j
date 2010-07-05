@@ -21,12 +21,13 @@ package org.td4j.core.internal.metamodel;
 
 import java.util.Set;
 
-import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.MetaModel;
+import org.td4j.core.tk.feature.FeatureRepository;
+import org.td4j.core.tk.feature.FeatureKey;
 
 public class MutableMetaModel extends MetaModel {
 
-	private final DefaultFeatureRepository featRepo = new DefaultFeatureRepository();
+	private final FeatureRepository featRepo = new FeatureRepository();
 
 	protected <T extends Object> void putFeature(FeatureKey<T> key, T feature) {
 		featRepo.putFeature(key, feature);
