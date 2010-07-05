@@ -17,7 +17,7 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.env;
+package org.td4j.core.tk.env;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.td4j.core.tk.ObjectTK;
 
-public class DefaultSvcRepository implements SvcRepository {
+public class SvcRepository implements SvcProvider {
 
 	private final Map<Class<?>, Object> implMap = new HashMap<Class<?>, Object>();
 	private final Map<Class<?>, Konstruktor> implConstructorMap = new HashMap<Class<?>, Konstruktor>();
@@ -38,19 +38,25 @@ public class DefaultSvcRepository implements SvcRepository {
 		
 		if (impl == null) impl = createByImplConstructor(svcDef);
 		
-		// TODO implement remaining facilities
-		
 		return impl;
 	}
 	
 	@Override
+	public <T> T requireService(Class<T> svcDef) {
+		final T svc = getService(svcDef);
+		if (svc == null) {
+			throw new IllegalStateException("Required Service not available: " + svcDef);
+		} else {
+			return svc;
+		}
+	}
+
 	public <T, I extends T> void setSingletonService(Class<T> svcDef, I svcImpl) {
 		verifyServiceUndefined(svcDef);
 		
 		implMap.put(svcDef, svcImpl);
 	}
 
-	@Override
 	public <T> void setSingletonService(Class<T> svcDef, Class<? extends T> svcImpl) {
 		verifyServiceUndefined(svcDef);
 		
@@ -63,18 +69,18 @@ public class DefaultSvcRepository implements SvcRepository {
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			// try constructor with SvcRepo argument
+			// try constructor with SvcProvider argument
 		}
 		
-		// try constructor with SvcRepository as argument
+		// try constructor with SvcProvider as argument
 		if (konstruktor == null) {
 			try {
-				final Constructor<? extends T> constructor = svcImpl.getConstructor(SvcRepository.class);
-				konstruktor = new Konstruktor(Konstruktor.ArgType.SvcRepoArg, constructor);
+				final Constructor<? extends T> constructor = svcImpl.getConstructor(SvcProvider.class);
+				konstruktor = new Konstruktor(Konstruktor.ArgType.SvcProviderArg, constructor);
 			} catch (SecurityException e) {
 				throw new RuntimeException(e);
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException("No appropriate constructor found in " + svcImpl + " : init() or init(" + SvcRepository.class.getName() + ")");
+				throw new IllegalArgumentException("No appropriate constructor found in " + svcImpl + " : init() or init(" + SvcProvider.class.getName() + ")");
 			}	
 		}
 		
@@ -90,25 +96,6 @@ public class DefaultSvcRepository implements SvcRepository {
 		
 		return null;
 	}	
-
-
-	@Override
-	public <T> void setServiceProvider(Class<T> svcDef, Class<?> svcProvider) {
-		verifyServiceUndefined(svcDef);
-		
-		// TODO
-		throw new UnsupportedOperationException();		
-	}
-
-	@Override
-	public <T> void setServiceProvider(Class<T> svcDef, Object svcProvider) {
-		verifyServiceUndefined(svcDef);
-		// TODO Auto-generated method stub
-		
-		// TODO
-		throw new UnsupportedOperationException();		
-	}
-	
 	
 	private void verifyServiceUndefined(Class<?> svcDef) {
 		if (implMap.containsKey(svcDef)
@@ -117,18 +104,16 @@ public class DefaultSvcRepository implements SvcRepository {
 			throw new IllegalStateException("Service implementation already defined.");
 		}
 	}
-
-	@Override
-	public void clearService(Class<?> svcDef) {
-		
-		// TODO
+	
+	// TODO
+	public void clearService(Class<?> svcDef) {		
 		throw new UnsupportedOperationException();
 	}
 	
 	// --------------------------------------------------------------
 	
 	static class Konstruktor {
-		private static enum ArgType {NoArg, SvcRepoArg}
+		private static enum ArgType {NoArg, SvcProviderArg}
 		
 		private final ArgType argType;
 		private final Constructor<?> constructor;
@@ -139,7 +124,7 @@ public class DefaultSvcRepository implements SvcRepository {
 		}
 		
 		@SuppressWarnings("unchecked")
-		private <T> T newInstance(SvcRepository repo) {
+		private <T> T newInstance(SvcProvider repo) {
 			try { 
 				if (argType == ArgType.NoArg) {
 					return (T) constructor.newInstance();

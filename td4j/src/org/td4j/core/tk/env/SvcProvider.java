@@ -17,36 +17,11 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.env;
+package org.td4j.core.tk.env;
 
-import org.td4j.core.tk.ObjectTK;
-
-public class SvcRepo {
+public interface SvcProvider {
 	
-	private static SvcRepository delegate;
-	
-	public static void init(SvcRepository repository) {
-		if (delegate != null) throw new IllegalStateException("already initialized");
-		
-		delegate = ObjectTK.enforceNotNull(repository, "repository");
-	}
-	
-	public static <T> T getService(Class<T> svcDef) {
-		return delegate.getService(svcDef);
-	}
-	
-	public static <T> T requireService(Class<T> svcDef) {
-		final T svc = getService(svcDef);
-		if (svc == null) {
-			throw new IllegalStateException("Required Service not available: " + svcDef);
-		} else {
-			return svc;
-		}
-	}
-	
-	
-	public static SvcRepository getRepositoryDelegate() {
-		return delegate;
-	}	
+	public <T> T getService(Class<T> svcDef);
+	public <T> T requireService(Class<T> svcDef);
 
 }
