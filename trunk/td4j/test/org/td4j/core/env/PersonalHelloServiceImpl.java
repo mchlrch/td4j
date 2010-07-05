@@ -19,12 +19,14 @@
 
 package org.td4j.core.env;
 
+import org.td4j.core.tk.env.SvcProvider;
+
 public class PersonalHelloServiceImpl implements HelloService {
 
 	private final IdentityService idService;
 	
-	public PersonalHelloServiceImpl(SvcRepository svcRepo) {
-		this(svcRepo.getService(IdentityService.class));
+	public PersonalHelloServiceImpl(SvcProvider svcProvider) {
+		this(svcProvider.getService(IdentityService.class));
 	}
 	
 	private PersonalHelloServiceImpl(IdentityService idService) {
