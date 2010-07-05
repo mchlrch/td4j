@@ -19,13 +19,17 @@
 
 package org.td4j.core.internal.metamodel;
 
-import org.td4j.core.metamodel.FeatureKey;
 import org.td4j.core.metamodel.feature.MetaClassKey;
+import org.td4j.core.tk.env.SvcProvider;
+import org.td4j.core.tk.feature.FeatureKey;
 
 public class JavaMetaModel extends MutableMetaModel {
 	
-	private final JavaModelInspector featureFactory = new JavaModelInspector(this);
+	private final JavaModelInspector featureFactory;
 	
+	public JavaMetaModel(SvcProvider svcProvider) {
+		this.featureFactory = new JavaModelInspector(this, svcProvider);
+	}
 	
 	@Override
 	public <T> T getFeature(FeatureKey<T> key) {

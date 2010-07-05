@@ -30,32 +30,32 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
-import org.td4j.core.env.SvcRepo;
+import org.td4j.core.binding.model.ListDataConnector;
+import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.binding.model.ListFieldConnector;
 import org.td4j.core.internal.binding.model.ListMethodConnector;
-import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
 import org.td4j.core.internal.reflect.ExecutableConstructor;
 import org.td4j.core.internal.reflect.ExecutableMethod;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.reflect.Companion;
+import org.td4j.core.reflect.Companions;
 import org.td4j.core.reflect.DataConnector;
-import org.td4j.core.reflect.Operation;
-import org.td4j.core.reflect.Show;
-import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.IllegalConnectorTypeException;
-import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ListProperty;
+import org.td4j.core.reflect.Operation;
+import org.td4j.core.reflect.ReflectionTK;
+import org.td4j.core.reflect.Show;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.UnknownPropertyException;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
+import org.td4j.core.tk.env.SvcProvider;
 
 public class JavaModelInspector {
 	
@@ -81,9 +81,11 @@ public class JavaModelInspector {
 	
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 	private final JavaMetaModel metaModel;
+	private final SvcProvider svcProvider;
 	
-	JavaModelInspector(JavaMetaModel metaModel) {
+	JavaModelInspector(JavaMetaModel metaModel, SvcProvider svcProvider) {
 		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
+		this.svcProvider = ObjectTK.enforceNotNull(svcProvider, "svcProvider");
 	}
 	
 	
@@ -182,7 +184,7 @@ public class JavaModelInspector {
 		return fieldConnectors;
 	}
 	
-	
+	// PEND: use OperationGroups to bundle operations together
 	private List<AbstractExecutable> createOperations(final Class<?> cls) {
 		final List<AbstractExecutable> result = new ArrayList<AbstractExecutable>();
 
@@ -205,16 +207,17 @@ public class JavaModelInspector {
 		}
 
 		// companions
-		final Companion companionSpec = cls.getAnnotation(Companion.class);
+		final Companions companionSpec = cls.getAnnotation(Companions.class);
 		if (companionSpec != null) {
-			final Class<?> compCls = companionSpec.value();
-			final Object svc = SvcRepo.requireService(compCls);
-
-			final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
-			for (Method method : compMethods) {
-				final Operation executableTag = method.getAnnotation(Operation.class);
-				if (executableTag != null) {
-					result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
+			for (Class<?> compCls : companionSpec.value()) {
+				final Object svc = svcProvider.requireService(compCls);
+	
+				final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
+				for (Method method : compMethods) {
+					final Operation executableTag = method.getAnnotation(Operation.class);
+					if (executableTag != null) {
+						result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
+					}
 				}
 			}
 		}
