@@ -85,7 +85,7 @@ public class MainUISwing extends ControllerAwareGridBagPanel {
 		mediator.setContext(homer);
 
 		// WidgetBuilder
-		final WidgetBuilder<Person> builder = new WidgetBuilder<Person>(mediator, null);
+		final WidgetBuilder<Person> builder = new WidgetBuilder<Person>(mediator, null, null);
 		// final JTextField name3Text = builder.text().bindField("firstName");
 		// add(builder.lcl(), new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
 		// GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
