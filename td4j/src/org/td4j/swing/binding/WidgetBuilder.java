@@ -39,12 +39,10 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
-import org.td4j.core.internal.metamodel.JavaMetaModel;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.tk.IFilter;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.core.tk.filter.AcceptAllFilter;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
@@ -65,44 +63,32 @@ public class WidgetBuilder<T> {
 
 	private final Mediator mediator;
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
-	private final MetaModel metaModel;
 	private final Navigator navigator;
 
 	private boolean autoCaptions = true;
 	private Caption currentCaption;
+	
+	// working with the metaModel is optional, metaModel is only used for nestedProperties in table widget
+	private final MetaModel metaModel;
 
 	public WidgetBuilder(Class<?> observableType) {
-		this(observableType, null);
+		this(observableType, null, null);
 	}
 
-	public WidgetBuilder(Class<?> observableType, Navigator navigator) {
-		this(new Mediator(observableType), navigator);
-	}
-
-	public WidgetBuilder(Mediator mediator, Navigator navigator) {
-		this(mediator, navigator, new JavaMetaModel(new SvcRepository()));
+	public WidgetBuilder(Class<?> observableType, MetaModel metaModel, Navigator navigator) {
+		this(new Mediator(observableType), metaModel, navigator);
 	}
 	
-	public WidgetBuilder(Mediator mediator, Navigator navigator, MetaModel metaModel) {
+	public WidgetBuilder(Mediator mediator, MetaModel metaModel, Navigator navigator) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
-
+		this.metaModel = metaModel;
 		this.navigator = navigator;
 	}
 
 	public Mediator getMediator() {
 		return mediator;
 	}
-
-	@SuppressWarnings("unchecked")
-	public T getContext() {
-		return (T) mediator.getContext();
-	}
-
-	public void setContext(T ctx) {
-		mediator.setContext(ctx);
-	}
-
+	
 	public Navigator getNavigator() {
 		return navigator;
 	}

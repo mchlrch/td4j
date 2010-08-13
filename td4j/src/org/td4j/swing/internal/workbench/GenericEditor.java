@@ -24,7 +24,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -41,11 +40,11 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ListDataContainer;
-import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.IndividualDataContainer;
 import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.binding.model.IndividualDataRelay;
+import org.td4j.core.binding.model.ListDataContainer;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
@@ -128,7 +127,7 @@ public class GenericEditor extends Editor<Object> {
 		// list table
 		listDataContainer = new ListDataContainer(modelType, "listData");
 		
-		final WidgetBuilder wb = new WidgetBuilder(modelType);
+		final WidgetBuilder wb = new WidgetBuilder(modelType, model, null);
 		
 		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, model);
 		final IndividualProperty[] nestedProperties = nestedPropsFactory.createNestedProperties();

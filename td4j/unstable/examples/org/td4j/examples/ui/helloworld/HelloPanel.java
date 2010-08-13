@@ -43,7 +43,7 @@ public class HelloPanel extends GridBagPanel {
 
 	public HelloPanel() {
 		initUI();
-		wb.setContext(new HelloModel());
+		wb.getMediator().setContext(new HelloModel());
 	}
 
 	private void initUI() {

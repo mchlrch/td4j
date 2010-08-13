@@ -46,10 +46,12 @@ public class TableController extends ListSwingWidgetController<JTable> {
 	private final JTable table;
 	private final MyTableModel model;
 	
-	public TableController(final JTable table, final ListDataProxy proxy, IndividualProperty[] columnProperties, final Navigator navigator) {
+	public TableController(final JTable table, final ListDataProxy proxy, final Navigator navigator) {
 		super(proxy);
 		this.table = ObjectTK.enforceNotNull(table, "table");
-		this.model = new MyTableModel(proxy, columnProperties);
+		
+		proxy.ensureSensibleNestedProperties(null);
+		this.model = new MyTableModel(proxy, proxy.getNestedProperties());
 
 		table.setModel(model);
 

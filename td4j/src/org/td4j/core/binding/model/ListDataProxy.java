@@ -25,27 +25,27 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.internal.binding.model.DataProxy;
+import org.td4j.core.internal.binding.model.ToStringConnector;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
+import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.tk.ObjectTK;
 
 
 public class ListDataProxy extends DataProxy implements NestedPropertiesProvider {
 
-	private final ListDataAccessAdapter dataAccess;
-	
-	// TODO: cleanup this hack
-	private final NestedPropertiesProvider nestedPropertyProvider;
+	private final ListDataAccessAdapter dataAccess;	
 	private IndividualProperty[] nestedProperties;
 	
 	public ListDataProxy(ListDataConnector dataConnector, String name) {
 		this(dataConnector, name, null);
 	}
 	
-	public ListDataProxy(ListDataConnector dataConnector, String name, NestedPropertiesProvider nestedPropertyProvider) {
+	public ListDataProxy(ListDataConnector dataConnector, String name, IndividualProperty[] nestedProperties) {
 		super(name);		
 		this.dataAccess = new ListDataAccessAdapter(dataConnector); 
-		this.nestedPropertyProvider = nestedPropertyProvider;
+		setNestedProperties(nestedProperties);
 	}
 	
 	@Override
@@ -71,28 +71,55 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 
 	@Override
 	public boolean isNestedPropertiesDefined() {
-		final boolean explicit = nestedProperties != null && nestedProperties.length > 0;
-		final boolean thruProvider = nestedPropertyProvider != null && nestedPropertyProvider.isNestedPropertiesDefined();
-		return explicit || thruProvider;
+		return nestedProperties != null && nestedProperties.length > 0;
 	}
 	
 	@Override
 	public IndividualProperty[] getNestedProperties() {
 		if (nestedProperties != null && nestedProperties.length > 0) {
 			return nestedProperties;
-		} else if (nestedPropertyProvider != null) {
-			return nestedPropertyProvider.getNestedProperties();
 		} else {
 			return new IndividualProperty[0];
 		}
+	}
+	
+	
+	public void ensureSensibleNestedProperties(MetaModel metaModel) {
+
+		// if proxy already defines nestedProperties, we are done
+		if (isNestedPropertiesDefined()) return;		
+			
+		// otherwise use all individual properties		
+		final List<IndividualProperty> individualProperties = individualPropertiesFromMetaModel(metaModel, getValueType());			
+			
+		if ( ! individualProperties.isEmpty()) {
+			setNestedProperties(individualProperties.toArray(new IndividualProperty[individualProperties.size()]));			
+			
+		// primitive rowTypes have no properties, also lack of MetaModel yields to no properties
+		// --> fallback to toString connector to make sure that table doesn't stay blank
+		} else {
+			final IndividualDataConnector toStringConnector = new ToStringConnector(getValueType());	
+			setNestedProperties(new IndividualProperty[] {new IndividualProperty("toString", toStringConnector)});
+		}		
 	}	
+	
+	private List<IndividualProperty> individualPropertiesFromMetaModel(MetaModel metaModel, Class<?> cls) {
+		
+		// it's possible to use the ListDataProxy (or WidgetBuilder) without having a MetaModel
+		if (metaModel != null) {
+			final MetaClass metaClass = metaModel.getMetaClass(cls);
+			return metaClass.getIndividualProperties();
+		} else {
+			return Collections.emptyList();
+		}		
+	}
+	
 
 	@Override
 	public String toString() {
 		return dataAccess.toString();
 	}
-	
-	
+		
 	// ==================================================================================
 	
 	private static class ListDataAccessAdapter {

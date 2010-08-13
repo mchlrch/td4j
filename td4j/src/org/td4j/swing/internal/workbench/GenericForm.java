@@ -31,14 +31,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.IndividualDataProxy;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.LabelController;
@@ -49,6 +49,7 @@ import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableControllerFactory;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
+import org.td4j.swing.workbench.Navigator;
 
 
 public class GenericForm<T> extends Form<T> {
@@ -64,8 +65,11 @@ public class GenericForm<T> extends Form<T> {
 	protected JPanel createForm() {
 		final JPanel panel = new JPanel(new GridBagLayout());
 
+		final MetaModel metaModel = getEditor().getWorkbench().getAppCtx().getMetamodel();
+		final Navigator navigator = getEditor().getWorkbench().getNavigator();
+		
 		// individual plugs
-		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), getEditor().getWorkbench().getNavigator());
+		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), metaModel, navigator);
 		final MetaClass metaClass = metaModel.getMetaClass(getContextType());
 		for (IndividualProperty individualProperty : metaClass.getIndividualProperties()) {
 			final Class<?> type = individualProperty.getValueType();
@@ -109,7 +113,7 @@ public class GenericForm<T> extends Form<T> {
 			final JLabel label = new JLabel();
 			panel.add(label, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 
-			final ListDataProxy listProxy = new ListDataProxy(listProperty, listProperty.getName(), listProperty);
+			final ListDataProxy listProxy = new ListDataProxy(listProperty, listProperty.getName(), listProperty.getNestedProperties());
 			getMediator().addContextSocket(listProxy);
 			
 			final TableControllerFactory tableCtrlFactory = wBuilder.caption(label).table();
