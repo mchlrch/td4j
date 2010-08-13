@@ -19,16 +19,20 @@
 
 package org.td4j.core.internal.metamodel;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.td4j.core.internal.metamodel.container.MutableListProperties;
+import org.td4j.core.internal.metamodel.feature.MutableListPropertiesKey;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureRepository;
 import org.td4j.core.tk.feature.FeatureKey;
+import org.td4j.core.tk.feature.FeatureRepository;
 
 public class JavaMetaClass<T> extends MetaClass {
 
@@ -73,12 +77,7 @@ public class JavaMetaClass<T> extends MetaClass {
 	@Override
 	protected void setIndividualProperties(List<IndividualProperty> properties) {
 		super.setIndividualProperties(properties);
-	}
-	
-	@Override
-	protected void setListProperties(List<ListProperty> properties) {
-		super.setListProperties(properties);
-	}
+	}	
 	
 	@Override
 	protected void setOperations(List<AbstractExecutable> operations) {
@@ -86,6 +85,34 @@ public class JavaMetaClass<T> extends MetaClass {
 	}
 
 	// =============================================================
+	
+	void setMutableListProperties(List<MutableListProperty> properties) {		
+		
+		// MutableListProperties are only used temporary during MetaClass creation - they are removed later on
+		final MutableListProperties props = new MutableListProperties(properties);
+		putFeature(MutableListPropertiesKey.ALL, props);
+		
+		final List<ListProperty> listProperties = new ArrayList<ListProperty>();
+		for (MutableListProperty prop : properties) {
+			listProperties.add(prop);
+		}
+		super.setListProperties(listProperties);
+	}
+	
+	List<MutableListProperty> getMutableListProperties() {
+		final MutableListProperties props = getFeature(MutableListPropertiesKey.ALL);
+		if (props != null) {
+			return Collections.unmodifiableList(props.get());
+		} else {
+			return Collections.emptyList();
+		}
+	}
+	
+	protected void removeMutableListProperties() {
+		featRepo.removeFeature(MutableListPropertiesKey.ALL);
+	}
+	
+  //=============================================================
 
 	@Override
 	public int hashCode() {

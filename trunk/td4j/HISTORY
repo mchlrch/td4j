@@ -1,4 +1,5 @@
 :: 10.xy
+- Incremental MetaClass creation (fixes issues with cyclic dependencies)
 - Companion object support (see org.td4j.examples.dispatcher)
 - SvcRepo
 - AppCtx

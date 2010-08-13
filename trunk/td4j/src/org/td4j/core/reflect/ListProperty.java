@@ -30,13 +30,18 @@ import org.td4j.core.tk.StringTK;
 public class ListProperty implements ListDataConnector, NestedPropertiesProvider, Property {
 	
 	private final String name;
-	private final ListDataConnector dataConnector;
-	private final IndividualProperty[] nestedProperties;
+	protected final ListDataConnector dataConnector;
+	private IndividualProperty[] nestedProperties;
 	
 	public ListProperty(String name, ListDataConnector dataConnector, IndividualProperty[] nestedProperties) {
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
-		this.nestedProperties = ObjectTK.enforceNotNull(nestedProperties, "nestedProperties");
+		setNestedProperties(nestedProperties);
+	}
+	
+	protected ListProperty(String name, ListDataConnector dataConnector) {
+		this.name = StringTK.enforceNotEmpty(name, "name");
+		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
 	}
 	
 	public String getName() {
@@ -68,6 +73,9 @@ public class ListProperty implements ListDataConnector, NestedPropertiesProvider
 		return dataConnector.canRead(ctx);		
 	}
 	
+	protected void setNestedProperties(IndividualProperty[] nestedProperties) {
+		this.nestedProperties = ObjectTK.enforceNotNull(nestedProperties, "nestedProperties");
+	}
 	
 	public IndividualProperty[] getNestedProperties() {
 		return nestedProperties;

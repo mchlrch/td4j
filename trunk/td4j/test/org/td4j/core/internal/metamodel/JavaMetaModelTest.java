@@ -77,6 +77,36 @@ public class JavaMetaModelTest {
 	public void testUnknownPlug() {
 		metaModel.getMetaClass(ClsF.class);
 	}
+	
+	@Test
+	public void testBidirectionalDependenciesWithoutNestedProperties() {
+		final ListProperty propertyRefToH = metaModel.getMetaClass(ClsG.class).getListProperty("refToH");
+		final ListProperty propertyRefToG = metaModel.getMetaClass(ClsH.class).getListProperty("refToG");
+		
+		assert propertyRefToH != null;
+		assert propertyRefToG != null;
+	}
+	
+	@Test
+	public void testBidirectionalDependenciesWithNestedProperties() {
+		final IndividualProperty propertyNameI = metaModel.getMetaClass(ClsI.class).getIndividualProperty("name");
+		final IndividualProperty propertyNameJ = metaModel.getMetaClass(ClsJ.class).getIndividualProperty("name");
+		
+		final ListProperty propertyRefToJ = metaModel.getMetaClass(ClsI.class).getListProperty("refToJ");
+		final ListProperty propertyRefToI = metaModel.getMetaClass(ClsJ.class).getListProperty("refToI");
+		
+		assert propertyRefToJ != null;
+		assert propertyRefToI != null;
+		
+		assert propertyRefToJ.getNestedProperties()[0].equals(propertyNameJ);
+		assert propertyRefToI.getNestedProperties()[0].equals(propertyNameI);
+	}
+	
+	@Test
+	public void testSelfReferencingProperty() {
+		final IndividualProperty refToSelf = metaModel.getMetaClass(ClsK.class).getIndividualProperty("refToSelf");
+		assert refToSelf != null;
+	}
 
 	// ========= helpers =========
 
@@ -213,6 +243,47 @@ public class JavaMetaModelTest {
 	@ShowProperties("int5")
 	public static class ClsF {
 		public int int4;
+	}
+	
+	
+	// -----------------------------------------------
+	
+	/**
+	 * Bidirectional dependency without nested properties
+	 * 
+	 * ClsG.refToH: type=ClsH
+	 * ClsH.refToG: type=ClsG
+	 */
+	public static class ClsG {
+		public List<ClsH> refToH;
+	}
+	
+	public static class ClsH {
+		public List<ClsG> refToG;
+	}
+	
+	
+	/**
+	 * Bidirectional dependency with nested properties
+	 * 
+	 * ClsI.refToJ: type=ClsJ, nestedProperties=name
+	 * ClsJ.refToI: type=ClsI, nestedProperties=name
+	 */
+	public static class ClsI {
+		@ShowProperties("name")
+		public List<ClsJ> refToJ;
+		public String name;
+	}
+	
+	public static class ClsJ {
+		@ShowProperties("name")
+		public List<ClsI> refToI;
+		public String name;
+	}
+	
+	
+	public static class ClsK {
+		public ClsK refToSelf;
 	}
 
 }

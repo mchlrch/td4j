@@ -19,43 +19,47 @@
 
 package org.td4j.core.internal.metamodel;
 
+import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.feature.MetaClassKey;
 import org.td4j.core.tk.env.SvcProvider;
 import org.td4j.core.tk.feature.FeatureKey;
 
 public class JavaMetaModel extends MutableMetaModel {
 	
-	private final JavaModelInspector featureFactory;
+	private final JavaMetaClassBuilder metaClassBuilder;
 	
 	public JavaMetaModel(SvcProvider svcProvider) {
-		this.featureFactory = new JavaModelInspector(this, svcProvider);
+		this.metaClassBuilder = new JavaMetaClassBuilder(this, svcProvider);
 	}
 	
 	@Override
 	public <T> T getFeature(FeatureKey<T> key) {
 		T feature = super.getFeature(key);
 		
+		// create metaClasses lazy
 		if (feature == null && key instanceof MetaClassKey) {
-			final JavaMetaClass<?> metaClass = createMetaClass( (MetaClassKey) key);
+			final MetaClassKey metaClassKey = (MetaClassKey) key;
+			final Class<?> cls = metaClassKey.getJavaClass();			
+			final JavaMetaClass<?> metaClass = metaClassBuilder.buildMetaClass(cls);
 			feature = (T) metaClass;
 		}
 		
 		return feature;
 	}
 
-
-	private JavaMetaClass<?> createMetaClass(MetaClassKey key) {
-		final Class<?> cls = key.getJavaClass();
-		final JavaMetaClass<?> metaClass = new JavaMetaClass(cls);
-		
-		final JavaModelInspector.FeatureContainer features = featureFactory.createFeatures(cls);
-		
-		metaClass.setIndividualProperties(features.individualProperties);
-		metaClass.setListProperties(features.listProperties);
-		metaClass.setOperations(features.operations);
-		
-		putFeature(key, metaClass);
+	
+	// ----------------------------------------------------------------------------------------
+	
+	// this method is necessary, as the metaModel normally creates MetaClass lazy, on demand
+	MetaClass getMetaClassReadonly(Class<?> cls) {
+		final MetaClassKey key = metaClassKey(cls);
+		final MetaClass metaClass = super.getFeature(key);
 		return metaClass;
 	}
-
+	
+	void putMetaClass(JavaMetaClass<?> metaClass) {
+		final MetaClassKey key = metaClassKey(metaClass.getJavaClass());
+		putFeature(key, metaClass);
+	}
+	
 }
