@@ -41,12 +41,12 @@ import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
 import org.td4j.core.internal.reflect.ExecutableConstructor;
 import org.td4j.core.internal.reflect.ExecutableMethod;
 import org.td4j.core.metamodel.MetaClass;
+import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.core.reflect.Companions;
 import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.IllegalConnectorTypeException;
 import org.td4j.core.reflect.IndividualProperty;
-import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.Operation;
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.Show;
@@ -80,29 +80,26 @@ public class JavaModelInspector {
 	};
 	
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
-	private final JavaMetaModel metaModel;
-	private final SvcProvider svcProvider;
-	
-	JavaModelInspector(JavaMetaModel metaModel, SvcProvider svcProvider) {
-		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
-		this.svcProvider = ObjectTK.enforceNotNull(svcProvider, "svcProvider");
-	}
 	
 	
-	public FeatureContainer createFeatures(Class<?> cls) {
+	public FeatureContainer createShallowFeatures(final Class<?> cls, final SvcProvider svcProvider, final MetaClassProvider metaClassProvider) {
 		final FeatureContainer features = new FeatureContainer();
 
-		populateConnectors(cls, features);
+		populateConnectors(cls, features, metaClassProvider);
 		
-		features.operations.addAll(createOperations(cls));
+		features.operations.addAll(createOperations(cls, svcProvider));
 		
 		return features;
 	}
 	
-	private void populateConnectors(final Class<?> cls, final FeatureContainer features) {
+	private void populateConnectors(final Class<?> cls, final FeatureContainer features, final MetaClassProvider metaClassProvider) {
 		final List<NamedDataConnector> connectors = createConnectors(cls);		
 		for (NamedDataConnector nc : connectors) {
 			final DataConnector connector = nc.connector;
+			
+			// trigger creation of referenced metaClasses
+			final Class<?> valueType = connector.getValueType();
+			metaClassProvider.getMetaClass(valueType);
 			
 			if (connector instanceof IndividualDataConnector) {
 				final IndividualDataConnector individualConnector = (IndividualDataConnector) connector;
@@ -111,8 +108,7 @@ public class JavaModelInspector {
 				
 			} else if (connector instanceof ListDataConnector) {
 				final ListDataConnector listConnector = (ListDataConnector) connector;
-				final IndividualProperty[] nestedProperties = findNestedProperties(connector);
-				final ListProperty listProperty = new ListProperty(nc.name, listConnector, nestedProperties);
+				final MutableListProperty listProperty = new MutableListProperty(nc.name, listConnector);
 				features.listProperties.add(listProperty);
 				
 			} else {
@@ -120,6 +116,14 @@ public class JavaModelInspector {
 			}
 		}		
 	}
+	
+	public void refineShallowFeatures(final FeatureContainer features, final SvcProvider svcProvider, final MetaClassProvider metaClassProvider) {
+		for (MutableListProperty prop : features.listProperties) {
+			final ListDataConnector listConnector = prop.getDataConnector();
+			final IndividualProperty[] nestedProperties = findNestedProperties(listConnector, metaClassProvider);
+			prop.setNestedProperties(nestedProperties);
+		}
+	}	
 	
 	
 	// =======================================================================================================
@@ -185,7 +189,7 @@ public class JavaModelInspector {
 	}
 	
 	// PEND: use OperationGroups to bundle operations together
-	private List<AbstractExecutable> createOperations(final Class<?> cls) {
+	private List<AbstractExecutable> createOperations(final Class<?> cls, SvcProvider svcProvider) {
 		final List<AbstractExecutable> result = new ArrayList<AbstractExecutable>();
 
 		// constructors
@@ -228,27 +232,27 @@ public class JavaModelInspector {
 	// =======================================================================================================
 	
 	// nested properties are only supported for list connectors
-	private IndividualProperty[] findNestedProperties(final DataConnector connector) {
+	private IndividualProperty[] findNestedProperties(final DataConnector connector, final MetaClassProvider metaClassProvider) {
 		final Class<?> valueType = connector.getValueType();
 		if (connector instanceof ListFieldConnector) {
 			final ListFieldConnector cfConnector = (ListFieldConnector) connector;
 			final ShowProperties exposeAnnotation = cfConnector.getField().getAnnotation(ShowProperties.class);
-			return findNestedProperties(valueType, exposeAnnotation);
+			return findNestedProperties(valueType, exposeAnnotation, metaClassProvider);
 			
 		} else if (connector instanceof ListMethodConnector) {
 			final ListMethodConnector cmConnector = (ListMethodConnector) connector;
 			final ShowProperties exposeAnnotation = cmConnector.getGetterMethod().getAnnotation(ShowProperties.class);
-			return findNestedProperties(valueType, exposeAnnotation);
+			return findNestedProperties(valueType, exposeAnnotation, metaClassProvider);
 			
 		} else {
 			return new IndividualProperty[0];
 		}
 	}
 	
-	private IndividualProperty[] findNestedProperties(final Class<?> valueType, final ShowProperties exposeAnnotation) {
+	private IndividualProperty[] findNestedProperties(final Class<?> valueType, final ShowProperties exposeAnnotation, final MetaClassProvider metaClassProvider) {
 		if (exposeAnnotation == null) return new IndividualProperty[0];
 		
-		final MetaClass mc = metaModel.getMetaClass(valueType);
+		final MetaClass mc = metaClassProvider.getMetaClass(valueType);
 		
 		final List<IndividualProperty> nestedProperties = new ArrayList<IndividualProperty>();
 		final List<String> unknownProperties = new ArrayList<String>();
@@ -331,7 +335,7 @@ public class JavaModelInspector {
 	// =======================================================================================================
 	public static class FeatureContainer {
 		public final List<IndividualProperty> individualProperties = new ArrayList<IndividualProperty>();
-		public final List<ListProperty> listProperties = new ArrayList<ListProperty>();
+		public final List<MutableListProperty> listProperties = new ArrayList<MutableListProperty>();
 		public final List<AbstractExecutable> operations = new ArrayList<AbstractExecutable>();
 	}
 	

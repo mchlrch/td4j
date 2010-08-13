@@ -17,35 +17,27 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.metamodel;
+package org.td4j.core.internal.metamodel;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.td4j.core.binding.model.ListDataConnector;
+import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ListProperty;
 
-import org.td4j.core.metamodel.feature.MetaClassKey;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureProvider;
-
-
-public abstract class MetaModel implements FeatureProvider, MetaClassProvider {
+public class MutableListProperty extends ListProperty {
 	
-	private final Map<Class<?>, MetaClassKey> keyCache = new HashMap<Class<?>, MetaClassKey>();
+	protected MutableListProperty(String name, ListDataConnector dataConnector) {
+		super(name, dataConnector);
+	}
+	
+	// === [ open scope for visibility in pkg ] ===================================
 	
 	@Override
-	public MetaClass getMetaClass(Class<?> cls) {
-		ObjectTK.enforceNotNull(cls, "cls");		
-		final MetaClassKey key = metaClassKey(cls);		
-		return getFeature(key);
+	protected void setNestedProperties(IndividualProperty[] nestedProperties) {
+		super.setNestedProperties(nestedProperties);
 	}
 	
-	protected MetaClassKey metaClassKey(Class<?> cls) {
-		MetaClassKey key = keyCache.get(cls);
-		if (key == null) {
-			key = new MetaClassKey(cls);
-			keyCache.put(cls, key);
-		}
-		
-		return key;		
+	protected ListDataConnector getDataConnector() {
+		return dataConnector;
 	}
-	
+
 }

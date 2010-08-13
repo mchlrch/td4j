@@ -17,35 +17,37 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.metamodel;
+package org.td4j.core.internal.metamodel;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.td4j.core.metamodel.feature.MetaClassKey;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureProvider;
 
-
-public abstract class MetaModel implements FeatureProvider, MetaClassProvider {
+class StatefulJavaMetaClass {
 	
-	private final Map<Class<?>, MetaClassKey> keyCache = new HashMap<Class<?>, MetaClassKey>();
+	static enum State {ShallowMetaClass, ShallowFeatures, QualifiedFeatures, QualifiedMetaClass};
 	
-	@Override
-	public MetaClass getMetaClass(Class<?> cls) {
-		ObjectTK.enforceNotNull(cls, "cls");		
-		final MetaClassKey key = metaClassKey(cls);		
-		return getFeature(key);
+	private final JavaMetaClass<?> metaClass;
+	private State state;
+	
+	StatefulJavaMetaClass(JavaMetaClass<?> metaClass, State state) {
+		this.metaClass = ObjectTK.enforceNotNull(metaClass, "metaClass");
+		setState(state);
 	}
 	
-	protected MetaClassKey metaClassKey(Class<?> cls) {
-		MetaClassKey key = keyCache.get(cls);
-		if (key == null) {
-			key = new MetaClassKey(cls);
-			keyCache.put(cls, key);
-		}
-		
-		return key;		
+	JavaMetaClass<?> getMetaClass() {
+		return metaClass;
+	}
+	
+	State getState() {
+		return state;
+	}
+	
+	void setState(State state) {
+		this.state = ObjectTK.enforceNotNull(state, "state");
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%s] %s", getState(), getMetaClass());
 	}
 	
 }

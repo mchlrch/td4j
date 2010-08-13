@@ -32,6 +32,10 @@ public class FeatureRepository implements FeatureProvider {
 	public <T extends Object> void putFeature(FeatureKey<T> key, T feature) {
 		featureMap.put(key, feature);
 	}
+	
+	public <T extends Object> T removeFeature(FeatureKey<T> key) {
+		return (T) featureMap.remove(key);
+	}
 
 	public <T> T getFeature(FeatureKey<T> key) {
 		final Object feature = featureMap.get(key);

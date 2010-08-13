@@ -17,35 +17,22 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.core.metamodel;
+package org.td4j.core.internal.metamodel.container;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import org.td4j.core.metamodel.feature.MetaClassKey;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureProvider;
+import org.td4j.core.internal.metamodel.MutableListProperty;
+import org.td4j.core.tk.container.NamedItemsContainer;
 
-
-public abstract class MetaModel implements FeatureProvider, MetaClassProvider {
+public class MutableListProperties extends NamedItemsContainer<MutableListProperty> {
 	
-	private final Map<Class<?>, MetaClassKey> keyCache = new HashMap<Class<?>, MetaClassKey>();
+	public MutableListProperties(List<MutableListProperty> props) {
+		super(props);
+	}
 	
 	@Override
-	public MetaClass getMetaClass(Class<?> cls) {
-		ObjectTK.enforceNotNull(cls, "cls");		
-		final MetaClassKey key = metaClassKey(cls);		
-		return getFeature(key);
+	protected String nameOfItem(MutableListProperty property) {
+		return property.getName();
 	}
-	
-	protected MetaClassKey metaClassKey(Class<?> cls) {
-		MetaClassKey key = keyCache.get(cls);
-		if (key == null) {
-			key = new MetaClassKey(cls);
-			keyCache.put(cls, key);
-		}
-		
-		return key;		
-	}
-	
+
 }

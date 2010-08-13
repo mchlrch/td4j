@@ -23,14 +23,14 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.metamodel.container.IndividualProperties;
 import org.td4j.core.metamodel.container.ListProperties;
 import org.td4j.core.metamodel.container.Operations;
-import org.td4j.core.metamodel.container.IndividualProperties;
+import org.td4j.core.metamodel.feature.IndividualPropertiesKey;
 import org.td4j.core.metamodel.feature.ListPropertiesKey;
 import org.td4j.core.metamodel.feature.OperationsKey;
-import org.td4j.core.metamodel.feature.IndividualPropertiesKey;
-import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ListProperty;
 import org.td4j.core.tk.feature.FeatureKey;
 import org.td4j.core.tk.feature.FeatureProvider;
 

@@ -19,33 +19,8 @@
 
 package org.td4j.core.metamodel;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface MetaClassProvider {
 
-import org.td4j.core.metamodel.feature.MetaClassKey;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureProvider;
-
-
-public abstract class MetaModel implements FeatureProvider, MetaClassProvider {
-	
-	private final Map<Class<?>, MetaClassKey> keyCache = new HashMap<Class<?>, MetaClassKey>();
-	
-	@Override
-	public MetaClass getMetaClass(Class<?> cls) {
-		ObjectTK.enforceNotNull(cls, "cls");		
-		final MetaClassKey key = metaClassKey(cls);		
-		return getFeature(key);
-	}
-	
-	protected MetaClassKey metaClassKey(Class<?> cls) {
-		MetaClassKey key = keyCache.get(cls);
-		if (key == null) {
-			key = new MetaClassKey(cls);
-			keyCache.put(cls, key);
-		}
-		
-		return key;		
-	}
+	public MetaClass getMetaClass(Class<?> cls);
 	
 }
