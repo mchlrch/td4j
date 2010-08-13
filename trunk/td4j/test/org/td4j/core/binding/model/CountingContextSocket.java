@@ -23,7 +23,7 @@ import org.td4j.core.binding.ContextSocket;
 import org.td4j.core.tk.ObjectTK;
 
 
-class CountingModelSocket implements ContextSocket {
+class CountingContextSocket implements ContextSocket {
 
 	private final Class<?> ctxType;
 
@@ -31,7 +31,7 @@ class CountingModelSocket implements ContextSocket {
 	public int setContextCount;
 	public int refreshFromContextCount;
 
-	CountingModelSocket(Class<?> ctxType) {
+	CountingContextSocket(Class<?> ctxType) {
 		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
 	}
 
