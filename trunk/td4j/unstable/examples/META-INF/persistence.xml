@@ -2,6 +2,40 @@
 <persistence version="1.0"
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	<persistence-unit name="issuetracker" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>org.td4j.examples.issuetracker.Comment</class>
+		<class>org.td4j.examples.issuetracker.Context</class>
+		<class>org.td4j.examples.issuetracker.Issue</class>
+		<class>org.td4j.examples.issuetracker.IssueTemplate</class>
+		<class>org.td4j.examples.issuetracker.Link</class>
+		<class>org.td4j.examples.issuetracker.Module</class>
+		<class>org.td4j.examples.issuetracker.NamedElement</class>
+		<class>org.td4j.examples.issuetracker.Person</class>
+		<class>org.td4j.examples.issuetracker.Severity</class>
+		<class>org.td4j.examples.issuetracker.Status</class>		
+		<properties>
+			<properties>
+				<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+				<property name="javax.persistence.jdbc.url" value="jdbc:h2:db/issues;DB_CLOSE_ON_EXIT=FALSE" />
+				<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform" />
+				<property name="eclipselink.logging.level" value="FINE" />
+				<property name="eclipselink.orm.throw.exceptions" value="true" />
+
+					<property name="eclipselink.ddl-generation" value="create-tables"/>
+ 
+				<!--
+					<property name="eclipselink.ddl-generation" value="none"/>
+				-->
+				
+
+				<property name="eclipselink.ddl-generation.output-mode"	value="database" />
+			</properties>
+		</properties>
+	</persistence-unit>
+	
+	
 	<persistence-unit name="tagger" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<class> org.td4j.examples.tagger.TagGroup</class>		
