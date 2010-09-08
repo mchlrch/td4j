@@ -43,7 +43,7 @@ public class PersonExample {
 		
 		// TODO: birthdate als PrimitiveType implementieren - toString / fromString
 
-		@Operation(paramNames = { "firstname", "lastName" })
+		@Operation(paramNames = { "firstName", "lastName" })
 		public Person(String firstName, String lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;
