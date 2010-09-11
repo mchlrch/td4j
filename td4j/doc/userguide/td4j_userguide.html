@@ -43,7 +43,7 @@ DAMAGE.
 <!--}}}-->
 
 <!--PRE-HEAD-END-->
-<title> My TiddlyWiki - a reusable non-linear personal web notebook </title>
+<title> td4j userguide - prototyping framework for domain models written in Java </title>
 <style id="styleArea" type="text/css">
 #saveTest {display:none;}
 #messageArea {display:none;}
@@ -512,6 +512,9 @@ Also see [[AdvancedOptions]]</pre>
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
+<div title="DefaultTiddlers" creator="mira" modifier="mira" created="201009112007" changecount="1">
+<pre>[[Introduction]]</pre>
+</div>
 <div title="GettingStarted" creator="mira" modifier="mira" created="201009071658" changecount="1">
 <pre>To get started with this blank [[TiddlyWiki]], you'll need to modify the following tiddlers:
 * [[SiteTitle]] &amp; [[SiteSubtitle]]: The title and subtitle of the site, as shown above (after saving, they will also appear in the browser title bar)
@@ -519,10 +522,249 @@ Also see [[AdvancedOptions]]</pre>
 * [[DefaultTiddlers]]: Contains the names of the tiddlers that you want to appear when the TiddlyWiki is opened
 You'll also need to enter your username for signing your edits: &lt;&lt;option txtUserName&gt;&gt;</pre>
 </div>
-<div title="HelloWorldExample" creator="mira" modifier="mira" created="201009071709" modified="201009071723" changecount="9">
-<pre>@@Adjust IMG URLs@@
+<div title="GettingStartedGuide" creator="mira" modifier="mira" created="201009111923" modified="201009112003" changecount="5">
+<pre>This guide will walk you through a simple prototyping scenario. We will start of with a very basic model and refine it as we go on. At the end of this guide, you will be able to start prototyping your own domain models with td4j.
 
-This is the five minute introduction to td4j.
+The model is simple, we have a //Person// with its //Address//. So we start of by writing those two classes and a main method to create test-data and launch the workbench with it.
+
+{{{
+public class Person {
+                
+  public String firstName;
+  public String lastName;
+                
+  public Person(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }             
+}
+}}}
+{{{
+public class Address {
+
+  public Person person;
+  public String street;
+  public String zip;
+  public String city;
+
+  public Address(Person person, String street, String zip, String city) {
+    this.person = person;
+    this.street = street;
+    this.zip = zip;
+    this.city = city;
+  }
+}
+}}}
+{{{
+public static void main(String[] args) {
+  Person homer = new Person(&quot;Homer&quot;, &quot;Simpson&quot;);
+  Address address = new Address(homer, &quot;742 Evergreen Terrace&quot;, &quot;99001&quot;, &quot;Springfield&quot;);
+
+  org.td4j.swing.workbench.Workbench.start(address, Person.class, Address.class);
+}
+}}}
+
+Not that exciting so far. //Address// takes the person as constructor argument to mimic that address existence is bound to the person living at this address (a composition).
+
+When we run the application, we get this UI:
+
+[img[img/getting_started/gs_01.png]]
+
+The blue text looks a bit cryptic, because we have forgotten to implement ''toString()'' in both //Address// and //Person//. Let's fix that and run it again.
+
+{{{
+public String toString() {
+  return &quot;&quot; + firstName + &quot; &quot; + lastName;
+}
+}}}
+{{{
+public String toString() {
+  return &quot;&quot; + street + &quot;, &quot; + zip + &quot; &quot; + city;
+}
+}}}
+
+[img[img/getting_started/gs_02.png]]
+
+Looks much better now. As you might guess, the underlined blue text is a link that will take us from the //Address// to the //Person//. 
+
+[img[img/getting_started/gs_03.png]]
+
+----
+
+Done that, you will notice that we don't have a link to go back from the person to its address. This is because we only have a one-way association from //Address// to //Person//, but no association the other way around. A quick solution would be to simply introduce a field for the address in //Person// and set the field in our main method.
+
+{{{
+public class Person {
+                
+  public String firstName;
+  public String lastName;
+  public Address address;
+  ...
+}}}
+{{{
+public static void main(String[] args) {
+  Person homer = new Person(&quot;Homer&quot;, &quot;Simpson&quot;);
+  homer.address = new Address(homer, &quot;742 Evergreen Terrace&quot;, &quot;99001&quot;, &quot;Springfield&quot;);
+  ...
+}}}
+
+This would work, but is not a nice solution. Let's use some ideas from domain driven design and build an aggregate where the address is only manipulated through the person. That way, person keeps control of the manipulations on its address and the address is nicely tucked away.
+
+{{{
+public static class Person {            
+...             
+  public void setAddress(String street, String zip, String city) {
+    address = new Address(this, street, zip, city);
+  }
+...
+}}}
+{{{
+public static void main(String[] args) {
+  Person homer = new Person(&quot;Homer&quot;, &quot;Simpson&quot;);
+  homer.setAddress(&quot;742 Evergreen Terrace&quot;, &quot;99001&quot;, &quot;Springfield&quot;);
+
+  org.td4j.swing.workbench.Workbench.start(homer.address, Person.class, Address.class);
+}
+}}}
+
+The code to create the test-data looks better now. But we are still able to change the address directly in the ~UIs address form without //Person// guarding against direct manipulations. To fix that, we are going to make the address form ''readonly'' and allow manipulations only through the //setAddress()// method . Making the address form readonly is easy, we change the fields visibility to private and add getter methods to read the fields values.
+
+{{{
+public class Address {
+
+  private Person person;
+  private String street;
+  private String zip;
+  private String city;
+...             
+  public Person getPerson() { return person; }
+  public String getStreet() { return street; }
+  public String getZip()    { return zip;    }
+  public String getCity()   { return city;   }
+...
+}}}
+
+[img[img/getting_started/gs_04.png]]
+
+The address form is now readonly. To be able to change the address, we have to expose the //setAddress()// method with the ''@Operation'' annotation.
+
+{{{
+public class Person {
+...
+@Operation
+public void setAddress(String street, String zip, String city) {
+  address = new Address(this, street, zip, city);
+}
+...
+}}}
+
+[img[img/getting_started/gs_05.png]]
+
+Now the address can be changed by invoking the //setAddress()// method from the operations menu in the right upper corner. Doing so shows a dialog to fill in the parameters for the method call. 
+
+[img[img/getting_started/gs_06.png]]
+
+td4j reads the domain model through reflection of the bytecode in the class files. The methods parameter names are only available in the sourcecode and are removed during compilation. To let td4j know the parameter names, we have to put them in the ''@Operation'' annotation.
+
+{{{
+public class Person {
+...
+@Operation(paramNames = { &quot;street&quot;, &quot;zip&quot;, &quot;city&quot; })
+public void setAddress(String street, String zip, String city) {
+  address = new Address(this, street, zip, city);
+}
+...
+}}}
+
+[img[img/getting_started/gs_07.png]]
+
+[img[img/getting_started/gs_08.png]]
+
+So far, we are able to change the address interactively but we cannot create a new person yet. Let's change that by exposing the constructor of class //Person//.
+
+{{{
+@Operation(paramNames = { &quot;firstName&quot;, &quot;lastName&quot; })
+public Person(String firstName, String lastName) {
+  this.firstName = firstName;
+  this.lastName = lastName;
+}
+}}}
+
+[img[img/getting_started/gs_09.png]]
+
+[img[img/getting_started/gs_10.png]]
+
+----
+
+OK, that was easy. Now let's add a new requirement; Suppose that we are dealing with a web shop application where customers can fill their cart and at the time of checkout they can choose their shipping address from multiple addresses that are kept on file for them. This is convenient for the customer, as sometimes she might want her goods to be delivered to her home address and other times to her job address.
+
+We will support multiple addresses by keeping a list instead of a single address instance. This only requires a slight change to the sourcecode.
+
+{{{
+public class Person {
+...
+public List&lt;Address&gt; addresses = new ArrayList&lt;Address&gt;();
+...
+@Operation(paramNames = { &quot;street&quot;, &quot;zip&quot;, &quot;city&quot; })
+public void addAddress(String street, String zip, String city) {
+  final Address address = new Address(this, street, zip, city);
+  addresses.add(address);
+}        
+...
+}}}
+
+{{{
+public static void main(String[] args) {
+  ...
+  homer.addAddress(&quot;742 Evergreen Terrace&quot;, &quot;99001&quot;, &quot;Springfield&quot;);
+  ...
+}
+}}}
+
+After those changes, the application looks like this: 
+
+[img[img/getting_started/gs_11.png]]
+
+To get rid of the unnecessary information in the column 'person', we add an annotation to show only the remaining properties of //Address//. 
+
+{{{
+@ShowProperties({&quot;street&quot;, &quot;zip&quot;, &quot;city&quot;})
+public List&lt;Address&gt; addresses = new ArrayList&lt;Address&gt;();
+}}}
+
+[img[img/getting_started/gs_12.png]]
+
+Now, for the very last step we complete the functionality by supporting address removal. 
+
+{{{
+public class Person {
+...
+public void removeAddress(Address address) {
+  addresses.remove(address);          
+}
+}}}
+
+{{{
+public class Address {
+...
+@Operation
+public Person delete() {
+  person.removeAddress(this);
+  final Person p = this.person;
+  this.person = null;
+  return p;
+}
+}}}
+
+With this code we have to navigate to the address to be able to delete it. This is done by double-clicking the address in the table. Then we can trigger the deletion from the operations menu.
+
+Because the {{{delete()}}} method returns the person to which the address was previously assigned to, we end up at the person.</pre>
+</div>
+<div title="HaemoSideBarOptions" modifier="TiddlyThemes" created="200701130013" modified="200708091512" tags="HaemoglobinTheme">
+<pre>&lt;&lt;closeAll&gt;&gt;&lt;&lt;permaview&gt;&gt;&lt;&lt;newTiddler&gt;&gt;&lt;&lt;newJournal 'DD MMM YYYY'&gt;&gt;&lt;&lt;saveChanges&gt;&gt;&lt;&lt;slider chkSliderOptionsPanel OptionsPanel 'options »' 'Change TiddlyWiki advanced options'&gt;&gt;</pre>
+</div>
+<div title="HelloWorldExample" creator="mira" modifier="mira" created="201009072151" modified="201009111920" changecount="4">
+<pre>This is the five minute introduction to td4j.
 
 !Step 1 - Creating the model
 
@@ -553,14 +795,14 @@ public static void main(String[] args) {
 
 Doing so will give us this UI:
 
-[img[some text|http://sourceforge.net/apps/trac/td4j/raw-attachment/wiki/HelloWorld/hw_01.jpg]]
+[img[helloworld|img/helloworld/hw_01.png]]
 
 If we change the text in the ''Name'' field and press //&lt;Enter&gt;//, the greeting is updated accordingly.
 
 Like it so far? Keep going with the [[GettingStartedGuide]]
 </pre>
 </div>
-<div title="Introduction" creator="YourName" modifier="mira" created="201009071652" modified="201009071729" changecount="11">
+<div title="Introduction" creator="YourName" modifier="mira" created="201009071652" modified="201009072154" changecount="13">
 <pre>//Welcome to testdrive for Java//
 
 td4j is a prototyping framework for domain models written in Java. It enables you to define essential structure and behaviour in code and try it out instantly.
@@ -569,35 +811,475 @@ td4j is a prototyping framework for domain models written in Java. It enables yo
 When designing the domain model of a software system, it's important to have feedback on the models fitness early in the process. This is especially true, if the designer is not a domain expert and if requirements are not exhaustive or inconsistent.
 
 ''What ?''
-Verify that you are designing the right concepts the right way by taking the model for a testdrive.
+Verify that you are designing the right concepts the right way by taking them for a testdrive.
 
 ''How ?''
 td4j analyzes and instruments the domain model using Java reflection and creates a GUI for you to work with the model directly.
 
 !Tell me more!
-* Have a look at the [[HelloWorld Example | HelloWorldExample]]
-* [[Download td4j | https://sourceforge.net/projects/td4j/files/]] and work through the [[Getting Started Guide | GettingStartedGuide]]
+* Have a look at the [[HelloWorld Example|HelloWorldExample]]
+* [[Download td4j | https://sourceforge.net/projects/td4j/files/]] and work through the [[Getting Started Guide|GettingStartedGuide]]
 * Check out the examples contained in the download
 * Get more detailed information about the concepts and features from the [[Reference]]
 </pre>
 </div>
-<div title="MainMenu" creator="mira" modifier="mira" created="201009071700" changecount="1">
+<div title="MainMenu" creator="mira" modifier="mira" created="201009071700" modified="201009112005" changecount="3">
 <pre>[[Introduction]]
-[[HelloWorld | HelloWorldExample]]
+[[HelloWorld|HelloWorldExample]]
+[[Getting Started|GettingStartedGuide]]
 [[Download | https://sourceforge.net/projects/td4j/files/]]
 [[Reference]]</pre>
 </div>
-<div title="Reference" creator="mira" modifier="mira" created="201009071736" changecount="1">
-<pre>!Basics
-Class
-Properties
-* Fields &amp; Methods, Visibility, Show, Hide ...
+<div title="Operations" creator="mira" modifier="mira" created="201009111909" modified="201009111911" changecount="2">
+<pre>* need explicit declaration with @Operation
+* constructor, instance &amp; static
+* without parameter
+* with parameters, specifying paramNames
+* return value &amp; navigation (@@primitive return values!?@@)
 
-Operations
 
-!Launch the
-Companions
+!Companions
+* provide operations separated from domain entities
+* implement behaviour spanning multiple domain objects or static behaviour (factory, repository, test)
+* SvcRepo &amp; AppCtx
+* injection of domain object (first parameter)</pre>
+</div>
+<div title="PageTemplate" modifier="TiddlyThemes" created="200701130013" modified="200708091512" tags="HaemoglobinTheme">
+<pre>&lt;!--{{{--&gt;
+&lt;div id='header' class='header'&gt;
+
+&lt;div class='headerShadow'&gt;
+&lt;span class='searchBar' macro='search'&gt;&lt;/span&gt;
+&lt;span class='siteTitle' refresh='content' tiddler='SiteTitle'&gt;&lt;/span&gt;&amp;nbsp;
+&lt;span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div id='topMenu' refresh='content' tiddler='MainMenu'&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id='sidebar'&gt;
+&lt;div id='sidebarOptions' refresh='content' tiddler='HaemoSideBarOptions'&gt;&lt;/div&gt;
+&lt;div id='sidebarTabs' refresh='content' force='true' tiddler='SideBarTabs'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id='displayArea'&gt;
+&lt;div id='messageArea'&gt;&lt;/div&gt;
+&lt;div id='tiddlerDisplay'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id='contentFooter' refresh='content' tiddler='contentFooter'&gt;&lt;/div&gt;
+&lt;!--}}}--&gt;</pre>
+</div>
+<div title="Properties" creator="mira" modifier="mira" created="201009111853" modified="201009111903" changecount="4">
+<pre>Structure is expressed with classes and their properties. Classes are ~POJOs.
+ 
+Properties are identified at runtime with Java Reflection. By default, public fields and public methods adhering to the Java Bean Specification are recognized as properties. If there is only a getter method, then the property will be readonly, whereas properties from fields are always read/write. As it is the case with the reflection API, ordering of properties is arbitrary and not guaranteed.
+
+{{{
+public class Person {
+
+  public  String  firstName;
+  private String  lastName;
+  private String  secretData;
+
+  public Person(String firstName, String lastName, String secretData) {
+    this.firstName  = firstName;
+    this.lastName   = lastName;
+    this.secretData = secretData;
+  }
+	
+  public String getLastName() {
+    return lastName;
+  }
+}
+}}}
+
+[img[img/basicproperties.png]]
+
+
+The type of property you get depends on the cardinality of the return type of the getter method, respectively on the field type. If it's not a collection, you get an ~IndividualProperty. If it's a collection type then you get a ~ListProperty. Only ~IndividualProperties are directly modifiable in the UI.
+
+!! Override default behaviour for property discovery
+You can override the default behaviour by sprinkling your ~POJOs with annotations.
+
+To declare explicitly which properties a class has and in which order, use the ''@~ShowProperties'' annotation on the class:
+{{{
+@ShowProperties({&quot;firstName&quot;, &quot;secretData&quot;})
+public class Person {
+...
+}
+}}}
+
+
+To show or hide a particular property, use one of ''@Show'' or ''@Hide'':
+{{{
+@Show private String secretData;
+@Hide public String getLastName() { ... }
+}}}
+
+!! Properties in tables
+~ListProperties are shown in a table an are readonly
+* To customize which properties of a class to show in the table, use the ''@~ShowProperties'' annotation
+* To customize the properties shown in the editor's list view, use the ''@~ShowPropertiesInEditorList'' annotation
+{{{
+@ShowPropertiesInEditorList({&quot;firstName&quot;, &quot;lastName&quot;})
+public class Person {
+		
+  public String firstName;
+  public String lastName;
+		
+  @ShowProperties({&quot;street&quot;, &quot;zip&quot;, &quot;city&quot;})
+  public List&lt;Address&gt; addresses = new ArrayList&lt;Address&gt;();
+}
+}}}
+
+
+[img[img/propertieseditorlist.png]]
+
+
+Note that ''@~ShowProperties'', ''@Show'' and ''@Hide'' all influence the set of properties for a given class that are known in td4j. This set of properties can later only be reduced and not expanded. Therefore the following code will not work:
+
+{{{
+@ShowProperties(&quot;firstName&quot;)
+@ShowPropertiesInEditorList( { &quot;firstName&quot;, &quot;lastName&quot; })
+public class Person {
+  ...
+}
+}}}</pre>
+</div>
+<div title="Reference" creator="mira" modifier="mira" created="201009071736" modified="201009111909" changecount="26">
+<pre>* Structure is modeled with [[Classes and Properties|Properties]]
+* Behaviour is modeled with [[Operations]]
+* Take your model for a testdrive in the [[Workbench]]</pre>
+</div>
+<div title="SiteSubtitle" creator="mira" modifier="mira" created="201009111914" modified="201009111914" changecount="2">
+<pre>prototyping framework for domain models written in Java</pre>
+</div>
+<div title="SiteTitle" creator="mira" modifier="mira" created="201009111913" modified="201009111916" changecount="3">
+<pre>td4j userguide
 </pre>
+</div>
+<div title="StyleSheet" modifier="TiddlyThemes" created="200701130013" modified="200708091512" tags="HaemoglobinTheme">
+<pre>/*{{{*/
+/*Haemoglobin Theme for TiddlyWiki*/
+/*Design and CSS by Saq Imtiaz*/
+/*Version 1.0*/
+/*}}}*/
+/*{{{*/
+
+#sidebarTabs {font-family:arial,helvetica;}
+
+body
+{background:#fefefe;}
+
+#contentWrapper {
+	font-family: Verdana, Arial, Tahoma, Sans-Serif;
+	color: #555555;
+margin:1.9em auto 1em ; width:800px;}
+
+#header {background:#fefefe;}
+
+.headerShadow {	padding: 1.4em 0em 0.5em 1em; }
+
+.siteTitle {
+			font-family: 'Trebuchet MS' sans-serif;
+			font-weight: bold;
+			font-size: 36px;
+			color: #BF2323;
+			background-color: #FFF;
+}
+
+.siteSubtitle {
+	font-size: 1.0em;
+        display: block;
+        margin: .5em 3em; color: #999;
+}
+
+.clearAll {clear:both;}
+.tagClear {clear:none;}
+#sidebar {position:relative; float:right; display:inline; right:0;}
+
+a{
+color:#BF2323;
+text-decoration: none; font-weight:normal;
+}
+
+a:hover{
+color:#BF2323;
+background-color: #fefefe;
+border-bottom:1px solid #BF2323;
+}
+
+.viewer .button, .editorFooter .button{
+color: #555;
+border: 1px solid #BF2323;
+}
+
+.viewer .button:hover,
+.editorFooter .button:hover{
+color: #fff;
+background: #BF2323;
+border-color: #BF2323;
+}
+
+.viewer .button:active, .viewer .highlight,.editorFooter .button:active, .editorFooter .highlight{color:#fff; background:#9F1313;border-color:#9F1313;}
+
+#topMenu br {display:none;}
+
+#topMenu {padding:0.45em 1em; background:#BF2323;}
+
+#topMenu a, #topMenu .tiddlyLink, #topMenu .button {color:#f1f1f1; padding:0.3em 0.45em; margin:0 4px;font-size:120%;font-weight:normal;font-variant: small-caps; border:none; background:#BF2323; text-decoration:none; }
+
+#topMenu a:hover, #topMenu .tiddlyLink:hover, #topMenu .button:hover, #topMenu .button:active, #topMenu .highlight {color:#fff;text-decoration:none; background:#9F1313; }
+
+
+
+#displayArea{margin:0 17em 2em 0.5em;}
+
+.tiddler {padding-left:0;}
+
+.title {color:#BF2323; border-bottom:1px solid#BF2323; }
+.subtitle, .subtitle a { color: #999999; font-size: 1.0em;margin:0.2em;}
+.shadow .title{color:#999;}
+
+.toolbar {font-size:85%;}
+.selected .toolbar a {color:#999999;}
+.selected .toolbar a:hover {color:#333; background:transparent;border:1px solid #fff;}
+
+.toolbar .button:hover, .toolbar .highlight, .toolbar .marked, .toolbar a.button:active{color:#333; background:transparent;border:1px solid #fff;}
+
+    *  html .viewer pre {
+
+margin-left: 0em;
+}
+
+    * html .editor textarea, * html .editor input {
+
+width: 98%;
+}
+
+/***
+!Sidebar
+***/
+#sidebar {position:relative;float:right; line-height: 1.4em; border-left:0px solid#000; display:inline; background:#fefefe; right:0; margin-bottom:2em !important; margin-bottom:1em;
+width: 16em;}
+
+/***
+!SidebarOptions
+***/
+#sidebarOptions {padding-left:0.5em; padding-top:2em;}
+
+#sidebarOptions a {
+			color:#999;
+			text-decoration: none;}
+
+#sidebarOptions	a:hover, #sidebarOptions a:active {
+			color:#CC0000;
+			background-color:#f5f5f5;border:1px solid #f5f5f5;
+		}
+
+#sidebarOptions input {border:1px solid #999; }
+
+
+
+ .listTitle {color:#888;}
+
+#sidebarTabs .tabContents {background:#fefefe;}
+#sidebarTabs .tabContents .tiddlyLink, #sidebarTabs .tabContents .button{color:#999;}
+#sidebarTabs .tabContents .tiddlyLink:hover,#sidebarTabs .tabContents .button:hover{color:#CC0000;background:#fefefe; text-decoration:none;border:none;}
+
+#sidebarTabs .tabContents .button:hover, #sidebarTabs .tabContents .highlight, #sidebarTabs .tabContents .marked, #sidebarTabs .tabContents a.button:active{color:#CC0000;background:#fefefe}
+
+
+.tabSelected{color:#fefefe; background:#999;}
+
+
+
+ .tabSelected, .tabSelected:hover {
+ color: #555;
+ background: #fefefe;
+ border: solid 1px #ccc;
+
+}
+
+#sidebarTabs .tabUnselected:hover { border-bottom: none;padding-bottom:3px;color:#999;}
+
+ .tabUnselected {
+ color: #999;
+ background: #eee;
+ border: solid 1px #ccc;
+
+}
+
+.tabUnselected:hover {text-decoration:none; border:1px solid #ccc;}
+
+#sidebarTabs .tabUnselected { border-bottom: none;padding-bottom:3px;}
+#sidebarTabs .tabSelected{padding-bottom:3px;}
+
+#sidebarOptions .sliderPanel {
+	background: #eee; border:1px solid#ccc;
+	font-size: .9em;
+}
+
+#sidebarOptions .sliderPanel input {border:1px solid #999;}
+#sidebarOptions .sliderPanel .txtOptionInput {border:1px solid #999;width:9em;}
+
+#sidebarOptions .sliderPanel a {font-weight:normal; color:#555;background-color: #eee; border-bottom:1px dotted #333;}
+
+
+#sidebarOptions .sliderPanel a:hover {
+color:#111;
+background-color: #eee;
+border:none;
+border-bottom:1px dotted #111;
+}
+
+.tabContents {background:#fefefe;}
+
+
+
+
+.tagging, .tagged {
+border: 1px solid #eee;
+background-color: #F7F7F7;
+}
+
+.selected .tagging, .selected .tagged {
+background-color: #f7f7f7;
+border: 1px solid #ccc;
+}
+
+.tagging .listTitle, .tagged .listTitle {
+color: #bbb;
+}
+
+.selected .tagging .listTitle, .selected .tagged .listTitle {
+color: #666;
+}
+
+.tagging .button, .tagged .button {
+color:#ccc;
+}
+.selected .tagging .button, .selected .tagged .button {
+color:#aaa;
+}
+
+.highlight, .marked {background:transparent; color:#111; border:none; text-decoration:underline;}
+
+.tagging .button:hover, .tagged .button:hover, .tagging .button:active, .tagged .button:active {
+border: none; background:transparent; text-decoration:underline; color:#333;
+}
+
+.popup {
+background: #BF2323;
+border: 1px solid #BF2323;
+}
+
+.popup li.disabled {
+color: #000;
+}
+
+.popup li a, .popup li a:visited {
+color: #eee;
+border: none;
+}
+
+.popup li a:hover {
+background: #bf1717;
+color: #fff;
+border: none;
+}
+
+
+
+   #messageArea {
+
+border: 4px solid #BF2323;
+background: #fefefe;
+color: #555;
+font-size:90%;
+}
+
+   #messageArea a:hover { background:#f5f5f5; border:none;}
+
+
+   #messageArea .button{
+color: #666;
+border: 1px solid #BF2323;
+}
+
+   #messageArea .button:hover {
+color: #fff;
+background: #BF2323;
+border-color: #BF2323;
+}
+
+   #contentFooter {background:#BF2323; color:#DF7D7D; clear: both; padding: 0.5em 1em; }
+
+
+#contentFooter a {
+color: #DF7D7D;
+border-bottom: 1px dotted #DF7D7D; font-weight:normal;text-decoration:none;
+}
+
+
+
+#contentFooter a:hover {
+color: #FFFFFF;
+background-color:transparent;
+border-bottom: 1px dotted #fff; text-decoration:none;
+}
+
+
+
+
+.searchBar {float:right;font-size: 1.0em;position:relative; margin-top:1.3em;}
+.searchBar .button {color:#999;display:block;}
+.searchBar .button:hover {border:1px solid #fefefe;color:#4F4B45;}
+.searchBar input {			
+                        background-color: #fefefe;
+			color: #999999;
+			border: 1px solid #CCC;		margin-right:3px;
+}
+
+.tiddler {padding-bottom:10px;}
+
+.viewer blockquote {
+border-left: 5px solid #BF2323;
+}
+
+.viewer table, .viewer td {
+border: 1px solid #BF2323;
+}
+
+.viewer th, thead td {
+background: #BF2323;
+border: 1px solid #BF2323;
+color: #fff;
+}
+.viewer pre {
+	border: 1px solid #ccc;
+	background: #f5f5f5;
+}
+
+.viewer code {
+color: #111; background:#f5f5f5;
+}
+
+.viewer hr {
+border-top: dashed 1px #555;
+}
+
+.editor input {
+border: 1px solid #888; margin-top:5px;
+}
+
+.editor textarea {
+border: 1px solid #888;
+}
+
+h1,h2,h3,h4,h5 { color: #BF2323; background: transparent; padding-bottom:2px; font-family: Arial, Helvetica, sans-serif; }
+h1 {font-size:18px;}
+h2 {font-size:16px;}
+h3 {font-size: 14px;}
+/*}}}*/</pre>
 </div>
 <div title="TiddlyWiki Markup" creator="YourName" modifier="YourName" created="201009071615" changecount="1">
 <pre>Here is a reference for the markup &quot;language&quot; used. See also [[Internal Macros]] (especially for the {{{&lt;&lt;br&gt;&gt;}}} macro that throws a new line).
@@ -710,6 +1392,30 @@ This is before the indented text
 * 1st Level
 ** 2nd Level
 &lt;/part&gt;</pre>
+</div>
+<div title="ViewTemplate" creator="mira" modifier="mira" created="201009112016" changecount="1">
+<pre>&lt;!--{{{--&gt;
+&lt;div class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'&gt;&lt;/div&gt;
+&lt;div class='title' macro='view title'&gt;&lt;/div&gt;
+&lt;div class='subtitle'&gt;&lt;span macro='view modifier link'&gt;&lt;/span&gt;, &lt;span macro='view modified date'&gt;&lt;/span&gt; (&lt;span macro='message views.wikified.createdPrompt'&gt;&lt;/span&gt; &lt;span macro='view created date'&gt;&lt;/span&gt;)&lt;/div&gt;
+&lt;div class='tagging' macro='tagging'&gt;&lt;/div&gt;
+&lt;div class='tagged' macro='tags'&gt;&lt;/div&gt;
+&lt;div class='viewer' macro='view text wikified'&gt;&lt;/div&gt;
+&lt;div class='tagClear'&gt;&lt;/div&gt;
+&lt;!--}}}--&gt;</pre>
+</div>
+<div title="Workbench" creator="mira" modifier="mira" created="201009111910" changecount="1">
+<pre>* Sidebar
+* ListView Content (Operations, Link)
+* Selection &amp; Visibility
+* DetailView
+* Operations-Menu
+
+* SRC Simple Launch
+* SRC Launch with AppContext </pre>
+</div>
+<div title="contentFooter" modifier="mira" created="200701130013" modified="201009111835" tags="HaemoglobinTheme" changecount="1">
+<pre>Copyright [[Michael Rauch|http://www.miranet.ch]]</pre>
 </div>
 </div>
 <!--POST-STOREAREA-->

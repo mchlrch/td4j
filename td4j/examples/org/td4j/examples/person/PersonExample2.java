@@ -91,9 +91,11 @@ public class PersonExample2 {
 		public String getCity() {		return city;   }
 		
 		@Operation
-		public void delete() {
+		public Person delete() {
 			person.removeAddress(this);
+			final Person p = this.person;
 			this.person = null;
+			return p;
 		}
 		
 		public String toString() {
