@@ -25,7 +25,7 @@ import org.td4j.swing.workbench.Workbench;
 public class PropertiesBasic {
 
 	public static void main(String[] args) {
-		final Person johnny = new Person("Johnny", "Mnemonic", "m0lly++", "confidental: there is no spoon.");
+		final Person johnny = new Person("Johnny", "Mnemonic", "confidental: there is no spoon.");
 
 		Workbench.start(johnny);
 	}
@@ -37,25 +37,16 @@ public class PropertiesBasic {
 
 		public  String  firstName;
 		private String  lastName;
-		private String  password;
 		private String  secretData;
 
-		public Person(String firstName, String lastName, String password, String secretData) {
+		public Person(String firstName, String lastName, String secretData) {
 			this.firstName  = firstName;
 			this.lastName   = lastName;
-			this.password   = password;
 			this.secretData = secretData;
 		}
 		
 		public String getLastName() {
 			return lastName;
-		}
-		public void setLastName(String lastName) {
-			this.lastName = lastName;
-		}
-		
-		public int getPasswordHash() {
-			return password != null ? password.hashCode() : -1;
 		}
 	}
 
