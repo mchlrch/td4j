@@ -830,18 +830,23 @@ td4j analyzes and instruments the domain model using Java reflection and creates
 [[Download | https://sourceforge.net/projects/td4j/files/]]
 [[Reference]]</pre>
 </div>
-<div title="Operations" creator="mira" modifier="mira" created="201009111909" modified="201009111911" changecount="2">
-<pre>* need explicit declaration with @Operation
-* constructor, instance &amp; static
+<div title="Operations" creator="mira" modifier="mira" created="201009111909" modified="201009112105" changecount="3">
+<pre>{{{
+this stub needs elaboration
+}}}
+
+* need explicit declaration with ''@Operation''
+* constructor, instance methods &amp; static methods
 * without parameter
 * with parameters, specifying paramNames
-* return value &amp; navigation (@@primitive return values!?@@)
+* return value = navigation
+** no navigation with return value of primitive type
 
 
 !Companions
 * provide operations separated from domain entities
 * implement behaviour spanning multiple domain objects or static behaviour (factory, repository, test)
-* SvcRepo &amp; AppCtx
+* ~SvcRepo &amp; ~AppCtx
 * injection of domain object (first parameter)</pre>
 </div>
 <div title="PageTemplate" modifier="TiddlyThemes" created="200701130013" modified="200708091512" tags="HaemoglobinTheme">
@@ -867,7 +872,7 @@ td4j analyzes and instruments the domain model using Java reflection and creates
 &lt;div id='contentFooter' refresh='content' tiddler='contentFooter'&gt;&lt;/div&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="Properties" creator="mira" modifier="mira" created="201009111853" modified="201009111903" changecount="4">
+<div title="Properties" creator="mira" modifier="mira" created="201009111853" modified="201009112054" changecount="5">
 <pre>Structure is expressed with classes and their properties. Classes are ~POJOs.
  
 Properties are identified at runtime with Java Reflection. By default, public fields and public methods adhering to the Java Bean Specification are recognized as properties. If there is only a getter method, then the property will be readonly, whereas properties from fields are always read/write. As it is the case with the reflection API, ordering of properties is arbitrary and not guaranteed.
@@ -891,7 +896,7 @@ public class Person {
 }
 }}}
 
-[img[img/basicproperties.png]]
+[img[img/reference/basicproperties.png]]
 
 
 The type of property you get depends on the cardinality of the return type of the getter method, respectively on the field type. If it's not a collection, you get an ~IndividualProperty. If it's a collection type then you get a ~ListProperty. Only ~IndividualProperties are directly modifiable in the UI.
@@ -931,7 +936,7 @@ public class Person {
 }}}
 
 
-[img[img/propertieseditorlist.png]]
+[img[img/reference/propertieseditorlist.png]]
 
 
 Note that ''@~ShowProperties'', ''@Show'' and ''@Hide'' all influence the set of properties for a given class that are known in td4j. This set of properties can later only be reduced and not expanded. Therefore the following code will not work:
@@ -1404,15 +1409,19 @@ This is before the indented text
 &lt;div class='tagClear'&gt;&lt;/div&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="Workbench" creator="mira" modifier="mira" created="201009111910" changecount="1">
-<pre>* Sidebar
-* ListView Content (Operations, Link)
+<div title="Workbench" creator="mira" modifier="mira" created="201009111910" modified="201009112104" changecount="2">
+<pre>{{{
+this stub needs elaboration
+}}}
+
+* Sidebar
+* ~ListView Content (Operations, Link)
 * Selection &amp; Visibility
-* DetailView
-* Operations-Menu
+* ~DetailView
+* ~Operations-Menu
 
 * SRC Simple Launch
-* SRC Launch with AppContext </pre>
+* SRC Launch with ~AppContext </pre>
 </div>
 <div title="contentFooter" modifier="mira" created="200701130013" modified="201009111835" tags="HaemoglobinTheme" changecount="1">
 <pre>Copyright [[Michael Rauch|http://www.miranet.ch]]</pre>
