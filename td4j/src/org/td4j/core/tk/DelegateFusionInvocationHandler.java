@@ -69,7 +69,7 @@ public class DelegateFusionInvocationHandler implements InvocationHandler {
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		final Object delegate = dispatchMap.get(method);
 		if (delegate == null) throw new IllegalStateException("no matching delegate for method: " + method);
-
+		if ( ! method.isAccessible()) method.setAccessible(true);
 		return method.invoke(delegate, args);
 	}
 

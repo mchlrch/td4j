@@ -41,6 +41,10 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 
 		this.getterMethod = getter;
 		this.setterMethod = setter;
+		
+		if (getter != null && ! getter.isAccessible()) getter.setAccessible(true);
+		if (setter != null && ! setter.isAccessible()) setter.setAccessible(true);
+		
 		this.argumentValues = argumentValues;
 	}
 	
