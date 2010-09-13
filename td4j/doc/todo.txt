@@ -1,0 +1,13 @@
+- use labels for readonly text properties & enable nimbus theme
+
+- InvocationDialog: Checkbox für boolean properties
+- InvocationDialog: try/catch by  für @Operations
+- InvocationDialog: <repeat> action - z.b.: mehrere Objekte erzeugen einfacher machen
+- WidgetBuilder aufteilen: 1) bindProperty(), setzt Metamodel voraus 2) bindField(), bindMethod(), ohne Metamodel direkt auf Felder und Methoden, unterstützt aber keine nestedProperties
+
+- Table: tooltip text mit propertyName auf spalten header
+- @ViewProxy: @ViewProxy(IssueContainerVP.class) public class IssueContainer - anstatt IssueContainer anzuzeigen, wird dynamisch ein proxy instanziert (BO ist constructor parameter) - Verwendung z.B: fürs Filtern von Tabellen
+- @ViewProxy: erbt @Companions vom gewrappten BO  
+-------------------------------------------------------------------------------------
+x(20100912) zZ im issuetracker example: in-memory EntityRepository, mit put(cls, obj), remove(cls, obj), find(cls, filter)
+x(20100913) graceful handling of inaccessible methods declared in pkg private superclasses
