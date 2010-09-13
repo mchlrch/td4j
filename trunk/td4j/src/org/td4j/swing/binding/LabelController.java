@@ -39,6 +39,7 @@ public class LabelController<T extends Component> extends IndividualSwingWidgetC
 
 		try {
 			setTextMethod = widget.getClass().getMethod("setText", new Class[] { String.class });
+			if (setTextMethod != null && ! setTextMethod.isAccessible()) setTextMethod.setAccessible(true);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -38,6 +38,8 @@ public class ListMethodConnector extends AbstractListDataConnector {
 		if ( ! Collection.class.isAssignableFrom(returnType)) throw new IllegalArgumentException("not a collection type: " + returnType);
 		
 		this.getterMethod = getter;
+		if ( ! getter.isAccessible()) getter.setAccessible(true);
+		
 		this.argumentValues = argumentValues;
 	}
 	
