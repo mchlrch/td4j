@@ -27,8 +27,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
@@ -93,7 +95,29 @@ public class JavaModelInspector {
 	}
 	
 	private void populateConnectors(final Class<?> cls, final FeatureContainer features, final MetaClassProvider metaClassProvider) {
-		final List<NamedDataConnector> connectors = createConnectors(cls);		
+		final List<NamedDataConnector> connectors = createConnectors(cls);
+		final Map<String, NamedDataConnector> connMap = asMap(connectors);
+		
+		// First round only marks choiceConnectors to avoid them from beeing treated as 'normal' listProperties
+		// marking is done by linking the pair of NamedDataConnectors together
+		for (NamedDataConnector nc : connectors) {
+			final DataConnector connector = nc.connector;
+			if (connector instanceof IndividualDataConnector) {
+				
+				// try to find choiceOptions
+				ListDataConnector choiceOptionsConnector = null;
+				final NamedDataConnector optConn = connMap.get(choiceOptionsNameFor(nc.name));
+				if (optConn != null && optConn.connector instanceof ListDataConnector) {					
+					choiceOptionsConnector = (ListDataConnector) optConn.connector;
+					if (connector.getValueType().isAssignableFrom(choiceOptionsConnector.getValueType())) {
+						optConn.setChoiceConsumer( (IndividualDataConnector)connector );
+						nc.setChoiceProvider(choiceOptionsConnector);
+					}				
+				}
+			}
+		}
+		
+		
 		for (NamedDataConnector nc : connectors) {
 			final DataConnector connector = nc.connector;
 			
@@ -102,11 +126,16 @@ public class JavaModelInspector {
 			metaClassProvider.getMetaClass(valueType);
 			
 			if (connector instanceof IndividualDataConnector) {
-				final IndividualDataConnector individualConnector = (IndividualDataConnector) connector;
-				final IndividualProperty individualProperty = new IndividualProperty(nc.name, individualConnector);
+				final IndividualDataConnector individualConnector = (IndividualDataConnector) connector;				
+				final ListDataConnector choiceOptionsConnector = nc.getChoiceProvider();				
+				final IndividualProperty individualProperty = new IndividualProperty(nc.name, individualConnector, choiceOptionsConnector);
 				features.individualProperties.add(individualProperty);
 				
 			} else if (connector instanceof ListDataConnector) {
+				
+				// ignore choiceOption providers
+				if (nc.isChoiceProvider()) continue;
+				
 				final ListDataConnector listConnector = (ListDataConnector) connector;
 				final MutableListProperty listProperty = new MutableListProperty(nc.name, listConnector);
 				features.listProperties.add(listProperty);
@@ -115,6 +144,16 @@ public class JavaModelInspector {
 				throw new IllegalStateException("Unsupported connector type: " + connector.getClass());
 			}
 		}		
+	}
+	
+	private Map<String, NamedDataConnector> asMap(List<NamedDataConnector> connectors) {
+		final Map<String, NamedDataConnector> result = new HashMap<String, NamedDataConnector>();
+		for (NamedDataConnector nc : connectors) {
+			final String name = nc.name;
+			if (result.containsKey(name)) throw new IllegalStateException("duplicate connector name: " + name);
+			result.put(name, nc);			
+		}
+		return result;
 	}
 	
 	public void refineShallowFeatures(final FeatureContainer features, final SvcProvider svcProvider, final MetaClassProvider metaClassProvider) {
@@ -138,7 +177,14 @@ public class JavaModelInspector {
 			for (String name : exposeProps.value()) {
 				final DataConnector con = connectorFactory.createConnector(cls, name);
 				ObjectTK.enforceNotNull(con, "con");
-				result.add(new NamedDataConnector(con, name));
+				final NamedDataConnector nc = new NamedDataConnector(con, name);
+				result.add(nc);
+				
+				// try to get connector for choiceOptions
+				final NamedDataConnector choiceOptionsConnector = createOptionsConnector(cls, nc);
+				if (choiceOptionsConnector != null) {
+					result.add(choiceOptionsConnector);
+				}				
 			}
 
 		} else {
@@ -154,7 +200,22 @@ public class JavaModelInspector {
 		return Collections.unmodifiableList(result);
 	}
 	
+	private NamedDataConnector createOptionsConnector(final Class<?> cls, NamedDataConnector nc) {
+		final String optionsName = choiceOptionsNameFor(nc.name);
+		try {
+			final DataConnector con = connectorFactory.createConnector(cls, optionsName);			
+			if (con instanceof ListDataConnector) {
+				return new NamedDataConnector(con, optionsName);
+			}
+		} catch (UnknownPropertyException ex) {
+			// no options for this property - ignore
+		}
+		return null;
+	}	
 	
+	private String choiceOptionsNameFor(String baseName) {
+		return baseName + "Options";
+	}
 	
 	private List<NamedDataConnector> createDefaultMethodConnectors(final Class<?> cls, final Level level, final HashSet<String> propertyNames) {
 		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
@@ -345,10 +406,21 @@ public class JavaModelInspector {
 		private final DataConnector connector;
 		private final String name;
 		
+		private ListDataConnector       choiceProvider;
+		private IndividualDataConnector choiceConsumer;
+		
 		private NamedDataConnector(DataConnector connector, String name) {
 			this.connector = ObjectTK.enforceNotNull(connector, "connector");
 			this.name = StringTK.enforceNotEmpty(name, "name");
 		}
+		
+		private void setChoiceProvider(ListDataConnector conn) { this.choiceProvider = conn; }
+		private ListDataConnector getChoiceProvider()          { return choiceProvider; }
+		private boolean isChoiceConsumer()                     { return choiceProvider != null; }
+		
+		private void setChoiceConsumer(IndividualDataConnector conn) { this.choiceConsumer = conn; }
+		private IndividualDataConnector getChoiceConsumer()          { return choiceConsumer; }
+		private boolean isChoiceProvider()                           { return choiceConsumer != null; }
 				
 		@Override
 		public String toString() {

@@ -20,6 +20,7 @@
 package org.td4j.core.reflect;
 
 import org.td4j.core.binding.model.IndividualDataConnector;
+import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
 
@@ -27,10 +28,16 @@ public class IndividualProperty implements IndividualDataConnector, Property {
 	
 	private final String name;
 	private final IndividualDataConnector dataConnector;
+	private final ListDataConnector choiceOptionsConnector;
 	
 	public IndividualProperty(String name, IndividualDataConnector dataConnector) {
+		this(name, dataConnector, null);
+	}
+	
+	public IndividualProperty(String name, IndividualDataConnector dataConnector, ListDataConnector choiceOptionsConnector) {
 		this.name = StringTK.enforceNotEmpty(name, "name");
 		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
+		this.choiceOptionsConnector = choiceOptionsConnector;
 	}
 	
 	public String getName() {
@@ -55,6 +62,10 @@ public class IndividualProperty implements IndividualDataConnector, Property {
 		dataConnector.writeValue(ctx, val);
 	}
 
+	public boolean canRead()   { return dataConnector.canRead();  }
+	public boolean canWrite()  { return dataConnector.canWrite(); }
+	public boolean canChoose() { return choiceOptionsConnector != null && choiceOptionsConnector.canRead(); }
+	
 	public boolean canRead(Object ctx) {
 		if (ctx == null) return false;
 		return dataConnector.canRead(ctx);		
@@ -64,6 +75,15 @@ public class IndividualProperty implements IndividualDataConnector, Property {
 		if (ctx == null) return false;
 		return dataConnector.canWrite(ctx);
 	}	
+	
+	public boolean canChoose(Object ctx) {
+		if (ctx == null || choiceOptionsConnector == null) return false;
+		return choiceOptionsConnector.canRead(ctx);
+	}
+	
+	public ListDataConnector getChoiceOptions() {
+		return choiceOptionsConnector;
+	}
 
 	@Override
 	public String toString() {
