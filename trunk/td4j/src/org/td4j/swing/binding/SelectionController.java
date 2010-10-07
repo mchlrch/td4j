@@ -34,13 +34,15 @@ public class SelectionController implements ListSelectionListener, IObserver {
 
 	private final ListSelectionModel selectionModel;
 	private final OrderedElementModel dataModel;
+	private final SelectionWidget selectionWidget;
 	private final IndividualDataProxy proxy;
 
 	private boolean proxyToSelectionSyncInProgress;
 
-	public SelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy) {
+	public SelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy, SelectionWidget selectionWidget) {
 		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
 		this.proxy = ObjectTK.enforceNotNull(proxy, "proxy");
+		this.selectionWidget = ObjectTK.enforceNotNull(selectionWidget, "selectionWidget");
 
 		this.selectionModel = selectionModel;
 
@@ -55,6 +57,7 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getValueIsAdjusting()) return;
 		if (proxyToSelectionSyncInProgress) return;
+		if ( ! canWrite()) return;
 
 		final int index = selectionModel.getMinSelectionIndex();
 		Object selection = null;
@@ -69,9 +72,11 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	public void observableChanged(ChangeEvent event) {
 		if (event.getType() != ChangeEvent.Type.StateChange) return;
 
+		selectionWidget.setSelectionEnabled(canWrite());
+		
 		proxyToSelectionSyncInProgress = true;
 		try {
-			final Object selectionFromProxy = proxy.readValue();
+			final Object selectionFromProxy = canRead() ? proxy.readValue() : null;
 			if (selectionFromProxy == null) {
 				selectionModel.clearSelection();
 
@@ -97,6 +102,15 @@ public class SelectionController implements ListSelectionListener, IObserver {
 			if (obj.equals(candidate)) return i;
 		}
 		return - 1;
+	}
+	
+	
+	private boolean canWrite() {
+		return proxy != null && proxy.canWrite();
+	}
+
+	private boolean canRead() {
+		return proxy != null && proxy.canRead();
 	}
 
 }

@@ -49,9 +49,11 @@ import org.td4j.swing.internal.binding.LabelControllerFactory;
 import org.td4j.swing.internal.binding.LinkControllerFactory;
 import org.td4j.swing.internal.binding.ListControllerFactory;
 import org.td4j.swing.internal.binding.ListModelAdapter;
+import org.td4j.swing.internal.binding.ListSelectionWidgetAdapter;
 import org.td4j.swing.internal.binding.SelectionControllerFactory;
 import org.td4j.swing.internal.binding.TableControllerFactory;
 import org.td4j.swing.internal.binding.TableModelAdapter;
+import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
 
@@ -200,7 +202,8 @@ public class WidgetBuilder<T> {
 
 	public SelectionControllerFactory selection(JList list) {
 		final ListModelAdapter modelAdapter = new ListModelAdapter(list.getModel());
-		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, list.getSelectionModel(), modelAdapter);
+		final ListSelectionWidgetAdapter selectionAdapter = new ListSelectionWidgetAdapter(list);
+		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, list.getSelectionModel(), modelAdapter, selectionAdapter);
 		return factory;
 	}
 	
@@ -234,7 +237,8 @@ public class WidgetBuilder<T> {
 		}
 		
 		final TableModelAdapter modelAdapter = new TableModelAdapter( (TableController.MyTableModel) tableModel );		
-		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, table.getSelectionModel(), modelAdapter);
+		final TableSelectionWidgetAdapter selectionWidget = new TableSelectionWidgetAdapter(table);
+		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, table.getSelectionModel(), modelAdapter, selectionWidget);
 		
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		return factory;
