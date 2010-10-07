@@ -27,7 +27,7 @@ import org.td4j.core.tk.ObjectTK;
 /**
  * This repo delegates to the MasterDataRepo.
  * It differs from MasterDataRepo in the methods return type, often returning
- * the IssueTemplate instead of the created object. This allows a better flow
+ * the IssueTemplate instead of the created object. This allows for a better flow
  * of user interactions.
  * 
  * @author mira
@@ -65,7 +65,7 @@ public class FluentMasterDataRepo {
 	}
 	
 	@Operation(paramNames={"template", "name"})
-	public IssueContainer createContext(IssueTemplate template, String name) {
+	public IssueContainer createContainer(IssueTemplate template, String name) {
 		return delegate.createIssueContainer(template, name);
 	}
 	
@@ -75,7 +75,7 @@ public class FluentMasterDataRepo {
 	}
 	
 	@Operation
-	public List<IssueContainer> findAllContexts() {
+	public List<IssueContainer> findAllContainers() {
 		return delegate.getRepo().getAll(IssueContainer.class);
 	}
 	
