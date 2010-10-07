@@ -23,6 +23,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.core.tk.StringTK;
@@ -73,9 +75,12 @@ public class ExecutableCompanionMethod extends AbstractExecutable {
 
 		try {
 			result = method.invoke(companion, args);
-		} catch (Exception e) {
-			// PEND: exception handling policy
-			throw new RuntimeException(e);
+		} catch (final Exception e) {
+			SwingUtilities.invokeLater(new Runnable() {				
+				public void run() {					
+					throw new RuntimeException(e);
+				}
+			});
 		}
 
 		return result;
