@@ -19,7 +19,6 @@
 
 package org.td4j.swing.workbench;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -37,10 +36,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.plaf.ColorUIResource;
 
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
@@ -58,6 +55,7 @@ import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.internal.binding.ListModelAdapter;
+import org.td4j.swing.internal.binding.ListSelectionWidgetAdapter;
 import org.td4j.swing.internal.workbench.ByClassNameFormFactory;
 import org.td4j.swing.internal.workbench.CompositeFormFactory;
 import org.td4j.swing.internal.workbench.GenericEditorFactory;
@@ -67,8 +65,7 @@ import org.td4j.swing.workbench.Editor.EditorContent;
 public class Workbench extends JFrame {
   private static final long serialVersionUID = 1L;
 
-  private static Workbench INSTANCE; // static singleton, initialized via
-  // setup() method
+  private static Workbench INSTANCE; // static singleton, initialized via setup() method
 
   private final AppCtx appCtx;
   
@@ -108,10 +105,8 @@ public class Workbench extends JFrame {
 		final Object initialNavigation = appCtx.getInitialNavigation();
 		
 		SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-      	
-      	// PEND: Nimbus doesn't use a different bgcolor for Textfield disabled
-//      	setLookAndFeel();
+      public void run() {      	
+      	setLookAndFeel();
       	
         final Workbench wb = setup(appCtx, editorFactory, sidebarEntries);
 
@@ -170,9 +165,6 @@ public class Workbench extends JFrame {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 				if ("Nimbus".equals(info.getName())) {
 					UIManager.setLookAndFeel(info.getClassName());
-					final UIDefaults defaults = UIManager.getLookAndFeel().getDefaults();
-					defaults.put("TextField.background", new ColorUIResource(Color.YELLOW));
-					defaults.put("TextField.inactiveBackground", new ColorUIResource(Color.RED));
 					break;
 				}
 			}
@@ -224,8 +216,9 @@ public class Workbench extends JFrame {
     // choice
     final IndividualDataConnector currentClassConnector = connectorFactory.createIndividualMethodConnector(SidebarModel.class, "currentClass");
     final IndividualDataProxy currentClassProxy = new IndividualDataProxy(currentClassConnector, "currentClass");
-    final SelectionController currentClassController = new SelectionController(classChooser
-        .getSelectionModel(), new ListModelAdapter(classChooser.getModel()), currentClassProxy);
+    final ListModelAdapter listModelAdapter = new ListModelAdapter(classChooser.getModel());
+    final ListSelectionWidgetAdapter listWidgetAdapter = new ListSelectionWidgetAdapter(classChooser);
+    final SelectionController currentClassController = new SelectionController(classChooser.getSelectionModel(), listModelAdapter, currentClassProxy, listWidgetAdapter);
 
     classOptionsController.getDataProxy().setContext(model);
     currentClassController.getDataProxy().setContext(model);
