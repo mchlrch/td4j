@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.SwingUtilities;
 
 import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.tk.ObjectTK;
@@ -59,9 +61,12 @@ public class ExecutableMethod extends AbstractExecutable {
 
 		try {
 			result = method.invoke(target, args);
-		} catch (Exception e) {
-			// PEND: exception handling policy
-			throw new RuntimeException(e);
+		} catch (final Exception e) {
+			SwingUtilities.invokeLater(new Runnable() {				
+				public void run() {					
+					throw new RuntimeException(e);
+				}
+			});
 		}
 
 		return result;
