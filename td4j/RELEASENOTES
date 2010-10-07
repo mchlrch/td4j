@@ -1,9 +1,13 @@
 :: 10.xy
+- Avoid navigation to <null> values
+- Support choice provisioning for mutable individual properties
+- Support for array based ListDataConnectors
+- Improved support for Javas primitive types
 - Incremental MetaClass creation (fixes issues with cyclic dependencies)
 - Companion object support (see org.td4j.examples.dispatcher)
 - SvcRepo
 - AppCtx
-- (Default to Nimbus theme?)
+- Default to Nimbus LNF, use Label for readonly text
 
 :: 10.6
 - LinkController: fallback on xdg-open if Desktop.browse() or Desktop.open() not supported
