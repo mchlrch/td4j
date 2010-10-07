@@ -19,11 +19,12 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public class String2ByteConverter implements IConverter {
+public class String2ByteConverter extends String2XYConverter {
 
-	@Override
-	public Class<?> getConversionTargetType() {
-		return Byte.class;
+	public String2ByteConverter(Class<?> targetType, Object nullValue) {
+		super(targetType, nullValue);
+		
+		if (targetType != byte.class && targetType != Byte.class) throw new IllegalArgumentException("targetType");
 	}
 	
   @Override
@@ -33,29 +34,14 @@ public class String2ByteConverter implements IConverter {
   		if ( ! s.trim().isEmpty()) return Byte.parseByte(s);
   	}
   	
-    return null;
+    return nullValue;
   }
 
-  @Override
-  public boolean canConvert() {
-    return true;
-  }
-
-  @Override
-  public Class<?> getUnconversionTargetType() {
-  	return String.class;
-  }
-  
   @Override
   public Object unconvert(Object from) {
   	if (from instanceof Byte) return Byte.toString( (Byte)from );
   	
     return null;
-  }
-
-  @Override
-  public boolean canUnconvert() {
-    return true;
   }
 
 }

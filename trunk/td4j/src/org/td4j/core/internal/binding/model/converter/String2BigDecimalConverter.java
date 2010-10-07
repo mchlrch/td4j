@@ -21,13 +21,12 @@ package org.td4j.core.internal.binding.model.converter;
 
 import java.math.BigDecimal;
 
-public class String2BigDecimalConverter implements IConverter {
+public class String2BigDecimalConverter extends String2XYConverter {
 
-	@Override
-	public Class<?> getConversionTargetType() {
-		return BigDecimal.class;
-	}
-	
+	public String2BigDecimalConverter() {
+		super(BigDecimal.class, null);
+	}	
+
   @Override
   public Object convert(Object from) {
   	if (from instanceof String) {
@@ -35,17 +34,7 @@ public class String2BigDecimalConverter implements IConverter {
   		if ( ! s.trim().isEmpty()) return new BigDecimal(s);
   	}
   	
-    return null;
-  }
-
-  @Override
-  public boolean canConvert() {
-    return true;
-  }
-
-  @Override
-  public Class<?> getUnconversionTargetType() {
-  	return String.class;
+    return nullValue;
   }
   
   @Override
@@ -53,11 +42,6 @@ public class String2BigDecimalConverter implements IConverter {
   	if (from instanceof BigDecimal) return from.toString();
   	
     return null;
-  }
-
-  @Override
-  public boolean canUnconvert() {
-    return true;
   }
 
 }
