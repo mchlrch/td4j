@@ -51,6 +51,10 @@ public class IndividualDataProxy extends DataProxy {
 			return dataAccess.getValueType();
 		}
 	}
+	
+	public IConverter getConverter() {
+		return converter;
+	}
 
 	public boolean canRead() {
 		return dataAccess.canRead(getContext()) && (converter == null || converter.canConvert());

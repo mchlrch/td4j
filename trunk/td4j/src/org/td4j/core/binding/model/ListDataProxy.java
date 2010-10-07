@@ -87,7 +87,7 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 	public void ensureSensibleNestedProperties(MetaModel metaModel) {
 
 		// if proxy already defines nestedProperties, we are done
-		if (isNestedPropertiesDefined()) return;		
+		if (isNestedPropertiesDefined()) return;
 			
 		// otherwise use all individual properties		
 		final List<IndividualProperty> individualProperties = individualPropertiesFromMetaModel(metaModel, getValueType());			
@@ -152,6 +152,12 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 				
 			return result;
 		}
+		
+		@Override
+		public String toString() {
+			return connector.toString();
+		}
+		
 	}
 	
 }

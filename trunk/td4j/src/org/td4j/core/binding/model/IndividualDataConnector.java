@@ -32,7 +32,8 @@ public interface IndividualDataConnector extends DataConnector {
 	// TODO: implementation shall return null if ctx==null -> check all
 	// subclasses
 	public boolean canRead(Object ctx);
-
 	public boolean canWrite(Object ctx);
 
+	public boolean canRead();
+	public boolean canWrite();
 }
