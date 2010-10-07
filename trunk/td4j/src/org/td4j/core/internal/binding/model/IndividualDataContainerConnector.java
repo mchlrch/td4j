@@ -28,6 +28,9 @@ public class IndividualDataContainerConnector extends AbstractIndividualDataConn
 	public IndividualDataContainerConnector(Class<?> valueType) {
 		super(IndividualDataContainer.class, valueType);
 	}
+	
+	public boolean canRead()  { return true; }
+	public boolean canWrite() { return true; }
 
 	public boolean canRead(Object ctx) {
 		return ctx != null && contextAsContainer(ctx).canRead();

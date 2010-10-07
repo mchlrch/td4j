@@ -56,13 +56,11 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 		return setterMethod;
 	}
 
-	public boolean canRead(Object ctx) {
-		return getterMethod != null && ctx != null;
-	}
-
-	public boolean canWrite(Object ctx) {
-		return setterMethod != null && ctx != null;
-	}
+	public boolean canRead()  { return getterMethod != null; }	
+	public boolean canWrite() { return setterMethod != null; }
+	
+	public boolean canRead(Object ctx)  { return canRead() && ctx != null;  }
+	public boolean canWrite(Object ctx) { return canWrite() && ctx != null; }
 
 	@Override
 	protected Object readValue0(Object ctx) throws Exception {

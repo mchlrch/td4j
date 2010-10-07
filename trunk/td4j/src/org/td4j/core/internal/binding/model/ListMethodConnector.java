@@ -20,6 +20,7 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 public class ListMethodConnector extends AbstractListDataConnector {
@@ -47,8 +48,10 @@ public class ListMethodConnector extends AbstractListDataConnector {
 		return getterMethod;
 	}
 
+	public boolean canRead() { return getterMethod != null; }
+	
 	public boolean canRead(Object ctx) {
-		return getterMethod != null && ctx != null;
+		return canRead() && (ctx != null || Modifier.isStatic(getterMethod.getModifiers()));
 	}
 	
 	@Override

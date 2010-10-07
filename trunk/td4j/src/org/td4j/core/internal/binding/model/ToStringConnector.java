@@ -25,6 +25,9 @@ public class ToStringConnector extends AbstractIndividualDataConnector {
     super(ctxType, String.class);
   }
 
+  public boolean canRead()  { return true; }
+  public boolean canWrite() { return false; }
+  
   @Override
   public boolean canRead(Object ctx) {
     return ctx != null;

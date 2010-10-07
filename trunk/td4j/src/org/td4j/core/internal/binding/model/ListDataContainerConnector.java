@@ -30,6 +30,9 @@ public class ListDataContainerConnector extends AbstractListDataConnector {
 		super(ListDataContainer.class, valueType);
 	}
 
+	public boolean canRead()  { return true; }
+	public boolean canWrite() { return true; }
+	
 	public boolean canRead(Object ctx) {
 		return ctx != null && contextAsContainer(ctx).canRead();
 	}

@@ -20,6 +20,7 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 
@@ -38,8 +39,10 @@ public class ListFieldConnector extends AbstractListDataConnector {
 		return field;
 	}
 
+	public boolean canRead()  { return true; }
+	
 	public boolean canRead(Object ctx) {
-		return ctx != null;
+		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
 	}
 
 	@Override

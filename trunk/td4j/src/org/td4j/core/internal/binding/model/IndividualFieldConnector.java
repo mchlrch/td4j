@@ -40,12 +40,15 @@ public class IndividualFieldConnector extends AbstractIndividualDataConnector {
 		return field;
 	}
 
+	public boolean canRead()  { return true; }
+	public boolean canWrite() { return ! Modifier.isFinal(field.getModifiers()); }
+	
 	public boolean canRead(Object ctx) {
-		return ctx != null;
+		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
 	}
 
 	public boolean canWrite(Object ctx) {
-		return ! Modifier.isFinal(field.getModifiers());
+		return canWrite() && (ctx != null || Modifier.isStatic(field.getModifiers())); 
 	}
 
 	@Override
