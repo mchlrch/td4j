@@ -190,17 +190,10 @@ public class ChoiceUISwing extends JPanel {
 
 		// delegate methods
 
-		public Class<?> getContextType() {
-			return delegate.getContextType();
-		}
-
-		public Class<?> getValueType() {
-			return delegate.getValueType();
-		}
-
-		public boolean canRead(Object model) {
-			return delegate.canRead(model);
-		}
+		public Class<?> getContextType()     { return delegate.getContextType(); }
+		public Class<?> getValueType()       { return delegate.getValueType(); }
+		public boolean canRead()             { return delegate.canRead(); }		
+		public boolean canRead(Object model) { return delegate.canRead(model); }
 
 		public List<?> readValue(Object ctx) {
 			List<?> origColl = delegate.readValue(ctx);
