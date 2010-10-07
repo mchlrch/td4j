@@ -76,6 +76,10 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 			final Class<?> itemType = ReflectionTK.getItemType(field);
 			final ListFieldConnector connector = new ListFieldConnector(cls, field, itemType);
 			return connector;
+		} else if (field.getType().isArray()) {
+			final Class<?> itemType = ReflectionTK.getItemType(field);
+			final ArrayFieldConnector connector = new ArrayFieldConnector(cls, field, itemType);
+			return connector;			
 		} else {
 			return new IndividualFieldConnector(cls, field);
 		}
@@ -125,6 +129,11 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 			final ListMethodConnector connector = new ListMethodConnector(cls, getter, itemType, argumentValues); 
 			return connector;
 
+		} else if (valueType.isArray()) {
+			final Class<?> itemType = ReflectionTK.getItemType(getter);
+			final ArrayMethodConnector connector = new ArrayMethodConnector(cls, getter, itemType);
+			return connector;
+			
 		} else {
 			return new IndividualMethodConnector(cls, getter, setter, argumentValues);
 		}
