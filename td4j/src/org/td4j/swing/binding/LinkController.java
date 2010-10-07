@@ -76,7 +76,9 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 	protected void doNavigate() {
 		final IndividualDataProxy dataProxy = getDataProxy();
 		final Class<?> valueType = dataProxy.getValueType();
-		final Object value = dataProxy.readValue();
+		final Object value = dataProxy.canRead() ? dataProxy.readValue() : null;
+		
+		if (value == null) return;
 		
 		if (linkHandler.canBrowse() && URL.class.isAssignableFrom(valueType)) {
 			try {
@@ -103,7 +105,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 			}
 			
 		} else {
-			navigator.seek(getDataProxy().readValue());
+			navigator.seek(value);
 		}
 	}
 
