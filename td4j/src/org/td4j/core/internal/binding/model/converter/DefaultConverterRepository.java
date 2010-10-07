@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009 Michael Rauch
+  Copyright (C) 2008, 2009, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -35,25 +35,38 @@ public class DefaultConverterRepository implements IConverterRepository {
   private final Map<ConverterKey, IConverter> map = new HashMap<ConverterKey, IConverter>();
 
   public DefaultConverterRepository() {
-  	addConverter(String.class, Byte.class, new String2ByteConverter());
-    addConverter(String.class, byte.class, new String2ByteConverter());
+  	addConverter(String.class, Byte.class, new String2ByteConverter(Byte.class, getNullEquivalentFor(Byte.class)));
+    addConverter(String.class, byte.class, new String2ByteConverter(byte.class, getNullEquivalentFor(byte.class)));
     
-    addConverter(String.class, Short.class, new String2ShortConverter());
-    addConverter(String.class, short.class, new String2ShortConverter());
+    addConverter(String.class, Short.class, new String2ShortConverter(Short.class, getNullEquivalentFor(Short.class)));
+    addConverter(String.class, short.class, new String2ShortConverter(short.class, getNullEquivalentFor(short.class)));
   	
-    addConverter(String.class, Integer.class, new String2IntConverter());
-    addConverter(String.class, int.class, new String2IntConverter());
+    addConverter(String.class, Integer.class, new String2IntConverter(Integer.class, getNullEquivalentFor(Integer.class)));
+    addConverter(String.class, int.class,     new String2IntConverter(int.class,     getNullEquivalentFor(int.class)));
     
-    addConverter(String.class, Long.class, new String2LongConverter());
-    addConverter(String.class, long.class, new String2LongConverter());
+    addConverter(String.class, Long.class, new String2LongConverter(Long.class, getNullEquivalentFor(Long.class)));
+    addConverter(String.class, long.class, new String2LongConverter(long.class, getNullEquivalentFor(long.class)));
     
-    addConverter(String.class, Float.class, new String2FloatConverter());
-    addConverter(String.class, float.class, new String2FloatConverter());
+    addConverter(String.class, Float.class, new String2FloatConverter(Float.class, getNullEquivalentFor(Float.class)));
+    addConverter(String.class, float.class, new String2FloatConverter(float.class, getNullEquivalentFor(float.class)));
     
-    addConverter(String.class, Double.class, new String2DoubleConverter());
-    addConverter(String.class, double.class, new String2DoubleConverter());    
+    addConverter(String.class, Double.class, new String2DoubleConverter(Double.class, getNullEquivalentFor(Double.class)));
+    addConverter(String.class, double.class, new String2DoubleConverter(double.class, getNullEquivalentFor(double.class)));    
     
     addConverter(String.class, BigDecimal.class, new String2BigDecimalConverter());
+  }
+  
+  @Override
+  public Object getNullEquivalentFor(Class<?> type) {
+  	if      (type == byte.class)    return (byte)  0;
+  	else if (type == short.class)   return (short) 0;
+  	else if (type == int.class)     return 0;
+  	else if (type == long.class)    return 0L;
+  	else if (type == float.class)   return 0.0F;
+  	else if (type == double.class)  return 0.0D;
+  	else if (type == boolean.class) return false;
+  	
+  	else return null;
   }
 
   private void addConverter(Class<?> fromType, Class<?> toType, IConverter converter) {

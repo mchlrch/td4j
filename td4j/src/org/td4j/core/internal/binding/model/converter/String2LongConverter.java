@@ -19,11 +19,12 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public class String2LongConverter implements IConverter {
+public class String2LongConverter extends String2XYConverter {
 
-	@Override
-	public Class<?> getConversionTargetType() {
-		return Long.class;
+	public String2LongConverter(Class<?> targetType, Object nullValue) {
+		super(targetType, nullValue);
+		
+		if (targetType != long.class && targetType != Long.class) throw new IllegalArgumentException("targetType");
 	}
 	
   @Override
@@ -33,29 +34,14 @@ public class String2LongConverter implements IConverter {
   		if ( ! s.trim().isEmpty()) return Long.parseLong(s);
   	}
   	
-    return null;
+    return nullValue;
   }
 
-  @Override
-  public boolean canConvert() {
-    return true;
-  }
-
-  @Override
-  public Class<?> getUnconversionTargetType() {
-  	return String.class;
-  }
-  
   @Override
   public Object unconvert(Object from) {
   	if (from instanceof Long) return Long.toString( (Long)from );
   	
     return null;
-  }
-
-  @Override
-  public boolean canUnconvert() {
-    return true;
   }
 
 }

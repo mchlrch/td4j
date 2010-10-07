@@ -19,11 +19,12 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public class String2IntConverter implements IConverter {
-
-	@Override
-	public Class<?> getConversionTargetType() {
-		return Integer.class;
+public class String2IntConverter extends String2XYConverter {
+	
+	public String2IntConverter(Class<?> targetType, Object nullValue) {
+		super(targetType, nullValue);
+		
+		if (targetType != int.class && targetType != Integer.class) throw new IllegalArgumentException("targetType");
 	}
 	
   @Override
@@ -33,29 +34,14 @@ public class String2IntConverter implements IConverter {
   		if ( ! s.trim().isEmpty()) return Integer.parseInt(s);
   	}
   	
-    return null;
+    return nullValue;
   }
 
-  @Override
-  public boolean canConvert() {
-    return true;
-  }
-
-  @Override
-  public Class<?> getUnconversionTargetType() {
-  	return String.class;
-  }
-  
   @Override
   public Object unconvert(Object from) {
   	if (from instanceof Integer) return Integer.toString( (Integer)from );
   	
     return null;
-  }
-
-  @Override
-  public boolean canUnconvert() {
-    return true;
   }
 
 }

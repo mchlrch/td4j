@@ -19,29 +19,34 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-public class String2FloatConverter extends String2XYConverter {
-
-	public String2FloatConverter(Class<?> targetType, Object nullValue) {
-		super(targetType, nullValue);
-		
-		if (targetType != float.class && targetType != Float.class) throw new IllegalArgumentException("targetType");
+public abstract class String2XYConverter implements IConverter {
+	
+	private final Class<?> targetType;
+	protected final Object nullValue;
+	
+	protected String2XYConverter(Class<?> targetType, Object nullValue) {
+		this.targetType = targetType;
+		this.nullValue = nullValue;
+	}
+	
+	@Override
+	public Class<?> getConversionTargetType() {
+		return targetType;
 	}
 	
   @Override
-  public Object convert(Object from) {
-  	if (from instanceof String) {
-  		final String s = (String)from;
-  		if ( ! s.trim().isEmpty()) return Float.parseFloat(s);
-  	}
-  	
-    return nullValue;
+  public boolean canConvert() {
+    return true;
   }
-
+  
   @Override
-  public Object unconvert(Object from) {
-  	if (from instanceof Float) return Float.toString( (Float)from );
-  	
-    return null;
+  public boolean canUnconvert() {
+    return true;
+  }
+  
+  @Override
+  public Class<?> getUnconversionTargetType() {
+  	return String.class;
   }
 
 }
