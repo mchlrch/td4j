@@ -28,22 +28,25 @@ import org.td4j.core.internal.binding.ui.IndividualControllerFactory;
 import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.SelectionController;
+import org.td4j.swing.binding.SelectionWidget;
 
 
 public class SelectionControllerFactory extends IndividualControllerFactory<SelectionController> {
 
 	private final ListSelectionModel selectionModel;
 	private final OrderedElementModel dataModel;
+	private final SelectionWidget selectionWidget;
 
-	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel) {
+	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel, SelectionWidget selectionWidget) {
 		super(mediator, connectorFactory);
 
 		this.selectionModel = ObjectTK.enforceNotNull(selectionModel, "selectionModel");
 		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
+		this.selectionWidget = ObjectTK.enforceNotNull(selectionWidget, "selectionWidget");
 	}
 
 	@Override
 	protected SelectionController createController(IndividualDataProxy dataProxy) {
-		return new SelectionController(selectionModel, dataModel, dataProxy);
+		return new SelectionController(selectionModel, dataModel, dataProxy, selectionWidget);
 	}
 }
