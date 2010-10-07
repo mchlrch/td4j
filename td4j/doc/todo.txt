@@ -1,13 +1,41 @@
-- use labels for readonly text properties & enable nimbus theme
 
-- InvocationDialog: Checkbox für boolean properties
-- InvocationDialog: try/catch by  für @Operations
+- TaskExample löschen, sobald IssueTracker läuft
+- Unit-Tests für converter und handling von primitiven Typen in widgets
+  - GenericForm und InvokationParameterDialog
+
+** MERGE mit todo.ods & PRIORITIZE **
+
+- TableSelectionWidgetAdapter: implementieren und testen, wenn selectionProperty.canWrite == false ist
+- ListView: Properties werden nicht aktualisiert, wenn deren Wert ändert
+- GenericForm: wenn Form >=1 Tabelle enthält, soll kein spacer am schluss eingefügt werden, dafür sollen die tabellen den vertikalen platz ausfüllen
+
+- Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern
+
+- Prüfen/Unit-Test dass @ShowProperties auf Methoden und Feldern funktioniert, insbesondere auch auf enum Typen
+
 - InvocationDialog: <repeat> action - z.b.: mehrere Objekte erzeugen einfacher machen
 - WidgetBuilder aufteilen: 1) bindProperty(), setzt Metamodel voraus 2) bindField(), bindMethod(), ohne Metamodel direkt auf Felder und Methoden, unterstützt aber keine nestedProperties
 
 - Table: tooltip text mit propertyName auf spalten header
 - @ViewProxy: @ViewProxy(IssueContainerVP.class) public class IssueContainer - anstatt IssueContainer anzuzeigen, wird dynamisch ein proxy instanziert (BO ist constructor parameter) - Verwendung z.B: fürs Filtern von Tabellen
 - @ViewProxy: erbt @Companions vom gewrappten BO  
+
+
 -------------------------------------------------------------------------------------
+
 x(20100912) zZ im issuetracker example: in-memory EntityRepository, mit put(cls, obj), remove(cls, obj), find(cls, filter)
 x(20100913) graceful handling of inaccessible methods declared in pkg private superclasses
+x(20100928) use labels for readonly text properties & enable nimbus theme
+
+x(20101002) SelectionController/JList: disabled, wenn ! property.canWrite() (siehe GenericForm:111)
+x(20101002) SelectionController/JList: richtiges verhalten, wenn keine instanz im mediator
+x(20101004) ArrayMethodConnector implementieren
+x(20101004) SelectionController/JList: richtiges verhalten, wenn mediator von <null> auf instanz wechselt - Selektion wird nicht nachgeführt, da listDataModel wahrscheinlich noch keinen Inhalt hat
+REJECTED SelectionController/JList: <empty> anzeigen & selection-disabled bei leerer Liste 
+REJECTED Options: enum werte auch unterstützen, wenn kein explizites xyOptions property deklariert ist
+
+x(20101004) Klicken auf NavigationLabel mit <null> soll keine Navigation auslösen! -> z.B.: Issue.resolvedAt
+x(20101004) Klicken auf NavigationLabel mit <null> und ctx=null wirft exception
+
+x(20101006) InvocationDialog: Checkbox für boolean properties
+x(20101007) InvocationDialog: try/catch by  für @Operations
