@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008 Michael Rauch
+  Copyright (C) 2008, 2010 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,6 +104,20 @@ public class ReflectionTK {
 	}
 
 	public static Class<?> getItemType(AccessibleObject ao) {
+		
+		// handle arrays
+		Class<?> plainType = null;
+		if (ao instanceof Field) {
+			plainType = ((Field) ao).getType();
+		} else if (ao instanceof Method) {
+			plainType = ((Method) ao).getReturnType();
+		}		
+		if (plainType.isArray()) {
+			final Class<?> type = plainType.getComponentType();
+			return type;
+		}
+		
+		// handle non-arrays
 		Type genType = null;
 		if (ao instanceof Field) {
 			genType = ((Field) ao).getGenericType();
@@ -123,9 +138,15 @@ public class ReflectionTK {
 					if (rawType instanceof Class) {
 						return (Class<?>) rawType;
 					}
+				} else if (typeArgs[0] instanceof WildcardType) {
+					final WildcardType wildcardTypeArg = (WildcardType) typeArgs[0];
+					final Type[] upperBoundsTypes = wildcardTypeArg.getUpperBounds();
+					if (upperBoundsTypes.length == 1 && upperBoundsTypes[0] instanceof Class) {
+						return (Class<?>) upperBoundsTypes[0];
+					}
 				}
 			}
-
+			
 			// Without generic type declaration, genType = type
 		} else if (genType instanceof Class) {
 			final Class<?> type = (Class<?>) genType;
