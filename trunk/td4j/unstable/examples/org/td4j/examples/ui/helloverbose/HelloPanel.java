@@ -39,8 +39,10 @@ import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.examples.AppLauncher;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
+import org.td4j.swing.binding.SelectionWidget;
 import org.td4j.swing.binding.TextController;
 import org.td4j.swing.internal.binding.ListModelAdapter;
+import org.td4j.swing.internal.binding.ListSelectionWidgetAdapter;
 
 
 
@@ -89,7 +91,9 @@ public class HelloPanel extends JPanel {
 		final IndividualDataConnector localeConnector = connectorFactory.createIndividualMethodConnector(HelloModel.class, "locale");
 		final IndividualDataProxy localeProxy = new IndividualDataProxy(localeConnector, "locale");
 		mediator.addContextSocket(localeProxy);
-		new SelectionController(localeChooser.getSelectionModel(), new ListModelAdapter(localeChooser.getModel()), localeProxy);
+		final ListModelAdapter listModelAdapter = new ListModelAdapter(localeChooser.getModel());
+		final SelectionWidget localeSelectionWidget = new ListSelectionWidgetAdapter(localeChooser);
+		new SelectionController(localeChooser.getSelectionModel(), listModelAdapter, localeProxy, localeSelectionWidget);
 
 		final IndividualDataConnector messageConnector = connectorFactory.createIndividualMethodConnector(HelloModel.class, "message");
 		final IndividualDataProxy messageProxy = new IndividualDataProxy(messageConnector, "message");
