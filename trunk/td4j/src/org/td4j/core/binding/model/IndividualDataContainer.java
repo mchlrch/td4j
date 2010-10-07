@@ -77,13 +77,17 @@ public class IndividualDataContainer<T> extends Observable {
 	}
 
 	public IndividualDataProxy createProxy() {
-		final IndividualDataContainerConnector con = new IndividualDataContainerConnector(getContentType());
-
-		// PEND: fix this, temporary only conversion to String supported !!
+		return createProxy( (IConverter) null);
+	}
+	
+	public IndividualDataProxy createProxy(Class<?> targetValueType) {
 		final Class<?> fromType = getContentType();
-		final Class<?> toType = String.class;
-		final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-
+		final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, targetValueType);
+		return createProxy(converter);
+	}
+	
+	public IndividualDataProxy createProxy(IConverter converter) {
+		final IndividualDataContainerConnector con = new IndividualDataContainerConnector(getContentType());
 		final IndividualDataProxy proxy = new IndividualDataProxy(con, getPropertyName(), converter);
 		proxy.setContext(this);
 
