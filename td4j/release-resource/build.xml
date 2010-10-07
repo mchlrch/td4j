@@ -23,6 +23,11 @@
 		<java classpathref="classpath" fork="true"
 			  classname="org.td4j.examples.helloworld.HelloWorldExample"/>
 	</target>
+	
+	<target name="localized_helloworld" description="Run localized HelloWorld example">
+			<java classpathref="classpath" fork="true"
+				  classname="org.td4j.examples.helloworld.LocalizedHelloWorldExample"/>
+	</target>
 		
 	<target name="person" description="Run Person-Address example">
 		<java classpathref="classpath" fork="true"
