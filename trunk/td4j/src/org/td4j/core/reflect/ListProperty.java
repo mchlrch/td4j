@@ -68,6 +68,8 @@ public class ListProperty implements ListDataConnector, NestedPropertiesProvider
 		return result;
 	}
 
+	public boolean canRead() { return dataConnector.canRead(); }
+	
 	public boolean canRead(Object ctx) {
 		if (ctx == null) return false;
 		return dataConnector.canRead(ctx);		
