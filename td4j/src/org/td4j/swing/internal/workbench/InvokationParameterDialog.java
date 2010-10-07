@@ -19,10 +19,10 @@
 
 package org.td4j.swing.internal.workbench;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
@@ -34,29 +34,23 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
-import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
-import org.td4j.core.internal.binding.model.converter.IConverter;
+import org.td4j.core.internal.binding.model.converter.IConverterRepository;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.tk.ListTK;
 import org.td4j.core.tk.ObjectTK;
-import org.td4j.swing.binding.ButtonController;
-import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
 
 
@@ -127,8 +121,9 @@ public class InvokationParameterDialog extends JDialog {
 	}
 
 	private void clearParamValueMap() {
+		final IConverterRepository repo = DefaultConverterRepository.INSTANCE;
 		for (InvokationParameter param : parameterList) {
-			paramValueMap.put(param, null);
+			paramValueMap.put(param, repo.getNullEquivalentFor(param.getType()));
 		}
 		wBuilder.getMediator().refreshFromContext();
 	}
@@ -137,54 +132,24 @@ public class InvokationParameterDialog extends JDialog {
 		setModal(true);
 		final Container contentPane = getContentPane();
 
-		contentPane.setLayout(new GridBagLayout());
+		contentPane.setLayout(new GridLayout());
 		
-		FocusRequester focusRequester = null;
+		final GenericPanelBuilder pBuilder = new GenericPanelBuilder(wBuilder) {
+			protected void postAddWidget(Component comp) {
+				super.postAddWidget(comp);
+				if (getFocusRequester() == null) {
+					final FocusRequester focusRequester = new FocusRequester(comp);
+					addHierarchyListener(focusRequester);
+					setFocusRequester(focusRequester);
+				}
+			}
+		};
+		
 		for (InvokationParameter param : parameterList) {
 			final IndividualDataConnector connector = connectorFactory.createIndividualMethodConnector(getClass(), "parameterValue", new Class[] { InvokationParameter.class }, new Object[] { param });
 			
-      // PEND: fix this, temporary only conversion to String supported !!
-      final Class<?> fromType = param.getType();
-      final Class<?> toType = String.class;
-      final IConverter converter = DefaultConverterRepository.INSTANCE.getConverter(fromType, toType);
-			final IndividualDataProxy dataProxy = new IndividualDataProxy(connector, param.getName(), converter);
-			wBuilder.getMediator().addContextSocket(dataProxy);
-			
-			final JLabel caption = new JLabel(param.getName());
-			caption.setToolTipText(String.format("%1$s : %2$s", param.getType().getSimpleName(), param.getName()));
-			contentPane.add(caption, new GridBagConstraints(0, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 0, 0), 0, 0));
-
-			// PEND: blend with code from GenericForm
-			if (param.getType() == Boolean.class) {
-				final ButtonController btnController = wBuilder.button().bindConnector(connector, param.getName());
-				final AbstractButton btn = btnController.getWidget();
-				contentPane.add(btn, new GridBagConstraints(1, - 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
-				if (focusRequester == null) {
-					focusRequester = new FocusRequester(btn);
-					addHierarchyListener(focusRequester);
-				}
-			} else {
-
-				// PEND: combobox
-
-				// if (param.getType() == String.class) {
-				final TextController textController = wBuilder.text().bind(dataProxy);
-				final JTextField text = textController.getWidget();
-				contentPane.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 5), 0, 0));
-
-				if (focusRequester == null) {
-					focusRequester = new FocusRequester(text);
-					addHierarchyListener(focusRequester);
-				}
-				
-				// } else {
-				// final LinkController linkController =
-				// wBuilder.link().bindConnector(connector);
-				// final JLabel link = linkController.getWidget();
-				// contentPane.add(link, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0,
-				// GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 5, 0,
-				// 5), 0, 0));
-			}
+			final String labelTooltip = String.format("%1$s : %2$s", param.getType().getSimpleName(), param.getName());
+			pBuilder.addIndividualDataConnector(connector, param.getName(), param.getType(), labelTooltip);
 		}
 
 		final JPanel buttons = new JPanel(new GridLayout(1, 3));
@@ -198,10 +163,17 @@ public class InvokationParameterDialog extends JDialog {
 		buttons.add(okButton);
 		buttons.add(new JButton(cancelAction));
 
-		contentPane.add(buttons, new GridBagConstraints(0, - 1, 2, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(15, 0, 15, 5), 0, 0));
+		pBuilder.getPanel().add(buttons, new GridBagConstraints(0, - 1, 2, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(15, 0, 15, 5), 0, 0));
 
+		contentPane.add(pBuilder.getPanel(), BorderLayout.CENTER);
 		pack();
 	}
+	
+	
+	private FocusRequester focusRequester;
+	private FocusRequester getFocusRequester()               { return focusRequester; }
+	private void setFocusRequester(FocusRequester requester) { this.focusRequester = requester; }
+	
 
 	void setParameterValue(InvokationParameter param, Object value) {
 		paramValueMap.put(param, value);
