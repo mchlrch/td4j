@@ -61,7 +61,7 @@ public abstract class IndividualWidgetController<W> implements IObserver {
 
 		setAccess();
 		
-		final Object value = dataProxy.canRead() ? dataProxy.readValue() : null;
+		final Object value = canRead() ? dataProxy.readValue() : null;
 		updateView(value);
 	}
 
