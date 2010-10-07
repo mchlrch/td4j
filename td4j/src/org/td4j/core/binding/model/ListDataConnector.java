@@ -29,5 +29,6 @@ public interface ListDataConnector extends DataConnector {
 	public List<?> readValue(Object ctx);
 
 	public boolean canRead(Object ctx);
+	public boolean canRead();
 
 }
