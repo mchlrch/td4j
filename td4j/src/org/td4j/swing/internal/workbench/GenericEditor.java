@@ -54,6 +54,7 @@ import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableModelAdapter;
+import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
@@ -153,7 +154,9 @@ public class GenericEditor extends Editor<Object> {
 		// connect table selection to mediator
 		listSelectionContainer = new IndividualDataContainer(modelType, "listSelection");
 		final IndividualDataProxy listSelectionProxy = listSelectionContainer.createProxy();
-		final SelectionController listTableSelection = new SelectionController(listTable.getSelectionModel(), new TableModelAdapter(listTableController.getModel()), listSelectionProxy);
+		final TableModelAdapter tableModelAdapter = new TableModelAdapter(listTableController.getModel());
+		final TableSelectionWidgetAdapter selectionWidget = new TableSelectionWidgetAdapter(listTable);
+		final SelectionController listTableSelection = new SelectionController(listTable.getSelectionModel(), tableModelAdapter, listSelectionProxy, selectionWidget);
 		final IndividualDataRelay relayMediator = new IndividualDataRelay(listSelectionProxy, mediator);
 		final IndividualDataRelay relayForm = new IndividualDataRelay(listSelectionProxy, form);		
 
