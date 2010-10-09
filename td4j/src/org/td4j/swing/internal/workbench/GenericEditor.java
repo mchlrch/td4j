@@ -104,8 +104,11 @@ public class GenericEditor extends Editor<Object> {
 
 		final JPanel header = new JPanel(new GridBagLayout());
 		typeLabel = new JLabel(modelType.getName());
-		header.add(typeLabel,    new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,       new Insets(5, 5, 5, 5), 0, 0));
-		header.add(new JLabel(), new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		typeLabel.setToolTipText(modelType.getName());
+		final Dimension prefSize = typeLabel.getPreferredSize();
+		typeLabel.setPreferredSize(new Dimension(0, prefSize.height));
+		
+		header.add(typeLabel,    new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 		
 		final MetaClass metaClass = model.getMetaClass(modelType); 
 		final JMenu executableMenu = new JMenu();
@@ -123,7 +126,7 @@ public class GenericEditor extends Editor<Object> {
 		if (executableMenu.getItemCount() == 0) executableMenu.setEnabled(false);
 		final JMenuBar menuBar = new JMenuBar();
 		menuBar.add(executableMenu);
-		header.add(menuBar, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		header.add(menuBar, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 		
 		// list table
 		listDataContainer = new ListDataContainer(modelType, "listData");
