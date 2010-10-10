@@ -5,8 +5,7 @@
 - Improved support for Javas primitive types
 - Incremental MetaClass creation (fixes issues with cyclic dependencies)
 - Companion object support (see org.td4j.examples.dispatcher)
-- SvcRepo
-- AppCtx
+- SvcRepo and AppCtx
 - Default to Nimbus LNF, use Label for readonly text
 
 :: 10.6
