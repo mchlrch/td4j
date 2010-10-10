@@ -1,4 +1,4 @@
-:: 10.xy
+:: 10.10
 - Avoid navigation to <null> values
 - Support choice provisioning for mutable individual properties
 - Support for array based ListDataConnectors
