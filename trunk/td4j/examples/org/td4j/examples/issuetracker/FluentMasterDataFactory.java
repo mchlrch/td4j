@@ -56,9 +56,9 @@ public class FluentMasterDataFactory {
 		return template;
 	}
 	
-	@Operation(paramNames={"template", "name", "resolved"})
-	public IssueContainerTemplate createStatus(IssueContainerTemplate template, String name, boolean resolved) {
-		master.createStatus(template, name, resolved);
+	@Operation(paramNames={"template", "name", "closed"})
+	public IssueContainerTemplate createStatus(IssueContainerTemplate template, String name, boolean closed) {
+		master.createStatus(template, name, closed);
 		return template;
 	}
 		
