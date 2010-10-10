@@ -1,0 +1,35 @@
+SF File Release System
+----------------------
+mira@apu:~/wdir/sf.net/td4j/release$ sftp miraman,td4j@frs.sourceforge.net
+sftp> cd  /home/frs/project/t/td/td4j
+sftp> put td4j-9.8.zip
+
+
+SF Project Upload - td4j
+------------------------
+mira@apu:~/wdir/sf.net/td4j/htdocs$ sftp miraman,td4j@web.sourceforge.net
+sftp> cd htdocs
+sftp> put index.html
+
+
+### sf.net UPLOAD for htdocs: /home/groups/t/td/td4j/htdocs (user=miraman,td4j)
+
+
+SF Developer Web Upload
+-----------------------
+mira@apu:~/wdir/sf.net/dev-web$ sftp miraman@frs.sourceforge.net
+sftp> cd userweb/htdocs
+sftp> put index.html
+
+
+protect email adress from spammers:
+-----------------------------------
+::_1. Changing the code direction with CSS
+<style type="text/css">
+span.codedirection { unicode-bidi:bidi-override; direction: rtl; }
+</style>
+
+<p><span class="codedirection">hc.tenarim@arim</span></p>
+
+::_2. ROT13 Encryption (needs JavaScript)
+
