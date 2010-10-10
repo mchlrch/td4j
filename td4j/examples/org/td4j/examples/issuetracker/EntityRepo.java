@@ -59,7 +59,9 @@ public class EntityRepo {
 		
 		final List<Object> entities = repo.get(cls);
 		if (entities != null) {
-			for (Object obj : entities) {
+			for (Object obj : entities) {				
+				
+				@SuppressWarnings("unchecked")
 				final T entity = (T) obj;
 				if (filter.accept(entity)) {
 					result.add(entity);
