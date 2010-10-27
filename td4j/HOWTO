@@ -15,6 +15,13 @@ sftp> put index.html
 ### sf.net UPLOAD for htdocs: /home/groups/t/td/td4j/htdocs (user=miraman,td4j)
 
 
+
+SVN tagging
+-----------
+# tag 20101010_v10-10
+mira@apu:~/workspace/td4j/td4j$ svn copy https://td4j.svn.sourceforge.net/svnroot/td4j/trunk https://td4j.svn.sourceforge.net/svnroot/td4j/tags/20101010_v10-10/
+
+
 SF Developer Web Upload
 -----------------------
 mira@apu:~/wdir/sf.net/dev-web$ sftp miraman@frs.sourceforge.net
