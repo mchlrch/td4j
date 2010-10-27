@@ -26,9 +26,10 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.reflect.ReflectionTK;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
+import ch.miranet.commons.reflect.ReflectionTK;
 
 
 public class ExecutableMethod extends AbstractExecutable {

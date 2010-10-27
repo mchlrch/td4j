@@ -25,10 +25,11 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.ui.IndividualControllerFactory;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.SelectionWidget;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class SelectionControllerFactory extends IndividualControllerFactory<SelectionController> {

@@ -26,7 +26,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.JList;
 
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

@@ -21,8 +21,9 @@ package org.td4j.core.reflect;
 
 import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataConnector;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 public class IndividualProperty implements IndividualDataConnector, Property {
 	

@@ -28,13 +28,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.td4j.core.reflect.ReflectionTK;
-import org.td4j.core.tk.IFilter;
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.filter.Filter;
+import ch.miranet.commons.reflect.ReflectionTK;
 
-
+/**
+ * Value Object Factory.
+ * Creates generic value objects from interfaces (backed by a map)
+ */
 public class VOFactory {
 
-	private static final IFilter<Method> defaultMethodFilter = new IFilter<Method>() {
+	private static final Filter<Method> defaultMethodFilter = new Filter<Method>() {
 		public boolean accept(Method m) {
 			return ! (m.getDeclaringClass() == Object.class); // filter out Object.getClass()
 		};
@@ -70,7 +74,7 @@ public class VOFactory {
 			final String pName = getterToPropertyName(m);
 			if (pName != null && ! propertyNames.contains(pName)) {
 				
-				final Method setter = setterForProperty(allMethods, pName, ReflectionTK.composeArray(m.getParameterTypes(), m.getReturnType()));				
+				final Method setter = setterForProperty(allMethods, pName, ArrayTK.append(m.getParameterTypes(), m.getReturnType()));				
 				final PropertySignature property = new PropertySignature(pName, m.getReturnType(), m.getParameterTypes(), m, setter);
 				properties.add(property);
 				propertyNames.add(pName);

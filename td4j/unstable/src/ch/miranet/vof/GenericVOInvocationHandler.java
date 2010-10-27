@@ -24,8 +24,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.td4j.core.tk.ArrayTK;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.ObjectTK;
 
 // PEND: wie kann equals() und hashCode() implementiert werden?
 

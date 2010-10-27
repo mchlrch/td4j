@@ -23,9 +23,10 @@ import java.util.Date;
 
 import org.td4j.core.reflect.Companions;
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.swing.workbench.AppCtx;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.service.SvcRepository;
 
 /**
  * This example shows a usage scenario for companion objects.

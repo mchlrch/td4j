@@ -24,8 +24,9 @@ import java.util.List;
 
 import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 public class ListProperty implements ListDataConnector, NestedPropertiesProvider, Property {
 	

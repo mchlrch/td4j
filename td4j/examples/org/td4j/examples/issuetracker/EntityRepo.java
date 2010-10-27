@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.filter.AcceptAllFilter;
+
+import ch.miranet.commons.filter.AcceptAllFilter;
+import ch.miranet.commons.filter.Filter;
 
 public class EntityRepo {
 	
@@ -50,11 +51,11 @@ public class EntityRepo {
 	}
 	
 	public <T> List<T> getAll(Class<T> cls) {
-		final IFilter<T> filter = AcceptAllFilter.getInstance(); 
+		final Filter<T> filter = AcceptAllFilter.getInstance(); 
 		return get(cls, filter);
 	}
 	
-	public <T> List<T> get(Class<T> cls, IFilter<T> filter) {
+	public <T> List<T> get(Class<T> cls, Filter<T> filter) {
 		final List<T> result = new ArrayList<T>();
 		
 		final List<Object> entities = repo.get(cls);

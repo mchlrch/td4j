@@ -29,7 +29,8 @@ import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.UnknownPropertyException;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 // TODO: rewrite to get nestedProperties form OpenClassRepository
 public class NestedPropertiesInEditorListFactory {

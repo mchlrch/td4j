@@ -31,10 +31,11 @@ import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Workbench;
 import org.td4j.swing.workbench.Editor.EditorContent;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.filter.Filter;
 
 
 class InvokeExecutableAction extends AbstractAction implements IObserver {
@@ -139,7 +140,7 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 	}
 
 
-	private static class MediatorEventFilter implements IFilter<ChangeEvent> {
+	private static class MediatorEventFilter implements Filter<ChangeEvent> {
 		@Override
 		public boolean accept(ChangeEvent event) {
 			if (ChangeEvent.Type.StateChange == event.getType()) return true;

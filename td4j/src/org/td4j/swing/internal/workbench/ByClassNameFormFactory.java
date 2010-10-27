@@ -24,10 +24,11 @@ import java.lang.reflect.Constructor;
 import javax.swing.JComponent;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class ByClassNameFormFactory implements FormFactory {

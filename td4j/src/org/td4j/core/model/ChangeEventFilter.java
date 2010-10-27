@@ -19,11 +19,12 @@
 
 package org.td4j.core.model;
 
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.filter.Filter;
 
 
-public class ChangeEventFilter implements IFilter<ChangeEvent> {
+public class ChangeEventFilter implements Filter<ChangeEvent> {
 
 	private final Object src;
 	private final ChangeEvent.Type type;

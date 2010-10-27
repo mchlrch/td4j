@@ -20,7 +20,8 @@
 package org.td4j.core.binding.model;
 
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

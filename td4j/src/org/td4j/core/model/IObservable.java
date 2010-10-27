@@ -20,14 +20,15 @@
 package org.td4j.core.model;
 
 import org.td4j.core.model.IObserver;
-import org.td4j.core.tk.IFilter;
+
+import ch.miranet.commons.filter.Filter;
 
 
 
 public interface IObservable {
 	public void addObserver(IObserver observer);
 
-	public void addObserver(IObserver observer, IFilter<ChangeEvent> eventFilter);
+	public void addObserver(IObserver observer, Filter<ChangeEvent> eventFilter);
 
 	public void removeObserver(IObserver observer);
 }

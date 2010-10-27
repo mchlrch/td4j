@@ -26,8 +26,10 @@ import java.util.Collection;
 
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.reflect.DataConnector;
-import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.UnknownPropertyException;
+
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.reflect.ReflectionTK;
 
 public class JavaDataConnectorFactory implements DataConnectorFactory {
 	
@@ -113,7 +115,7 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 
 		final Class<?> valueType = getter.getReturnType();
 		Method setter = null;
-		final Class<?>[] setterArgTypes = ReflectionTK.composeArray(argumentTypes, valueType);
+		final Class<?>[] setterArgTypes = ArrayTK.append(argumentTypes, valueType);
 		try {
 			setter = cls.getMethod("set" + ReflectionTK.capitalize(name), setterArgTypes);
 		} catch (Exception e) {

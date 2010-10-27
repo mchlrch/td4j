@@ -19,8 +19,9 @@
 
 package org.td4j.swing.workbench;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor.EditorContent;
+
+import ch.miranet.commons.ObjectTK;
 
 public class Navigator {
 

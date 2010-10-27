@@ -49,7 +49,6 @@ import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.WidgetBuilder;
@@ -59,6 +58,8 @@ import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.ObjectTK;
 
 public class GenericEditor extends Editor<Object> {
 	

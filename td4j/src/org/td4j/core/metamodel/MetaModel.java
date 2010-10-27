@@ -23,8 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.td4j.core.metamodel.feature.MetaClassKey;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureProvider;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.container.FeatureProvider;
 
 
 public abstract class MetaModel implements FeatureProvider, MetaClassProvider {

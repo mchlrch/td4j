@@ -20,7 +20,8 @@
 package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.IndividualDataContainer;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class IndividualDataContainerConnector extends AbstractIndividualDataConnector {

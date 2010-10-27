@@ -50,14 +50,15 @@ import org.td4j.core.reflect.Hide;
 import org.td4j.core.reflect.IllegalConnectorTypeException;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.reflect.ReflectionTK;
 import org.td4j.core.reflect.Show;
 import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.UnknownPropertyException;
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
-import org.td4j.core.tk.env.SvcProvider;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
+import ch.miranet.commons.filter.Filter;
+import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.service.SvcProvider;
 
 public class JavaModelInspector {
 	
@@ -75,7 +76,7 @@ public class JavaModelInspector {
 		PUBLIC
 	};
 	
-	private static final IFilter<Method> defaultMethodFilter = new IFilter<Method>() {
+	private static final Filter<Method> defaultMethodFilter = new Filter<Method>() {
 		public boolean accept(Method m) {
 			return ! (m.getDeclaringClass() == Object.class); // filter out Object.getClass()
 		};

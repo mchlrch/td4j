@@ -20,7 +20,8 @@
 package org.td4j.core.metamodel.feature;
 
 import org.td4j.core.metamodel.container.ListProperties;
-import org.td4j.core.tk.feature.FeatureKey;
+
+import ch.miranet.commons.container.FeatureKey;
 
 public class ListPropertiesKey implements FeatureKey<ListProperties> {
 	

@@ -26,9 +26,10 @@ import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.workbench.Navigator;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class LinkControllerFactory extends IndividualWidgetControllerFactory<LinkController, JLabel> {

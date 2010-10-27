@@ -30,7 +30,8 @@ import org.td4j.core.internal.capability.NestedPropertiesProvider;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class ListDataProxy extends DataProxy implements NestedPropertiesProvider {

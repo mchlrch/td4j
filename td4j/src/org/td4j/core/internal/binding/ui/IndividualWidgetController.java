@@ -24,7 +24,8 @@ import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
-import org.td4j.core.reflect.ReflectionTK;
+
+import ch.miranet.commons.reflect.ReflectionTK;
 
 
 

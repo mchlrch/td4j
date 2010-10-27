@@ -22,9 +22,10 @@ package org.td4j.core.metamodel.container;
 import java.util.List;
 
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.tk.container.NamedItemsContainer;
 
-public class ListProperties extends NamedItemsContainer<ListProperty> {
+import ch.miranet.commons.container.DictionaryContainer;
+
+public class ListProperties extends DictionaryContainer<ListProperty> {
 	
 	public ListProperties(List<ListProperty> props) {
 		super(props);

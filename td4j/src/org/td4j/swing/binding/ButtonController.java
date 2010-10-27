@@ -24,7 +24,8 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class ButtonController extends IndividualSwingWidgetController<AbstractButton> {

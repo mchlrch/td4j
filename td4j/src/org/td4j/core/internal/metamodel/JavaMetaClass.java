@@ -30,16 +30,17 @@ import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.feature.FeatureKey;
-import org.td4j.core.tk.feature.FeatureRepository;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.container.FeatureKey;
+import ch.miranet.commons.container.FeatureMap;
 
 public class JavaMetaClass<T> extends MetaClass {
 
 	private final Class<T> javaClass;
 	private final int hashCode;
 	
-	private final FeatureRepository featRepo = new FeatureRepository();
+	private final FeatureMap featRepo = new FeatureMap();
 
 	protected JavaMetaClass(Class<T> javaClass) {
 		this.javaClass = ObjectTK.enforceNotNull(javaClass, "javaClass");

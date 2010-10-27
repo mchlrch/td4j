@@ -28,8 +28,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 public class OpenClass extends Observable {

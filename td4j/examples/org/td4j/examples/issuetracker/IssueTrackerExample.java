@@ -19,7 +19,6 @@
 
 package org.td4j.examples.issuetracker;
 
-import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.examples.issuetracker.domain.dynamic.DynamicDataFactory;
 import org.td4j.examples.issuetracker.domain.dynamic.DynamicDataRepository;
 import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
@@ -28,6 +27,8 @@ import org.td4j.examples.issuetracker.domain.master.MasterDataFactory;
 import org.td4j.examples.issuetracker.domain.master.MasterDataRepository;
 import org.td4j.swing.workbench.AppCtx;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.service.SvcRepository;
 
 public class IssueTrackerExample {
 	

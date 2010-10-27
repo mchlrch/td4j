@@ -19,8 +19,9 @@
 
 package org.td4j.examples.issuetracker.domain.master;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.EntityRepo;
+
+import ch.miranet.commons.ObjectTK;
 
 /**
  * Responsibilities of the MasterDataFactory:

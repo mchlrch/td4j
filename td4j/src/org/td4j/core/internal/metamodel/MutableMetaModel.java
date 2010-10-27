@@ -22,12 +22,13 @@ package org.td4j.core.internal.metamodel;
 import java.util.Set;
 
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.tk.feature.FeatureRepository;
-import org.td4j.core.tk.feature.FeatureKey;
+
+import ch.miranet.commons.container.FeatureKey;
+import ch.miranet.commons.container.FeatureMap;
 
 public class MutableMetaModel extends MetaModel {
 
-	private final FeatureRepository featRepo = new FeatureRepository();
+	private final FeatureMap featRepo = new FeatureMap();
 
 	protected <T extends Object> void putFeature(FeatureKey<T> key, T feature) {
 		featRepo.putFeature(key, feature);

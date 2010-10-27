@@ -26,7 +26,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import org.td4j.core.tk.ObjectTK;
+import ch.miranet.commons.ObjectTK;
 
 
 public abstract class Editor<T> {

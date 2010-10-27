@@ -24,10 +24,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.tk.container.OrderedContainer;
-import org.td4j.core.tk.env.SvcProvider;
-import org.td4j.core.tk.feature.FeatureKey;
-import org.td4j.core.tk.feature.FeatureRepository;
+
+import ch.miranet.commons.container.FeatureKey;
+import ch.miranet.commons.container.FeatureMap;
+import ch.miranet.commons.container.ListContainer;
+import ch.miranet.commons.service.SvcProvider;
 
 /**
  * Only use AppCtx between user code and Workbench. Rest of td4j has no dependency on AppCtx.
@@ -36,7 +37,7 @@ import org.td4j.core.tk.feature.FeatureRepository;
  * 
  * @author mira
  */
-public class AppCtx extends FeatureRepository {
+public class AppCtx extends FeatureMap {
 	
 	public static final FeatureKey<SvcProvider> KEY_SVC_PROVIDER = new FeatureKey<SvcProvider>() {
 		public Class<SvcProvider> getFeatureType() {	return SvcProvider.class;	}
@@ -119,7 +120,7 @@ public class AppCtx extends FeatureRepository {
 	// ---------------------------------------------------------------------------
 	
 	
-	public static class SidebarEntries extends OrderedContainer<Class<?>> {
+	public static class SidebarEntries extends ListContainer<Class<?>> {
 		public SidebarEntries(List<Class<?>> entries) {
 			super(entries);
 		}

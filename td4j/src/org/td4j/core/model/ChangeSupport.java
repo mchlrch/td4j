@@ -26,16 +26,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.td4j.core.internal.model.ChangeEventImpl;
-import org.td4j.core.tk.ArrayTK;
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.filter.Filter;
 
 
 
 public class ChangeSupport {
 
 	private final Object source;
-	private final Map<IObserver, IFilter<ChangeEvent>> observers = new HashMap<IObserver, IFilter<ChangeEvent>>();
+	private final Map<IObserver, Filter<ChangeEvent>> observers = new HashMap<IObserver, Filter<ChangeEvent>>();
 
 	public ChangeSupport(Object source) {
 		this.source = ObjectTK.enforceNotNull(source, "source");
@@ -94,7 +95,7 @@ public class ChangeSupport {
 		observers.put(observer, null);
 	}
 
-	public void addObserver(IObserver observer, IFilter<ChangeEvent> eventFilter) {
+	public void addObserver(IObserver observer, Filter<ChangeEvent> eventFilter) {
 		observers.put(observer, eventFilter);
 	}
 
@@ -102,10 +103,10 @@ public class ChangeSupport {
 		observers.remove(observer);
 	}
 
-	protected static void notifyObservers(Map<IObserver, IFilter<ChangeEvent>> observers, ChangeEvent event) {
-		final List<Entry<IObserver, IFilter<ChangeEvent>>> observerEntries = new ArrayList<Entry<IObserver,IFilter<ChangeEvent>>>(observers.entrySet());
-		for (Entry<IObserver, IFilter<ChangeEvent>> entry : observerEntries) {
-			final IFilter<ChangeEvent> filter = entry.getValue();
+	protected static void notifyObservers(Map<IObserver, Filter<ChangeEvent>> observers, ChangeEvent event) {
+		final List<Entry<IObserver, Filter<ChangeEvent>>> observerEntries = new ArrayList<Entry<IObserver,Filter<ChangeEvent>>>(observers.entrySet());
+		for (Entry<IObserver, Filter<ChangeEvent>> entry : observerEntries) {
+			final Filter<ChangeEvent> filter = entry.getValue();
 			if (filter == null || filter.accept(event)) {
 				entry.getKey().observableChanged(event);
 			}
@@ -115,13 +116,13 @@ public class ChangeSupport {
 	// ---------------------------------------------------------
 	// these methods can be used to listen application-wide to changeEvents
 
-	private static final Map<IObserver, IFilter<ChangeEvent>> flatObservers = new HashMap<IObserver, IFilter<ChangeEvent>>();
+	private static final Map<IObserver, Filter<ChangeEvent>> flatObservers = new HashMap<IObserver, Filter<ChangeEvent>>();
 
 	public static void addFlatObserver(IObserver observer) {
 		flatObservers.put(observer, null);
 	}
 
-	public static void addFlatObserver(IFilter<ChangeEvent> eventFilter, IObserver observer) {
+	public static void addFlatObserver(Filter<ChangeEvent> eventFilter, IObserver observer) {
 		flatObservers.put(observer, eventFilter);
 	}
 

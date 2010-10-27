@@ -49,9 +49,10 @@ import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverterRepository;
 import org.td4j.core.internal.reflect.InvokationParameter;
-import org.td4j.core.tk.ListTK;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.WidgetBuilder;
+
+import ch.miranet.commons.ListTK;
+import ch.miranet.commons.ObjectTK;
 
 
 public class InvokationParameterDialog extends JDialog {

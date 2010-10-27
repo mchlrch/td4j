@@ -40,7 +40,6 @@ import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.LabelController;
 import org.td4j.swing.binding.LinkController;
@@ -50,6 +49,8 @@ import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableControllerFactory;
+
+import ch.miranet.commons.ObjectTK;
 
 public class GenericPanelBuilder {
 	

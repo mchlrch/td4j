@@ -25,8 +25,9 @@ import java.util.List;
 
 import org.td4j.core.internal.binding.model.ListDataContainerConnector;
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 

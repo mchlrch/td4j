@@ -27,8 +27,9 @@ import org.td4j.core.internal.metamodel.JavaModelInspector.FeatureContainer;
 import org.td4j.core.internal.metamodel.StatefulJavaMetaClass.State;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaClassProvider;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.env.SvcProvider;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.service.SvcProvider;
 
 /**
  * Metaclasses and their properties can expose cyclic dependencies spanning multiple metaclasses.

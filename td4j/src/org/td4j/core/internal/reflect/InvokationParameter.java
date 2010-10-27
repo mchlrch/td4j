@@ -19,8 +19,9 @@
 
 package org.td4j.core.internal.reflect;
 
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 public class InvokationParameter {

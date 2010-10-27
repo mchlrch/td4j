@@ -22,7 +22,7 @@ package org.td4j.core.internal.reflect;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.td4j.core.tk.StringTK;
+import ch.miranet.commons.StringTK;
 
 
 public abstract class AbstractExecutable {

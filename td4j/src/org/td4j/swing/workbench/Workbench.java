@@ -49,9 +49,6 @@ import org.td4j.core.internal.metamodel.JavaMetaModel;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.env.SvcProvider;
-import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.internal.binding.ListModelAdapter;
@@ -61,6 +58,10 @@ import org.td4j.swing.internal.workbench.CompositeFormFactory;
 import org.td4j.swing.internal.workbench.GenericEditorFactory;
 import org.td4j.swing.internal.workbench.GenericFormFactory;
 import org.td4j.swing.workbench.Editor.EditorContent;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.service.SvcProvider;
+import ch.miranet.commons.service.SvcRepository;
 
 public class Workbench extends JFrame {
   private static final long serialVersionUID = 1L;

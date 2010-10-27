@@ -23,9 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.td4j.core.reflect.ShowPropertiesInEditorList;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.domain.master.Severity;
 import org.td4j.examples.issuetracker.domain.master.Status;
+
+import ch.miranet.commons.ObjectTK;
 
 @ShowPropertiesInEditorList({"title", "status", "severity"})
 public class Issue {

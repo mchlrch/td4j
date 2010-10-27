@@ -22,8 +22,9 @@ package org.td4j.swing.internal.binding;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionWidget;
+
+import ch.miranet.commons.ObjectTK;
 
 public class TableSelectionWidgetAdapter implements SelectionWidget {
 	

@@ -19,14 +19,14 @@
 
 package org.td4j.core.model;
 
-import org.td4j.core.tk.IFilter;
+import ch.miranet.commons.filter.Filter;
 
 
 public abstract class Observable implements IObservable {
 
 	protected final ChangeSupport changeSupport = new ChangeSupport(this);
 
-	public void addObserver(IObserver observer, IFilter<ChangeEvent> eventFilter) {
+	public void addObserver(IObserver observer, Filter<ChangeEvent> eventFilter) {
 		changeSupport.addObserver(observer, eventFilter);
 	}
 

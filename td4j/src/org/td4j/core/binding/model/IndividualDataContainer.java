@@ -23,8 +23,9 @@ import org.td4j.core.internal.binding.model.IndividualDataContainerConnector;
 import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository;
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 

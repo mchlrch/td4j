@@ -20,11 +20,12 @@
 package org.td4j.examples.issuetracker;
 
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.domain.dynamic.DynamicDataFactory;
 import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
 import org.td4j.examples.issuetracker.domain.master.IssueContainerTemplate;
 import org.td4j.examples.issuetracker.domain.master.MasterDataFactory;
+
+import ch.miranet.commons.ObjectTK;
 
 /**
  * This factory basically delegates to the MasterDataFactory.

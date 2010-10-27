@@ -41,9 +41,6 @@ import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.DataConnector;
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.filter.AcceptAllFilter;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
 import org.td4j.swing.internal.binding.LinkControllerFactory;
@@ -56,6 +53,10 @@ import org.td4j.swing.internal.binding.TableModelAdapter;
 import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.filter.AcceptAllFilter;
+import ch.miranet.commons.filter.Filter;
 
 
 
@@ -210,7 +211,7 @@ public class WidgetBuilder<T> {
 	
 	// ========================================
 	// ==== Table =============================
-	private static final IFilter<DataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
+	private static final Filter<DataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
 
 	public TableControllerFactory table() {
 		widgetPreCreate();
