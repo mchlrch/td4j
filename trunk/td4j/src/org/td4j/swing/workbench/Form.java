@@ -22,7 +22,8 @@ package org.td4j.swing.workbench;
 import javax.swing.JComponent;
 
 import org.td4j.core.binding.MediatorForwarder;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public abstract class Form<T> extends MediatorForwarder<T> {

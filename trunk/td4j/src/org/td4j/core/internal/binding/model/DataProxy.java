@@ -25,7 +25,8 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableTK;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public abstract class DataProxy extends Observable implements ContextSocket, IObserver {

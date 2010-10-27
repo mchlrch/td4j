@@ -19,7 +19,7 @@
 
 package org.td4j.examples.order;
 
-import org.td4j.core.tk.ObjectTK;
+import ch.miranet.commons.ObjectTK;
 
 public class LineItem {
 

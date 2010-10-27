@@ -21,8 +21,9 @@ package org.td4j.core.internal.metamodel;
 
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.feature.MetaClassKey;
-import org.td4j.core.tk.env.SvcProvider;
-import org.td4j.core.tk.feature.FeatureKey;
+
+import ch.miranet.commons.container.FeatureKey;
+import ch.miranet.commons.service.SvcProvider;
 
 public class JavaMetaModel extends MutableMetaModel {
 	

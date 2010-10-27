@@ -25,7 +25,8 @@ import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.model.ListFieldConnector;
 import org.td4j.core.internal.binding.model.ListMethodConnector;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

@@ -24,8 +24,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.td4j.core.metamodel.MetaPackage;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 public class MutableMetaPackage extends MetaPackage {
 	

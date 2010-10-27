@@ -23,7 +23,8 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public abstract class IndividualControllerFactory<T> {

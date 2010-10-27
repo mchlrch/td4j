@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.td4j.core.tk.ObjectTK;
+import ch.miranet.commons.ObjectTK;
 
 public class DefaultConverterRepository implements IConverterRepository {
 

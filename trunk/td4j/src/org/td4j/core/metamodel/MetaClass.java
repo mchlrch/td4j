@@ -31,8 +31,9 @@ import org.td4j.core.metamodel.feature.ListPropertiesKey;
 import org.td4j.core.metamodel.feature.OperationsKey;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.tk.feature.FeatureKey;
-import org.td4j.core.tk.feature.FeatureProvider;
+
+import ch.miranet.commons.container.FeatureKey;
+import ch.miranet.commons.container.FeatureProvider;
 
 
 

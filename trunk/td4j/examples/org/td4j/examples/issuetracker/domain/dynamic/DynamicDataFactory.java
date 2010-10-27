@@ -20,9 +20,10 @@
 package org.td4j.examples.issuetracker.domain.dynamic;
 
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.EntityRepo;
 import org.td4j.examples.issuetracker.domain.master.IssueContainerTemplate;
+
+import ch.miranet.commons.ObjectTK;
 
 /**
  * Responsibilities of the DynamicDataFactory:

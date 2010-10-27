@@ -23,9 +23,10 @@ package org.td4j.core.metamodel.container;
 import java.util.List;
 
 import org.td4j.core.internal.reflect.AbstractExecutable;
-import org.td4j.core.tk.container.OrderedContainer;
 
-public class Operations extends OrderedContainer<AbstractExecutable> {
+import ch.miranet.commons.container.ListContainer;
+
+public class Operations extends ListContainer<AbstractExecutable> {
 	
 	public Operations(List<AbstractExecutable> operations) {
 		super(operations);

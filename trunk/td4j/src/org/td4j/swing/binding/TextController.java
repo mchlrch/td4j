@@ -29,7 +29,8 @@ import java.awt.event.KeyListener;
 import javax.swing.JTextField;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class TextController extends IndividualSwingWidgetController<JTextField> {

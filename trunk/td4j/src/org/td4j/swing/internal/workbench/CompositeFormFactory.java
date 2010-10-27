@@ -19,10 +19,11 @@
 
 package org.td4j.swing.internal.workbench;
 
-import org.td4j.core.tk.ArrayTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
+
+import ch.miranet.commons.ArrayTK;
 
 
 public class CompositeFormFactory implements FormFactory {

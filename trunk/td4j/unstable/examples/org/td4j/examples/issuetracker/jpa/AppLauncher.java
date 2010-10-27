@@ -22,9 +22,10 @@ package org.td4j.examples.issuetracker.jpa;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.td4j.core.tk.env.SvcRepository;
 import org.td4j.swing.workbench.AppCtx;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.service.SvcRepository;
 
 public class AppLauncher {
 	

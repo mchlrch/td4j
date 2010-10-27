@@ -20,10 +20,11 @@
 package org.td4j.swing.internal.workbench;
 
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class GenericFormFactory implements FormFactory {

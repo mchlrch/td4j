@@ -35,8 +35,9 @@ import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Navigator;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

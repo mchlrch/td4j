@@ -28,8 +28,9 @@ import java.util.List;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.SelectionWidget;
+
+import ch.miranet.commons.ObjectTK;
 
 public class ListSelectionWidgetAdapter implements SelectionWidget {
 	

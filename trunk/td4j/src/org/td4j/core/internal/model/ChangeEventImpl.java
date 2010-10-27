@@ -24,8 +24,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.td4j.core.model.ChangeEvent;
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 

@@ -52,10 +52,11 @@ import org.td4j.core.model.ChangeSupport;
 import org.td4j.core.model.IObservable;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.order.Person;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.TextController;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

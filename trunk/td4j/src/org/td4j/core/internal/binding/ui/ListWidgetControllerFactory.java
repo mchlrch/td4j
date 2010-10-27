@@ -23,7 +23,8 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

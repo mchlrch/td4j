@@ -22,7 +22,8 @@ package org.td4j.swing.binding;
 import javax.swing.JLabel;
 
 import org.td4j.core.binding.model.Caption;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class LabelCaption implements Caption {

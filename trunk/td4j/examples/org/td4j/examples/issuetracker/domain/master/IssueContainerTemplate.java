@@ -24,10 +24,11 @@ import java.util.List;
 
 import org.td4j.core.reflect.Companions;
 import org.td4j.core.reflect.ShowProperties;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.FluentMasterDataFactory;
 import org.td4j.examples.issuetracker.domain.NamedElement;
 import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
+
+import ch.miranet.commons.ObjectTK;
 
 @Companions({FluentMasterDataFactory.class, MasterDataRepository.class})
 public class IssueContainerTemplate extends NamedElement {

@@ -33,9 +33,10 @@ import org.td4j.core.reflect.Property;
 import org.td4j.core.reflect.Show;
 import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.UnknownPropertyException;
-import org.td4j.core.tk.env.SvcRepository;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import ch.miranet.commons.service.SvcRepository;
 
 
 // TODO: what about static field/methods for plugs?

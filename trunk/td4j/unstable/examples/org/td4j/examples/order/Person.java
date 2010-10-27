@@ -27,8 +27,9 @@ import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableList;
 import org.td4j.core.reflect.Operation;
 import org.td4j.core.reflect.ShowProperties;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

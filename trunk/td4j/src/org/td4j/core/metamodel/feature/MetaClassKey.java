@@ -20,7 +20,8 @@
 package org.td4j.core.metamodel.feature;
 
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.tk.feature.FeatureKey;
+
+import ch.miranet.commons.container.FeatureKey;
 
 public class MetaClassKey implements FeatureKey<MetaClass> {	
 	

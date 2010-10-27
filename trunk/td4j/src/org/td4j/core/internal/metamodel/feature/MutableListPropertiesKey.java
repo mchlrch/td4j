@@ -20,7 +20,8 @@
 package org.td4j.core.internal.metamodel.feature;
 
 import org.td4j.core.internal.metamodel.container.MutableListProperties;
-import org.td4j.core.tk.feature.FeatureKey;
+
+import ch.miranet.commons.container.FeatureKey;
 
 public class MutableListPropertiesKey implements FeatureKey<MutableListProperties> {
 	

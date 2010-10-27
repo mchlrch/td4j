@@ -23,7 +23,8 @@ import java.awt.Component;
 import java.lang.reflect.Method;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 

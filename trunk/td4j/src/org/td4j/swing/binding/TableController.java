@@ -35,10 +35,11 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
 import org.td4j.core.reflect.IndividualProperty;
-import org.td4j.core.tk.ArrayTK;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
+
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.ObjectTK;
 
 
 public class TableController extends ListSwingWidgetController<JTable> {

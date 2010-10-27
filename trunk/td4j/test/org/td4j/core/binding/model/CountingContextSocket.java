@@ -20,7 +20,8 @@
 package org.td4j.core.binding.model;
 
 import org.td4j.core.binding.ContextSocket;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 class CountingContextSocket implements ContextSocket {

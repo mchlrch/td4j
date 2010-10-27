@@ -20,11 +20,12 @@
 package org.td4j.swing.internal.workbench;
 
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.EditorFactory;
 import org.td4j.swing.workbench.FormFactory;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class GenericEditorFactory implements EditorFactory {

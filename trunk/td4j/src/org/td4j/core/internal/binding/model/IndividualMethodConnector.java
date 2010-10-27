@@ -21,8 +21,8 @@ package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
 
-import org.td4j.core.reflect.ReflectionTK;
-import org.td4j.core.tk.ObjectTK;
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.ObjectTK;
 
 
 
@@ -71,7 +71,7 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 	@Override
 	protected void writeValue0(Object ctx, Object val) throws Exception {
 		ObjectTK.enforceNotNull(ctx, "ctx");
-		setterMethod.invoke(ctx, ReflectionTK.composeArray(argumentValues, val));
+		setterMethod.invoke(ctx, ArrayTK.append(argumentValues, val));
 	}
 
 	@Override

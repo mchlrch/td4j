@@ -21,7 +21,8 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.converter.IConverter;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class IndividualDataProxy extends DataProxy {

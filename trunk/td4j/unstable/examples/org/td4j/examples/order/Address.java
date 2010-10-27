@@ -25,7 +25,8 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.core.reflect.Operation;
 import org.td4j.core.reflect.ShowProperties;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 @ShowProperties

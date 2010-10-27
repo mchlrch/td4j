@@ -19,9 +19,10 @@
 
 package org.td4j.swing.internal.binding;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.TableController;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class TableModelAdapter implements OrderedElementModel {

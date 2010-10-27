@@ -22,9 +22,10 @@ package org.td4j.core.internal.metamodel.container;
 import java.util.List;
 
 import org.td4j.core.internal.metamodel.MutableListProperty;
-import org.td4j.core.tk.container.NamedItemsContainer;
 
-public class MutableListProperties extends NamedItemsContainer<MutableListProperty> {
+import ch.miranet.commons.container.DictionaryContainer;
+
+public class MutableListProperties extends DictionaryContainer<MutableListProperty> {
 	
 	public MutableListProperties(List<MutableListProperty> props) {
 		super(props);

@@ -19,8 +19,9 @@
 
 package org.td4j.core.reflect;
 
-import org.td4j.core.tk.ArrayTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.StringTK;
 
 
 public class IllegalConnectorTypeException extends RuntimeException {

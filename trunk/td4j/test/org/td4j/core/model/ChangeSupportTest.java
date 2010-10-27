@@ -21,9 +21,10 @@ package org.td4j.core.model;
 
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeSupport;
-import org.td4j.core.tk.IFilter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import ch.miranet.commons.filter.Filter;
 
 
 
@@ -70,7 +71,7 @@ public class ChangeSupportTest {
 	@Test(dataProvider = "harness")
 	public void testPropertyChangeFiltered(ChangeSupport cs, CountingObserver observer) {
 		final CountingObserver selectiveObserver = new CountingObserver();
-		final IFilter<ChangeEvent> filter = new IFilter<ChangeEvent>() {
+		final Filter<ChangeEvent> filter = new Filter<ChangeEvent>() {
 			public boolean accept(ChangeEvent element) {
 				return element.contains("foo") || element.contains("bar");
 			}
@@ -98,7 +99,7 @@ public class ChangeSupportTest {
 	@Test(dataProvider = "harness", dependsOnMethods = { "testPropertyChangeFiltered" })
 	public void testObserverRemovalFiltered(ChangeSupport cs, CountingObserver observer) {
 		final CountingObserver selectiveObserver = new CountingObserver();
-		final IFilter<ChangeEvent> filter = new IFilter<ChangeEvent>() {
+		final Filter<ChangeEvent> filter = new Filter<ChangeEvent>() {
 			public boolean accept(ChangeEvent element) {
 				return element.contains("foo") || element.contains("bar");
 			}

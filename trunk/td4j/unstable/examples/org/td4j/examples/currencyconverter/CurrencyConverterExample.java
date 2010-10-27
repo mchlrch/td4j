@@ -26,8 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.workbench.Workbench;
+
+import ch.miranet.commons.ObjectTK;
 
 
 // TODO: BigDecimal-String Converter

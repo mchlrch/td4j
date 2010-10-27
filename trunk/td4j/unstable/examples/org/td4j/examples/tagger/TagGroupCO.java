@@ -5,7 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 public class TagGroupCO {
 	

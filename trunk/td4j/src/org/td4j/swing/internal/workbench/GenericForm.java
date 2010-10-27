@@ -25,11 +25,12 @@ import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.Navigator;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class GenericForm<T> extends Form<T> {

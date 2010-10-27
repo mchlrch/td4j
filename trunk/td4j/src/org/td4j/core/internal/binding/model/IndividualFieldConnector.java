@@ -22,7 +22,7 @@ package org.td4j.core.internal.binding.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import org.td4j.core.tk.ObjectTK;
+import ch.miranet.commons.ObjectTK;
 
 
 

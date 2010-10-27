@@ -21,8 +21,9 @@ package org.td4j.swing.internal.binding;
 
 import javax.swing.ListModel;
 
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.swing.binding.OrderedElementModel;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class ListModelAdapter implements OrderedElementModel {

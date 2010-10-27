@@ -24,8 +24,9 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.td4j.core.tk.ObjectTK;
-import org.td4j.core.tk.StringTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.StringTK;
 
 
 public class ExecutableConstructor extends AbstractExecutable {

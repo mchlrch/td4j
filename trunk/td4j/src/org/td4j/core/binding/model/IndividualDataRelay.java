@@ -23,7 +23,8 @@ import org.td4j.core.binding.ContextSocket;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
 
 
 public class IndividualDataRelay implements IObserver {

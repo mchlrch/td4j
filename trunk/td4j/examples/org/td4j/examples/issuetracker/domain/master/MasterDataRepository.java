@@ -22,8 +22,9 @@ package org.td4j.examples.issuetracker.domain.master;
 import java.util.List;
 
 import org.td4j.core.reflect.Operation;
-import org.td4j.core.tk.ObjectTK;
 import org.td4j.examples.issuetracker.EntityRepo;
+
+import ch.miranet.commons.ObjectTK;
 
 public class MasterDataRepository {
 	

@@ -19,8 +19,9 @@
 
 package org.td4j.core.model;
 
-import org.td4j.core.tk.IFilter;
-import org.td4j.core.tk.ObjectTK;
+
+import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.filter.Filter;
 
 public class ObservableTK {
 
@@ -29,7 +30,7 @@ public class ObservableTK {
 	}
 	
 	// PEND: prefer this method over the above in framework code to reduce callbacks from observable
-	public static boolean attachObserverToModel(Object model, IObserver observer, IFilter<ChangeEvent> eventFilter) {
+	public static boolean attachObserverToModel(Object model, IObserver observer, Filter<ChangeEvent> eventFilter) {
 		ObjectTK.enforceNotNull(observer, "observer");
 
 		if (model instanceof IObservable) {
