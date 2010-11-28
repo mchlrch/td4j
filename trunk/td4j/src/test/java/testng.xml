@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="td4j" verbose="1" >
+ <test name="binding.model"   >
+    <packages>
+      <package name="org.td4j.core.binding.model" />
+      <package name="org.td4j.core.internal.binding.model" />
+   </packages>
+ </test>
+
+  <test name="model"   >
+    <packages>
+      <package name="org.td4j.core.model" />
+   </packages>
+ </test>
+  
+ <test name="metamodel"   >
+    <packages>
+      <package name="org.td4j.core.internal.metamodel" />      
+   </packages>
+ </test>
+
+</suite>
