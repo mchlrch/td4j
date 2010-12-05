@@ -1,0 +1,36 @@
+** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
+* Project   td4j 
+* Version   @VERSION@
+* Date      @DATE@
+*
+* Web       http://td4j.org
+*
+* Author    Michael Rauch
+*           mira@miranet.ch
+*
+* About     'Testdrive for Java' is a prototyping framework
+*           for domain models written in Java
+*          
+* License   GPL; see file COPYING for details          
+** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** ** **
+
+___Examples___
+
+Use one of the following commands to run the respective sample application:
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.helloworld.HelloWorldExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.helloworld.LocalizedHelloWorldExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.person.PersonExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.person.PersonExample2"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.personrelation.PersonRelationExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.project.ProjectExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.zen.ZenExample"
+
+$ mvn exec:java -Dexec.mainClass="org.td4j.examples.issuetracker.IssueTrackerExample"
+
