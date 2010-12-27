@@ -35,9 +35,9 @@ import java.util.Map;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataConnector;
+import org.td4j.core.internal.binding.model.AbstractListFieldConnector;
+import org.td4j.core.internal.binding.model.AbstractListMethodConnector;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
-import org.td4j.core.internal.binding.model.ListFieldConnector;
-import org.td4j.core.internal.binding.model.ListMethodConnector;
 import org.td4j.core.internal.reflect.AbstractExecutable;
 import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
 import org.td4j.core.internal.reflect.ExecutableConstructor;
@@ -296,13 +296,13 @@ public class JavaModelInspector {
 	// nested properties are only supported for list connectors
 	private IndividualProperty[] findNestedProperties(final DataConnector connector, final MetaClassProvider metaClassProvider) {
 		final Class<?> valueType = connector.getValueType();
-		if (connector instanceof ListFieldConnector) {
-			final ListFieldConnector cfConnector = (ListFieldConnector) connector;
+		if (connector instanceof AbstractListFieldConnector) {
+			final AbstractListFieldConnector cfConnector = (AbstractListFieldConnector) connector;
 			final ShowProperties exposeAnnotation = cfConnector.getField().getAnnotation(ShowProperties.class);
 			return findNestedProperties(valueType, exposeAnnotation, metaClassProvider);
 			
-		} else if (connector instanceof ListMethodConnector) {
-			final ListMethodConnector cmConnector = (ListMethodConnector) connector;
+		} else if (connector instanceof AbstractListMethodConnector) {
+			final AbstractListMethodConnector cmConnector = (AbstractListMethodConnector) connector;
 			final ShowProperties exposeAnnotation = cmConnector.getGetterMethod().getAnnotation(ShowProperties.class);
 			return findNestedProperties(valueType, exposeAnnotation, metaClassProvider);
 			
