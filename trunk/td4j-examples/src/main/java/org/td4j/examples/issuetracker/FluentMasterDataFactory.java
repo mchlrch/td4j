@@ -28,7 +28,7 @@ import org.td4j.examples.issuetracker.domain.master.MasterDataFactory;
 import ch.miranet.commons.ObjectTK;
 
 /**
- * This factory basically delegates to the MasterDataFactory.
+ * This factory delegates to the MasterDataFactory.
  * 
  * It differs from MasterDataFactory in the methods return type, often returning
  * the IssueTemplate instead of the created object. This way, the user stays with

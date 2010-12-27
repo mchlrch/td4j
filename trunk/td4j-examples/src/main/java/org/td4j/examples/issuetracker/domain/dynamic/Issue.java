@@ -41,38 +41,50 @@ public class Issue {
 	private Severity severity;
 	private Status status;
 	
+	@SuppressWarnings("unused")
 	private Issue() {}	
 	Issue(IssueContainer container) {
 		setContainer(container);
 		setReportedAt(new Date());
 	}
 	
-	public IssueContainer getContainer() { return container; }
+	public  IssueContainer getContainer()                         { return container; }
+	private void           setContainer(IssueContainer container) { this.container = ObjectTK.enforceNotNull(container, "container"); }
 
-	public String getTitle()       { return title; }
-	public String getDescription() { return description; }
-	public Date getReportedAt()    { return reportedAt; }
-	public Date getClosedAt()      { return closedAt; }
+	public String getTitle()             { return title; }
+	public void   setTitle(String title) { this.title = title; }
+
+	public String getDescription()                   { return description; }
+	public void   setDescription(String description) { this.description = description; }
+
+	public  Date getReportedAt()                { return reportedAt; }
+	private void setReportedAt(Date reportedAt) { this.reportedAt = reportedAt; }
 	
-	public Severity getSeverity()              { return severity; }	
-	public void setSeverity(Severity severity) { this.severity = severity; }
-	public List<Severity> getSeverityOptions() { return container.getTemplate().getSeverities(); }
+	public  Date getClosedAt()              { return closedAt; }
+	private void setClosedAt(Date closedAt) { this.closedAt = closedAt; }
 	
-	public Status getStatus()      { return status; }
-	public boolean isClosed() { return status != null && status.isClosed(); }
+	public Severity       getSeverity()                  { return severity; }	
+	public void           setSeverity(Severity severity) { this.severity = severity; }
+	public List<Severity> getSeverityOptions()           { return container.getTemplate().getSeverities(); }
+	
+	
+	public Status getStatus() {
+		return status;
+	}
+
 	public void setStatus(Status status) {
 		this.status = status;
-		setClosedAt( isClosed() ? new Date() : null);		
+		setClosedAt(isClosed() ? new Date() : null);
 	}
-	public List<Status> getStatusOptions() { return container.getTemplate().getStati(); }
+
+	public List<Status> getStatusOptions() {
+		return container.getTemplate().getStati();
+	}
 	
-	// -------------------------------------------------------------------
-	private void setContainer(IssueContainer container) { this.container = ObjectTK.enforceNotNull(container, "container"); }
-	public void setTitle(String title)                  { this.title = title; }
-	public void setDescription(String description)      { this.description = description; }
-	private void setReportedAt(Date reportedAt)         { this.reportedAt = reportedAt; }
-	private void setClosedAt(Date closedAt)             { this.closedAt = closedAt; }
-	
+	public boolean isClosed() {
+		return status != null && status.isClosed();
+	}
+
 	
 	@Override
 	public String toString() { return title; }

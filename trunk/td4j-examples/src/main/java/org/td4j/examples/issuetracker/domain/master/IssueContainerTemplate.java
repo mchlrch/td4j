@@ -15,7 +15,7 @@
 
   You should have received a copy of the GNU General Public License
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+ *********************************************************************/
 
 package org.td4j.examples.issuetracker.domain.master;
 
@@ -30,19 +30,38 @@ import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
 
 import ch.miranet.commons.ObjectTK;
 
-@Companions({FluentMasterDataFactory.class, MasterDataRepository.class})
+@Companions({ FluentMasterDataFactory.class, MasterDataRepository.class })
 public class IssueContainerTemplate extends NamedElement {
-	
-	private List<Severity> severities = new ArrayList<Severity>();
-	private List<Status>   stati      = new ArrayList<Status>();
-	private List<IssueContainer>  derivates  = new ArrayList<IssueContainer>();
-	
-	@ShowProperties("name")	public List<Severity> getSeverities() { return severities;}
-	@ShowProperties({"name", "closed"}) public List<Status>   getStati()      { return stati; }
-	@ShowProperties("name") public List<IssueContainer>  getDerivates()  { return derivates;}
-	
-	void addSeverity(Severity severity)        { severities.add(ObjectTK.enforceNotNull(severity, "severity")); }
-	void addStatus(Status status)              { stati.add(ObjectTK.enforceNotNull(status, "status")); }
-	public void addDerivate(IssueContainer container) { derivates.add(ObjectTK.enforceNotNull(container, "container")); }
+
+	private List<Severity>       severities = new ArrayList<Severity>();
+	private List<Status>         stati      = new ArrayList<Status>();
+	private List<IssueContainer> derivates  = new ArrayList<IssueContainer>();
+
+	@ShowProperties("name")
+	public List<Severity> getSeverities() {
+		return severities;
+	}
+
+	@ShowProperties({ "name", "closed" })
+	public List<Status> getStati() {
+		return stati;
+	}
+
+	@ShowProperties("name")
+	public List<IssueContainer> getDerivates() {
+		return derivates;
+	}
+
+	void addSeverity(Severity severity) {
+		severities.add(ObjectTK.enforceNotNull(severity, "severity"));
+	}
+
+	void addStatus(Status status) {
+		stati.add(ObjectTK.enforceNotNull(status, "status"));
+	}
+
+	public void addDerivate(IssueContainer container) {
+		derivates.add(ObjectTK.enforceNotNull(container, "container"));
+	}
 
 }

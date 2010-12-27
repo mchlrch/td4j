@@ -29,6 +29,7 @@ import ch.miranet.commons.filter.Filter;
 
 public class EntityRepo {
 	
+	// TODO: reuse OneToManyMap, once it's in commons
 	private final HashMap<Class<?>, List<Object>> repo = new HashMap<Class<?>, List<Object>>();
 	
 	public <T> void put(Class<T> cls, T entity) {
