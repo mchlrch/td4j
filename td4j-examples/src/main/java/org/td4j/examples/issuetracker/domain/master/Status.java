@@ -15,15 +15,20 @@
 
   You should have received a copy of the GNU General Public License
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+ *********************************************************************/
 
 package org.td4j.examples.issuetracker.domain.master;
 
 public class Status extends TemplateElement {
 
 	private boolean closed;
-	
-	public boolean isClosed()             { return closed; }
-	public void setClosed(boolean closed) { this.closed = closed; }
-	
+
+	public boolean isClosed() {
+		return closed;
+	}
+
+	public void setClosed(boolean closed) {
+		this.closed = closed;
+	}
+
 }

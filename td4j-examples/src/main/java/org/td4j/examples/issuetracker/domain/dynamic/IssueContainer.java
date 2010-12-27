@@ -15,7 +15,7 @@
 
   You should have received a copy of the GNU General Public License
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+ *********************************************************************/
 
 package org.td4j.examples.issuetracker.domain.dynamic;
 
@@ -27,24 +27,37 @@ import org.td4j.core.reflect.ShowProperties;
 import org.td4j.examples.issuetracker.domain.NamedElement;
 import org.td4j.examples.issuetracker.domain.master.IssueContainerTemplate;
 
-@Companions({DynamicDataFactory.class, DynamicDataRepository.class})
+@Companions({ DynamicDataFactory.class, DynamicDataRepository.class })
 public class IssueContainer extends NamedElement {
-	
+
 	private IssueContainerTemplate template;
-		
+
 	private List<Issue> issues = new ArrayList<Issue>();
-	
-	@SuppressWarnings("unused") private IssueContainer() {}
+
+	@SuppressWarnings("unused")
+	private IssueContainer() {
+	}
+
 	IssueContainer(String name, IssueContainerTemplate template) {
 		setName(name);
 		setTemplate(template);
 	}
-	
-	public IssueContainerTemplate getTemplate()               { return template; }
-	private void setTemplate(IssueContainerTemplate template) { this.template = template; }
-	
-	@ShowProperties({"title", "status", "severity"})
-	public List<Issue> getIssues() { return issues; }
-	void addIssue(Issue issue)     { issues.add(issue); }
-	
+
+	public IssueContainerTemplate getTemplate() {
+		return template;
+	}
+
+	private void setTemplate(IssueContainerTemplate template) {
+		this.template = template;
+	}
+
+	@ShowProperties({ "title", "status", "severity" })
+	public List<Issue> getIssues() {
+		return issues;
+	}
+
+	void addIssue(Issue issue) {
+		issues.add(issue);
+	}
+
 }

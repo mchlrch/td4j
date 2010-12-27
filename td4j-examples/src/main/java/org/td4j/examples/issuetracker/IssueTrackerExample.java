@@ -32,30 +32,39 @@ import ch.miranet.commons.service.SvcRepository;
 
 public class IssueTrackerExample {
 	
-	public static void main(String[] args) {
-		final SvcRepository svcRepo = new SvcRepository();
+	public static void main(String[] args) {		
 		
-		final Setup setup = new Setup();
-		final Object initialNavigation = setup.run(svcRepo);		
+		final Testbed testbed = new Testbed();
+		testbed.initCompanions();
+		testbed.initMasterData();
 		
 		final AppCtx ctx = new AppCtx();
 		ctx.setSidebarEntries(IssueContainer.class, IssueContainerTemplate.class);
-		ctx.setSvcProvider(svcRepo);		
-		ctx.setInitialNavigation(initialNavigation);		
+		ctx.setSvcProvider(testbed.getServiceRepository());		
+		ctx.setInitialNavigation(testbed.getInitialNavigation());		
 		
 		Workbench.start(ctx);
 	}
 	
 	
-	private static class Setup {
+	
+	private static class Testbed {
+		private final SvcRepository svcRepo;
+		private IssueContainerTemplate initialNavigation;
 		
-		private Object run(SvcRepository repo) {			
-			initCompanions(repo);
-			final IssueContainerTemplate template = createTemplate(repo);
-			return template;
-		}		
-
-		private void initCompanions(SvcRepository svcRepo) {
+		private Testbed() {
+			this.svcRepo = new SvcRepository();
+		}
+		
+		private SvcRepository getServiceRepository() {
+			return svcRepo;
+		}
+		
+		private Object getInitialNavigation() {
+			return initialNavigation;
+		}
+		
+		private void initCompanions() {
 			final EntityRepo entityRepo = new EntityRepo();
 			
 			final MasterDataFactory masterFactory   = new MasterDataFactory(entityRepo);
@@ -68,13 +77,13 @@ public class IssueTrackerExample {
 			svcRepo.setSingletonService(DynamicDataFactory.class, dynamicFactory);
 			
 			svcRepo.setSingletonService(MasterDataRepository.class, masterRepo);
-			svcRepo.setSingletonService(DynamicDataRepository.class, dynamicRepo);			
-		}		
-	
-		private IssueContainerTemplate createTemplate(SvcRepository repo) {
-			final FluentMasterDataFactory mf = repo.getService(FluentMasterDataFactory.class);
+			svcRepo.setSingletonService(DynamicDataRepository.class, dynamicRepo);
+		}
+		
+		private void initMasterData() {
+			final FluentMasterDataFactory mf = svcRepo.getService(FluentMasterDataFactory.class);
 			
-			final IssueContainerTemplate template = mf.createTemplate("project");
+			final IssueContainerTemplate template = mf.createTemplate("project template");
 			
 			mf.createSeverity(template, "low");
 			mf.createSeverity(template, "medium");
@@ -82,10 +91,11 @@ public class IssueTrackerExample {
 			
 			mf.createStatus(template, "new",      false);
 			mf.createStatus(template, "open",     false);
-			mf.createStatus(template, "deferred", true);		
 			mf.createStatus(template, "fixed",    true);
-				
-			return template;
+			mf.createStatus(template, "deferred", true);
+			mf.createStatus(template, "rejected", true);
+			
+			initialNavigation = template;
 		}
 	}
 	
