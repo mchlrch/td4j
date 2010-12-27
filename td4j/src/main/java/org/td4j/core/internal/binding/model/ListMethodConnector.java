@@ -20,12 +20,10 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 
-public class ListMethodConnector extends AbstractListDataConnector {
+public class ListMethodConnector extends AbstractListMethodConnector {
 
-	private final Method getterMethod;
 	private final Object[] argumentValues;
 	
 	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
@@ -33,35 +31,22 @@ public class ListMethodConnector extends AbstractListDataConnector {
 	}
 
 	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
-		super(contextType, valueType);
+		super(contextType, getter, valueType);
 
 		final Class<?> returnType = getter.getReturnType();
 		if ( ! Collection.class.isAssignableFrom(returnType)) throw new IllegalArgumentException("not a collection type: " + returnType);
 		
-		this.getterMethod = getter;
-		if ( ! getter.isAccessible()) getter.setAccessible(true);
-		
 		this.argumentValues = argumentValues;
-	}
-	
-	public Method getGetterMethod() {
-		return getterMethod;
-	}
-
-	public boolean canRead() { return getterMethod != null; }
-	
-	public boolean canRead(Object ctx) {
-		return canRead() && (ctx != null || Modifier.isStatic(getterMethod.getModifiers()));
 	}
 	
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) getterMethod.invoke(ctx, argumentValues);
+		return (Collection<?>) getGetterMethod().invoke(ctx, argumentValues);
 	}
 	
 	@Override
 	public String toString() {
-		return getContextType().getName() + "." + getterMethod.getName() + " : List<" + getValueType() + ">";
+		return getContextType().getName() + "." + getGetterMethod().getName() + " : List<" + getValueType() + ">";
 	}
 	
 }

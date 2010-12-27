@@ -20,27 +20,28 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
+import java.lang.reflect.Modifier;
 
 
-public class ArrayMethodConnector extends AbstractListMethodConnector {
+public abstract class AbstractListMethodConnector extends AbstractListDataConnector {
 
-	public ArrayMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
-		super(contextType, getter, valueType);
+	private final Method getterMethod;
 
-		if ( ! getter.getReturnType().isArray()) throw new IllegalArgumentException("not an array type: " + getter.getReturnType());
+	public AbstractListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
+		super(contextType, valueType);
+
+		this.getterMethod = getter;
+		if ( ! getter.isAccessible()) getter.setAccessible(true);
 	}
 	
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		final Object[] value = (Object[]) getGetterMethod().invoke(ctx);
-		return Arrays.asList(value);
+	public Method getGetterMethod() {
+		return getterMethod;
 	}
+
+	public boolean canRead()  { return getterMethod != null; }
 	
-	@Override
-	public String toString() {
-		return getContextType().getName() + "." + getGetterMethod().getName() + " : " + getValueType() + "[]";
+	public boolean canRead(Object ctx) {
+		return canRead() && (ctx != null || Modifier.isStatic(getterMethod.getModifiers()));
 	}
 
 }

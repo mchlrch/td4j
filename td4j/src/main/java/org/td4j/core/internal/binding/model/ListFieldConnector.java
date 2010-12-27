@@ -20,39 +20,25 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 
-public class ListFieldConnector extends AbstractListDataConnector {
-
-	private final Field field;
+public class ListFieldConnector extends AbstractListFieldConnector {
 
 	public ListFieldConnector(Class<?> contextType, Field field, Class<?> valueType) {
-		super(contextType, valueType);
-
+		super(contextType, field, valueType);
+		
 		if ( ! Collection.class.isAssignableFrom(field.getType())) throw new IllegalArgumentException("not a collection type: " + field.getType());
-		this.field = field;
 	}
 	
-	public Field getField() {
-		return field;
-	}
-
-	public boolean canRead()  { return true; }
-	
-	public boolean canRead(Object ctx) {
-		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
-	}
-
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) field.get(ctx);
+		return (Collection<?>) getField().get(ctx);
 	}
 	
 	@Override
 	public String toString() {
-		return getContextType().getName() + "#" + field.getName() + " : List<" + getValueType() + ">";
+		return getContextType().getName() + "#" + getField().getName() + " : List<" + getValueType() + ">";
 	}
 
 }
