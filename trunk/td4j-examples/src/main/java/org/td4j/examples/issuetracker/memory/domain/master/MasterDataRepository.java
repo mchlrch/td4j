@@ -17,8 +17,26 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-package org.td4j.examples.issuetracker.domain.master;
+package org.td4j.examples.issuetracker.memory.domain.master;
 
-public class Severity extends TemplateElement {
+import java.util.List;
+
+import org.td4j.core.reflect.Operation;
+import org.td4j.examples.issuetracker.memory.EntityRepo;
+
+import ch.miranet.commons.ObjectTK;
+
+public class MasterDataRepository {
+	
+	private final EntityRepo repo;
+	
+	public MasterDataRepository(EntityRepo repo) {
+		this.repo = ObjectTK.enforceNotNull(repo, "repo");
+	}
+	
+	@Operation
+	public List<IssueContainerTemplate> getAllTemplates() {
+		return repo.getAll(IssueContainerTemplate.class);
+	}
 	
 }

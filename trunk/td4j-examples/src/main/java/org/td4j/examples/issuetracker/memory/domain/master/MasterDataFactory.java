@@ -17,9 +17,9 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-package org.td4j.examples.issuetracker.domain.master;
+package org.td4j.examples.issuetracker.memory.domain.master;
 
-import org.td4j.examples.issuetracker.EntityRepo;
+import org.td4j.examples.issuetracker.memory.EntityRepo;
 
 import ch.miranet.commons.ObjectTK;
 
