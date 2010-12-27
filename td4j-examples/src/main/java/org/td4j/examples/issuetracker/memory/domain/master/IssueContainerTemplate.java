@@ -17,16 +17,16 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.examples.issuetracker.domain.master;
+package org.td4j.examples.issuetracker.memory.domain.master;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.td4j.core.reflect.Companions;
 import org.td4j.core.reflect.ShowProperties;
-import org.td4j.examples.issuetracker.FluentMasterDataFactory;
-import org.td4j.examples.issuetracker.domain.NamedElement;
-import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
+import org.td4j.examples.issuetracker.memory.FluentMasterDataFactory;
+import org.td4j.examples.issuetracker.memory.domain.NamedElement;
+import org.td4j.examples.issuetracker.memory.domain.dynamic.IssueContainer;
 
 import ch.miranet.commons.ObjectTK;
 

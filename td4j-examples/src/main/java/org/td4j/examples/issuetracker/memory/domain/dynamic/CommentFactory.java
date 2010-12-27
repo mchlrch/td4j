@@ -15,20 +15,31 @@
 
   You should have received a copy of the GNU General Public License
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
- *********************************************************************/
+*********************************************************************/
 
-package org.td4j.examples.issuetracker.domain.master;
+package org.td4j.examples.issuetracker.memory.domain.dynamic;
 
-public class Status extends TemplateElement {
+import org.td4j.core.reflect.Operation;
+import org.td4j.examples.issuetracker.memory.EntityRepo;
 
-	private boolean closed;
+import ch.miranet.commons.ObjectTK;
 
-	public boolean isClosed() {
-		return closed;
+public class CommentFactory {
+
+	private final EntityRepo repo;
+	
+	public CommentFactory(EntityRepo repo) {
+		this.repo = ObjectTK.enforceNotNull(repo, "repo");
 	}
-
-	public void setClosed(boolean closed) {
-		this.closed = closed;
+	
+	@Operation
+	public Comment createComment(Issue issue, String description) {
+		final Comment comment = new Comment(issue, description);
+		
+		issue.addComment(comment);
+		
+		repo.put(Comment.class, comment);
+		return comment;
 	}
-
+	
 }
