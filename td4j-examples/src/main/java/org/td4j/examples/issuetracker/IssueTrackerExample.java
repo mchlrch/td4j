@@ -19,6 +19,7 @@
 
 package org.td4j.examples.issuetracker;
 
+import org.td4j.examples.issuetracker.domain.dynamic.CommentFactory;
 import org.td4j.examples.issuetracker.domain.dynamic.DynamicDataFactory;
 import org.td4j.examples.issuetracker.domain.dynamic.DynamicDataRepository;
 import org.td4j.examples.issuetracker.domain.dynamic.IssueContainer;
@@ -78,6 +79,8 @@ public class IssueTrackerExample {
 			
 			svcRepo.setSingletonService(MasterDataRepository.class, masterRepo);
 			svcRepo.setSingletonService(DynamicDataRepository.class, dynamicRepo);
+			
+			svcRepo.setSingletonService(CommentFactory.class, new CommentFactory(entityRepo));
 		}
 		
 		private void initMasterData() {

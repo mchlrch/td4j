@@ -19,9 +19,12 @@
 
 package org.td4j.examples.issuetracker.domain.dynamic;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.td4j.core.reflect.Companions;
+import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.examples.issuetracker.domain.master.Severity;
 import org.td4j.examples.issuetracker.domain.master.Status;
@@ -29,6 +32,7 @@ import org.td4j.examples.issuetracker.domain.master.Status;
 import ch.miranet.commons.ObjectTK;
 
 @ShowPropertiesInEditorList({"title", "status", "severity"})
+@Companions(CommentFactory.class)
 public class Issue {
 	
 	private IssueContainer container;
@@ -40,6 +44,8 @@ public class Issue {
 	
 	private Severity severity;
 	private Status status;
+	
+	private List<Comment> comments = new ArrayList<Comment>();
 	
 	@SuppressWarnings("unused")
 	private Issue() {}	
@@ -85,6 +91,10 @@ public class Issue {
 		return status != null && status.isClosed();
 	}
 
+	@ShowProperties({ "description", "commentedAt", "withLink" })
+	public List<Comment> getComments()               { return comments; }
+	       void          addComment(Comment comment) { comments.add(comment); }
+	
 	
 	@Override
 	public String toString() { return title; }

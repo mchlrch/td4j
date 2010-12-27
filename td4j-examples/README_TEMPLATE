@@ -19,7 +19,3 @@ ___Examples___
 Maven: To run the sample application 'helloworld' with maven:
 
 $ mvn exec:java -Dexec.mainClass="org.td4j.examples.helloworld.HelloWorldExample"
-
-
-JAR distribution: To run the sample application 'helloworld' using the JAR distribution:
-$ java -cp  td4j-X.Y-jar-with-dependencies.jar:td4j-examples-X.Y.jar org.td4j.examples.helloworld.HelloWorldExample
