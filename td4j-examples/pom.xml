@@ -2,6 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>5</version>
+	</parent>
+
 	<groupId>org.td4j</groupId>
 	<artifactId>td4j-examples</artifactId>
 	<version>1.0-SNAPSHOT</version>
@@ -9,6 +15,29 @@
 
 	<name>td4j-examples</name>
 	<url>http://www.td4j.org</url>
+	<description>a prototyping framework for domain models - examples</description>
+
+	<licenses>
+		<license>
+			<name>GPLv3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:svn:http://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</connection>
+		<developerConnection>scm:svn:https://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</developerConnection>
+		<url>http://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>mira</id>
+			<name>Michael Rauch</name>
+			<email>mira@miranet.ch</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,6 +45,12 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>ch.miranet.commons</groupId>
+			<artifactId>commons-mira</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.td4j</groupId>
 			<artifactId>td4j</artifactId>
@@ -46,17 +81,17 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
+					<descriptor>src/main/assembly/project.xml</descriptor>
 					<descriptorRefs>
 						<descriptorRef>bin</descriptorRef>
-						<descriptorRef>src</descriptorRef>
 					</descriptorRefs>
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- append to the packaging phase. -->
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
-							<goal>single</goal> <!-- goals == mojos -->
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -76,7 +111,8 @@
 				</executions>
 				<configuration>
 					<ignoreMissingFile>false</ignoreMissingFile>
-					<file>README</file>
+					<file>README_TEMPLATE</file>
+					<outputFile>README</outputFile>
 					<replacements>
 						<replacement>
 							<token>@VERSION@</token>
@@ -88,7 +124,7 @@
 						</replacement>
 					</replacements>
 				</configuration>
-			</plugin>
+			</plugin>			
 
 		</plugins>
 	</build>
