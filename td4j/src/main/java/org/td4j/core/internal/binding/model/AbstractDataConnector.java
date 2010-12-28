@@ -41,4 +41,24 @@ public abstract class AbstractDataConnector implements DataConnector {
 		return valueType;
 	}
 	
+	@Override
+	public int hashCode() {
+		return 41 * (41 + ctxType.hashCode()) + valueType.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof AbstractDataConnector) {
+			final AbstractDataConnector that = (AbstractDataConnector) other;
+			return that.canEqual(this)
+					&& this.ctxType.equals(that.ctxType)
+					&& this.valueType.equals(that.valueType);
+			
+		} else {
+			return false;
+		}
+	}
+	
+	public abstract boolean canEqual(Object other);
+	
 }

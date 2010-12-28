@@ -67,5 +67,27 @@ public class IndividualFieldConnector extends AbstractIndividualDataConnector {
 	public String toString() {
 		return getContextType().getName() + "#" + field.getName();
 	}
+	
+	@Override
+	public int hashCode() {
+		return 41 * super.hashCode() + field.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof IndividualFieldConnector) {
+			final IndividualFieldConnector that = (IndividualFieldConnector) other;
+			return super.equals(other)
+					&& that.canEqual(this)
+					&& this.field.equals(that.field);
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof IndividualFieldConnector;
+	}
 
 }

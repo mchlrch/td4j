@@ -20,6 +20,7 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import ch.miranet.commons.ArrayTK;
 import ch.miranet.commons.ObjectTK;
@@ -42,10 +43,10 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 		this.getterMethod = getter;
 		this.setterMethod = setter;
 		
-		if (getter != null && ! getter.isAccessible()) getter.setAccessible(true);
+		if ( ! getter.isAccessible()) getter.setAccessible(true);
 		if (setter != null && ! setter.isAccessible()) setter.setAccessible(true);
 		
-		this.argumentValues = argumentValues;
+		this.argumentValues = ObjectTK.enforceNotNull(argumentValues, "argumentValues");
 	}
 	
 	public Method getGetterMethod() {
@@ -77,6 +78,39 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 	@Override
 	public String toString() {
 		return getContextType().getName() + "." + getterMethod.getName() + ":" + getterMethod.getReturnType().getName();
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 41 * super.hashCode() + getterMethod.hashCode();
+		if (setterMethod != null) {
+			hash = 41 * hash + setterMethod.hashCode();
+		}
+		hash = 41 * hash + Arrays.hashCode(argumentValues); 
+		return hash;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof IndividualMethodConnector) {
+			final IndividualMethodConnector that = (IndividualMethodConnector) other;
+			return super.equals(other)
+					&& that.canEqual(this)
+					&& this.getterMethod.equals(that.getterMethod)
+					&& methodsAreEqualOrBothNull(this.setterMethod, that.setterMethod)
+					&& Arrays.equals(this.argumentValues, that.argumentValues);
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof IndividualMethodConnector;
+	}
+	
+	private static boolean methodsAreEqualOrBothNull(Method m1, Method m2) {
+		return m1 != null ? m1.equals(m2) : m2 == null;
 	}
 
 }

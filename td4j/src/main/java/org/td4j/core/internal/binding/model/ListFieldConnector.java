@@ -40,5 +40,10 @@ public class ListFieldConnector extends AbstractListFieldConnector {
 	public String toString() {
 		return getContextType().getName() + "#" + getField().getName() + " : List<" + getValueType() + ">";
 	}
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof ListFieldConnector;
+	}
 
 }

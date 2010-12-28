@@ -64,5 +64,10 @@ public class IndividualDataContainerConnector extends AbstractIndividualDataConn
 
 		return container;
 	}
+		
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof IndividualDataContainerConnector;
+	}
 
 }
