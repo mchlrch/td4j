@@ -1,6 +1,6 @@
 ::ODS-B
 x Prüfen/Unit-Test dass @ShowProperties auf Methoden und Feldern funktioniert, insbesondere auch auf enum Typen und Arrays
-- equals und hashCode in connectors sauber implementieren
+x equals und hashCode in connectors sauber implementieren
 - Aufrufe zu Model und zu Widget immer in try-catch-finally: keine undefinierten Zustände bei Exceptions
 
 
@@ -9,3 +9,6 @@ x Prüfen/Unit-Test dass @ShowProperties auf Methoden und Feldern funktioniert, 
 - code duplication: GenericForm
 - code duplication: CollectionWidgetController
 - Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern
+
+
+- setup code coverage analysis (http://emma.sourceforge.net/intro.html)

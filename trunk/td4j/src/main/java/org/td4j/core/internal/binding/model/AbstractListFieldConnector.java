@@ -22,6 +22,8 @@ package org.td4j.core.internal.binding.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import ch.miranet.commons.ObjectTK;
+
 
 public abstract class AbstractListFieldConnector extends AbstractListDataConnector {
 
@@ -30,7 +32,7 @@ public abstract class AbstractListFieldConnector extends AbstractListDataConnect
 	public AbstractListFieldConnector(Class<?> contextType, Field field, Class<?> valueType) {
 		super(contextType, valueType);
 
-		this.field = field;		
+		this.field = ObjectTK.enforceNotNull(field, "field");		
 	}
 	
 	public Field getField() {
@@ -41,6 +43,23 @@ public abstract class AbstractListFieldConnector extends AbstractListDataConnect
 	
 	public boolean canRead(Object ctx) {
 		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
-	}	
+	}
+	
+	@Override
+	public int hashCode() {
+		return 41 * super.hashCode() + field.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (other instanceof AbstractListFieldConnector) {
+			final AbstractListFieldConnector that = (AbstractListFieldConnector) other;
+			return super.equals(other) 
+					&& that.canEqual(this)
+					&& this.field.equals(that.field);
+		} else {
+			return false;
+		}
+	}
 
 }

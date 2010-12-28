@@ -27,20 +27,29 @@ import java.util.Collection;
 public class ArrayMethodConnector extends AbstractListMethodConnector {
 
 	public ArrayMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
-		super(contextType, getter, valueType);
+		this(contextType, getter, valueType, new Object[0]);
+	}
+	
+	public ArrayMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
+		super(contextType, getter, valueType, argumentValues);
 
 		if ( ! getter.getReturnType().isArray()) throw new IllegalArgumentException("not an array type: " + getter.getReturnType());
 	}
 	
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		final Object[] value = (Object[]) getGetterMethod().invoke(ctx);
+		final Object[] value = (Object[]) getGetterMethod().invoke(ctx, getArgumentValues());
 		return Arrays.asList(value);
 	}
 	
 	@Override
 	public String toString() {
 		return getContextType().getName() + "." + getGetterMethod().getName() + " : " + getValueType() + "[]";
+	}
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof ArrayMethodConnector;
 	}
 
 }

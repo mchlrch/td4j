@@ -52,5 +52,10 @@ public class ToStringConnector extends AbstractIndividualDataConnector {
   public String toString() {
     return getContextType().getName() + "#toString";
   }
-
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof ToStringConnector;
+	}
+  
 }

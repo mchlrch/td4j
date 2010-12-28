@@ -22,31 +22,32 @@ package org.td4j.core.internal.binding.model;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-public class ListMethodConnector extends AbstractListMethodConnector {
-
-	private final Object[] argumentValues;
+public class ListMethodConnector extends AbstractListMethodConnector {	
 	
 	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType) {
 		this(contextType, getter, valueType, new Object[0]);
 	}
 
 	public ListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
-		super(contextType, getter, valueType);
+		super(contextType, getter, valueType, argumentValues);
 
 		final Class<?> returnType = getter.getReturnType();
 		if ( ! Collection.class.isAssignableFrom(returnType)) throw new IllegalArgumentException("not a collection type: " + returnType);
-		
-		this.argumentValues = argumentValues;
 	}
 	
 	@Override
 	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) getGetterMethod().invoke(ctx, argumentValues);
+		return (Collection<?>) getGetterMethod().invoke(ctx, getArgumentValues());
 	}
 	
 	@Override
 	public String toString() {
 		return getContextType().getName() + "." + getGetterMethod().getName() + " : List<" + getValueType() + ">";
+	}
+	
+	@Override
+	public boolean canEqual(Object other) {
+		return other instanceof ListMethodConnector;
 	}
 	
 }
