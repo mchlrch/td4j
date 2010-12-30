@@ -33,18 +33,17 @@ import org.td4j.swing.workbench.Navigator;
 import ch.miranet.commons.ObjectTK;
 
 
-public class GenericForm<T> extends Form<T> {
+public class GenericForm extends Form {
 
 	private final MetaModel metaModel;
 
-	GenericForm(Editor editor, Class<T> modelType, MetaModel model) {
+	GenericForm(Editor editor, Class<?> modelType, MetaModel model) {
 		super(editor, modelType);
 		this.metaModel = ObjectTK.enforceNotNull(model, "model");
 	}
 
 	@Override
 	protected JPanel createForm() {
-		final MetaModel metaModel = getEditor().getWorkbench().getAppCtx().getMetamodel();
 		final Navigator navigator = getEditor().getWorkbench().getNavigator();
 		
 		final WidgetBuilder<Object> wBuilder = new WidgetBuilder<Object>(getMediator(), metaModel, navigator);

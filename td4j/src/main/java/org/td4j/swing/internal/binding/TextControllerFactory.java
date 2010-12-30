@@ -31,7 +31,7 @@ import org.td4j.swing.binding.TextController;
 
 public class TextControllerFactory extends IndividualWidgetControllerFactory<TextController, JTextField> {
 
-	public TextControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JTextField widget, Caption caption) {
+	public TextControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JTextField widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 

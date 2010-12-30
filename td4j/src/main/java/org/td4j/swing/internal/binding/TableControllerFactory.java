@@ -36,7 +36,7 @@ public class TableControllerFactory extends ListWidgetControllerFactory<TableCon
 	private final Navigator navigator;
 	private final MetaModel metaModel;
 
-	public TableControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, Caption caption, Navigator navigator) {
+	public TableControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, Caption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.metaModel = metaModel;
 		this.navigator = navigator;		

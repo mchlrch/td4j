@@ -235,7 +235,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 				
 				System.out.println("Invoke: " + cmd);
 				
-				final Process proc = Runtime.getRuntime().exec(cmd);
+				Runtime.getRuntime().exec(cmd);
 								
 			} catch (IOException ioex) {
 				throw new RuntimeException(ioex);

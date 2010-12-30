@@ -26,13 +26,13 @@ import org.td4j.core.binding.MediatorForwarder;
 import ch.miranet.commons.ObjectTK;
 
 
-public abstract class Form<T> extends MediatorForwarder<T> {
+public abstract class Form extends MediatorForwarder<Object> {
 
 	private final Editor editor;
 
 	private JComponent form;
 
-	protected Form(Editor editor, Class<T> ctxType) {
+	protected Form(Editor editor, Class<?> ctxType) {
 		super(ctxType);
 		this.editor = ObjectTK.enforceNotNull(editor, "editor");
 	}

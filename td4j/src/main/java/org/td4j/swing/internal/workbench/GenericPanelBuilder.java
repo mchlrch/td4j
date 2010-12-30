@@ -44,7 +44,6 @@ import org.td4j.swing.binding.ButtonController;
 import org.td4j.swing.binding.LabelController;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.binding.ListController;
-import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
@@ -149,7 +148,7 @@ public class GenericPanelBuilder {
 	private void addSelectionWidget(JLabel label, IndividualDataProxy selectionProxy, IndividualProperty property) {
 		final ListController choiceController = wBuilder.caption(label).list().bindConnector(property.getChoiceOptions(), property.getName());
 		final JList list = choiceController.getWidget();
-		final SelectionController selectionController = wBuilder.selection(list).bind(selectionProxy);
+		wBuilder.selection(list).bind(selectionProxy);
 		panel.add(list, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 		postAddWidget(list);
 	}

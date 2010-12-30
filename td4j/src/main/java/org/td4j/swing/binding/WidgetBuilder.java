@@ -40,7 +40,6 @@ import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.DataConnector;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
 import org.td4j.swing.internal.binding.LinkControllerFactory;
@@ -55,8 +54,6 @@ import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
 
 import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.filter.AcceptAllFilter;
-import ch.miranet.commons.filter.Filter;
 
 
 
@@ -64,7 +61,7 @@ import ch.miranet.commons.filter.Filter;
 // PEND: refactor common superclass swt.WidgetBuilder
 public class WidgetBuilder<T> {
 
-	private final Mediator mediator;
+	private final Mediator<T> mediator;
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
 	private final Navigator navigator;
 
@@ -74,21 +71,21 @@ public class WidgetBuilder<T> {
 	// working with the metaModel is optional, metaModel is only used for nestedProperties in table widget
 	private final MetaModel metaModel;
 
-	public WidgetBuilder(Class<?> observableType) {
+	public WidgetBuilder(Class<T> observableType) {
 		this(observableType, null, null);
 	}
 
-	public WidgetBuilder(Class<?> observableType, MetaModel metaModel, Navigator navigator) {
-		this(new Mediator(observableType), metaModel, navigator);
+	public WidgetBuilder(Class<T> observableType, MetaModel metaModel, Navigator navigator) {
+		this(new Mediator<T>(observableType), metaModel, navigator);
 	}
 	
-	public WidgetBuilder(Mediator mediator, MetaModel metaModel, Navigator navigator) {
+	public WidgetBuilder(Mediator<T> mediator, MetaModel metaModel, Navigator navigator) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.metaModel = metaModel;
 		this.navigator = navigator;
 	}
 
-	public Mediator getMediator() {
+	public Mediator<T> getMediator() {
 		return mediator;
 	}
 	
@@ -211,7 +208,6 @@ public class WidgetBuilder<T> {
 	
 	// ========================================
 	// ==== Table =============================
-	private static final Filter<DataConnector> acceptAllColumnsFilter = AcceptAllFilter.getInstance();
 
 	public TableControllerFactory table() {
 		widgetPreCreate();

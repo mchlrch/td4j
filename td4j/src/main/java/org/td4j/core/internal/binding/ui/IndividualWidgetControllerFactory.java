@@ -32,7 +32,7 @@ public abstract class IndividualWidgetControllerFactory<T extends IndividualWidg
 	private final W widget;
 	private final Caption caption;
 
-	protected IndividualWidgetControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
+	protected IndividualWidgetControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
 		super(mediator, connectorFactory);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");

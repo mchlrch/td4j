@@ -37,10 +37,14 @@ public class ByClassNameFormFactory implements FormFactory {
 	public Form createForm(Editor editor, Class<?> modelType) {
 
 		try {
-			final Class panelClass = Class.forName(modelType.getName() + "Panel");
+			final Class<?> panelClass = Class.forName(modelType.getName() + "Panel");
 
 			if (JComponent.class.isAssignableFrom(panelClass)) {
-				final Constructor<JComponent> constructor = panelClass.getConstructor(Editor.class, Mediator.class);
+				
+				@SuppressWarnings("unchecked")
+				final Class<? extends JComponent> narrowedPanelClass = (Class<? extends JComponent>) panelClass;
+				
+				final Constructor<? extends JComponent> constructor = narrowedPanelClass.getConstructor(Editor.class, Mediator.class);
 				final Form form = new ByClassNameForm(editor, modelType, constructor);
 				return form;
 			}
@@ -58,11 +62,11 @@ public class ByClassNameFormFactory implements FormFactory {
 
 	// -------------------------------------------------
 
-	private static class ByClassNameForm<T> extends Form<T> {
+	private static class ByClassNameForm extends Form {
 
-		private final Constructor<JComponent> panelConstructor;
+		private final Constructor<? extends JComponent> panelConstructor;
 
-		private ByClassNameForm(Editor editor, Class<T> modelType, Constructor<JComponent> panelConstructor) {
+		private ByClassNameForm(Editor editor, Class<?> modelType, Constructor<? extends JComponent> panelConstructor) {
 			super(editor, modelType);
 			this.panelConstructor = ObjectTK.enforceNotNull(panelConstructor, "panelConstructor");
 		}

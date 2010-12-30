@@ -38,7 +38,7 @@ public class SelectionControllerFactory extends IndividualControllerFactory<Sele
 	private final OrderedElementModel dataModel;
 	private final SelectionWidget selectionWidget;
 
-	public SelectionControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel, SelectionWidget selectionWidget) {
+	public SelectionControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel, SelectionWidget selectionWidget) {
 		super(mediator, connectorFactory);
 
 		this.selectionModel = ObjectTK.enforceNotNull(selectionModel, "selectionModel");

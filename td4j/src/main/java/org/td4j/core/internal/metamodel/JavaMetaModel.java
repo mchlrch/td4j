@@ -33,6 +33,7 @@ public class JavaMetaModel extends MutableMetaModel {
 		this.metaClassBuilder = new JavaMetaClassBuilder(this, svcProvider);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getFeature(FeatureKey<T> key) {
 		T feature = super.getFeature(key);
@@ -41,7 +42,7 @@ public class JavaMetaModel extends MutableMetaModel {
 		if (feature == null && key instanceof MetaClassKey) {
 			final MetaClassKey metaClassKey = (MetaClassKey) key;
 			final Class<?> cls = metaClassKey.getJavaClass();			
-			final JavaMetaClass<?> metaClass = metaClassBuilder.buildMetaClass(cls);
+			final JavaMetaClass<?> metaClass = metaClassBuilder.buildMetaClass(cls);			
 			feature = (T) metaClass;
 		}
 		

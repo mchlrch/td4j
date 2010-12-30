@@ -19,13 +19,13 @@
 
 package org.td4j.core.binding;
 
-public interface ContextSocket {
+public interface ContextSocket<T> {
 
 	public Class<?> getContextType();
 
-	public void setContext(Object ctx);
+	public void setContext(T ctx);
 
-	public Object getContext();
+	public T getContext();
 
 	public void refreshFromContext();
 

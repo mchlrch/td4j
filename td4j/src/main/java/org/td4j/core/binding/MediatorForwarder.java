@@ -19,7 +19,7 @@
 
 package org.td4j.core.binding;
 
-public class MediatorForwarder<T> implements ContextSocket {
+public class MediatorForwarder<T> implements ContextSocket<T> {
 
 	private final Mediator<T> mediator;
 
@@ -27,7 +27,7 @@ public class MediatorForwarder<T> implements ContextSocket {
 		this.mediator = mediator;
 	}
 
-	public MediatorForwarder(Class<T> ctxType) {
+	public MediatorForwarder(Class<?> ctxType) {
 		this.mediator = new Mediator<T>(ctxType);
 	}
 
@@ -39,11 +39,11 @@ public class MediatorForwarder<T> implements ContextSocket {
 		return mediator.getContextType();
 	}
 
-	public void setContext(Object ctx) {
+	public void setContext(T ctx) {
 		mediator.setContext(ctx);
 	}
 
-	public Object getContext() {
+	public T getContext() {
 		return mediator.getContext();
 	}
 

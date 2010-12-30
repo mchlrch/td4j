@@ -19,7 +19,6 @@
 
 package org.td4j.swing.internal.binding;
 
-import java.awt.Cursor;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
