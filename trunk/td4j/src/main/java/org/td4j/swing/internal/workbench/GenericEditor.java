@@ -45,7 +45,7 @@ import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.binding.model.IndividualDataRelay;
 import org.td4j.core.binding.model.ListDataContainer;
 import org.td4j.core.binding.model.ListDataProxy;
-import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.AbstractOperation;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
@@ -112,21 +112,21 @@ public class GenericEditor extends Editor<Object> {
 		header.add(typeLabel,    new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 		
 		final MetaClass metaClass = model.getMetaClass(modelType); 
-		final JMenu executableMenu = new JMenu();
-		executableMenu.setToolTipText("Operations");
+		final JMenu operationsMenu = new JMenu();
+		operationsMenu.setToolTipText("Operations");
 		final Icon opIcon = getOperationsIcon();
 		if (opIcon != null) {
-			executableMenu.setIcon(opIcon);
+			operationsMenu.setIcon(opIcon);
 		} else {
-			executableMenu.setText("Operations");
+			operationsMenu.setText("Operations");
 		}		
 		
-		for (AbstractExecutable executable : metaClass.getOperations()) {
-			executableMenu.add(new InvokeExecutableAction(this, executable));
+		for (AbstractOperation operation : metaClass.getOperations()) {
+			operationsMenu.add(new InvokeOperationAction(this, operation));
 		}
-		if (executableMenu.getItemCount() == 0) executableMenu.setEnabled(false);
+		if (operationsMenu.getItemCount() == 0) operationsMenu.setEnabled(false);
 		final JMenuBar menuBar = new JMenuBar();
-		menuBar.add(executableMenu);
+		menuBar.add(operationsMenu);
 		header.add(menuBar, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 		
 		// list table

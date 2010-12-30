@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.td4j.core.internal.metamodel.container.MutableListProperties;
 import org.td4j.core.internal.metamodel.feature.MutableListPropertiesKey;
-import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.AbstractOperation;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
@@ -81,7 +81,7 @@ public class JavaMetaClass<T> extends MetaClass {
 	}	
 	
 	@Override
-	protected void setOperations(List<AbstractExecutable> operations) {
+	protected void setOperations(List<AbstractOperation> operations) {
 		super.setOperations(operations);
 	}
 

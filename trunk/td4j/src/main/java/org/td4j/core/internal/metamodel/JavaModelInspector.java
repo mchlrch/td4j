@@ -38,10 +38,10 @@ import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.internal.binding.model.AbstractListFieldConnector;
 import org.td4j.core.internal.binding.model.AbstractListMethodConnector;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
-import org.td4j.core.internal.reflect.AbstractExecutable;
-import org.td4j.core.internal.reflect.ExecutableCompanionMethod;
-import org.td4j.core.internal.reflect.ExecutableConstructor;
-import org.td4j.core.internal.reflect.ExecutableMethod;
+import org.td4j.core.internal.reflect.AbstractOperation;
+import org.td4j.core.internal.reflect.CompanionMethodOperation;
+import org.td4j.core.internal.reflect.ConstructorOperation;
+import org.td4j.core.internal.reflect.MethodOperation;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.core.reflect.Companions;
@@ -79,7 +79,7 @@ public class JavaModelInspector {
 	private static final Filter<Method> defaultMethodFilter = new Filter<Method>() {
 		public boolean accept(Method m) {
 			return ! (m.getDeclaringClass() == Object.class); // filter out Object.getClass()
-		};
+		}
 	};
 	
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
@@ -251,24 +251,24 @@ public class JavaModelInspector {
 	}
 	
 	// PEND: use OperationGroups to bundle operations together
-	private List<AbstractExecutable> createOperations(final Class<?> cls, SvcProvider svcProvider) {
-		final List<AbstractExecutable> result = new ArrayList<AbstractExecutable>();
+	private List<AbstractOperation> createOperations(final Class<?> cls, SvcProvider svcProvider) {
+		final List<AbstractOperation> result = new ArrayList<AbstractOperation>();
 
 		// constructors
 		final Constructor<?>[] constructors = cls.getDeclaredConstructors();
 		for (Constructor<?> constructor : constructors) {
-			final Operation executableTag = constructor.getAnnotation(Operation.class);
-			if (executableTag != null) {
-				result.add(new ExecutableConstructor(constructor, executableTag.paramNames()));
+			final Operation operationTag = constructor.getAnnotation(Operation.class);
+			if (operationTag != null) {
+				result.add(new ConstructorOperation(constructor, operationTag.paramNames()));
 			}
 		}
 
 		// methods
 		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
 		for (Method method : allMethods) {
-			final Operation executableTag = method.getAnnotation(Operation.class);
-			if (executableTag != null) {
-				result.add(new ExecutableMethod(method, executableTag.paramNames()));
+			final Operation operationTag = method.getAnnotation(Operation.class);
+			if (operationTag != null) {
+				result.add(new MethodOperation(method, operationTag.paramNames()));
 			}
 		}
 
@@ -280,9 +280,9 @@ public class JavaModelInspector {
 	
 				final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
 				for (Method method : compMethods) {
-					final Operation executableTag = method.getAnnotation(Operation.class);
-					if (executableTag != null) {
-						result.add(new ExecutableCompanionMethod(cls, svc, method, executableTag.paramNames()));
+					final Operation operationTag = method.getAnnotation(Operation.class);
+					if (operationTag != null) {
+						result.add(new CompanionMethodOperation(cls, svc, method, operationTag.paramNames()));
 					}
 				}
 			}
@@ -398,7 +398,7 @@ public class JavaModelInspector {
 	public static class FeatureContainer {
 		public final List<IndividualProperty> individualProperties = new ArrayList<IndividualProperty>();
 		public final List<MutableListProperty> listProperties = new ArrayList<MutableListProperty>();
-		public final List<AbstractExecutable> operations = new ArrayList<AbstractExecutable>();
+		public final List<AbstractOperation> operations = new ArrayList<AbstractOperation>();
 	}
 	
 	
@@ -427,7 +427,7 @@ public class JavaModelInspector {
 		public String toString() {
 			return name;
 		}
-
 	}
+	
 
 }

@@ -27,31 +27,31 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.AbstractOperation;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
-import org.td4j.swing.workbench.Workbench;
 import org.td4j.swing.workbench.Editor.EditorContent;
+import org.td4j.swing.workbench.Workbench;
 
 import ch.miranet.commons.ObjectTK;
 import ch.miranet.commons.filter.Filter;
 
 
-class InvokeExecutableAction extends AbstractAction implements IObserver {
+class InvokeOperationAction extends AbstractAction implements IObserver {
 	private static final long serialVersionUID = 1L;
 
 	private static final MediatorEventFilter mediatorEventFilter = new MediatorEventFilter();
 
 	private final GenericEditor editor;
-	private final AbstractExecutable executable;
+	private final AbstractOperation operation;
 
 	private InvokationParameterDialog dialog;
 
-	InvokeExecutableAction(GenericEditor editor, AbstractExecutable executable) {
-		super(executable.toString());
+	InvokeOperationAction(GenericEditor editor, AbstractOperation operation) {
+		super(operation.toString());
 		this.editor = ObjectTK.enforceNotNull(editor, "editor");
-		this.executable = ObjectTK.enforceNotNull(executable, "executable");
+		this.operation = ObjectTK.enforceNotNull(operation, "operation");
 
 		final Mediator<?> mediator = editor.getMediator();
 		mediator.addObserver(this, mediatorEventFilter);
@@ -62,12 +62,12 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-			if (executable.getParameters().isEmpty()) {
+			if (operation.getParameters().isEmpty()) {
 				doInvoke();
 	
 			} else {
 				if (dialog == null) {
-					dialog = createDialog(executable);
+					dialog = createDialog(operation);
 				}
 				dialog.setVisible(true);
 				if (dialog.getOptionType() == JOptionPane.OK_OPTION) {
@@ -82,17 +82,17 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 		}
 	}
 
-	private InvokationParameterDialog createDialog(AbstractExecutable executable) {
-		final List<InvokationParameter> params = executable.getParameters();
+	private InvokationParameterDialog createDialog(AbstractOperation operation) {
+		final List<InvokationParameter> params = operation.getParameters();
 		final InvokationParameterDialog dialog = new InvokationParameterDialog(params);
-		dialog.setTitle(executable.toString());
+		dialog.setTitle(operation.toString());
 		return dialog;
 	}
 
 	void doInvoke(Object... paramValues) {
 		Object[] params = paramValues;
 
-		if ( ! executable.isStatic()) {
+		if ( ! operation.isStatic()) {
 			params = new Object[1 + (paramValues != null ? paramValues.length : 0)];
 			if (paramValues != null && paramValues.length > 0) {
 				System.arraycopy(paramValues, 0, params, 1, paramValues.length);
@@ -102,7 +102,7 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 			params[0] = model;
 		}
 
-		final Object result = executable.invoke(params);
+		final Object result = operation.invoke(params);
 
 		// PEND: no navigation if primitive class
 		if (result != null) {
@@ -113,11 +113,11 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 		  
 			if (Collection.class.isAssignableFrom(resultType)) {
 
-				// PEND: bevor methode überhaupt als executable akzeptiert wird, muss
+				// PEND: bevor methode überhaupt als operation akzeptiert wird, muss
 				// auf annotation für typ geprüft werden, damit wir auch richtige
 				// navigation durchführen können
 			  
-			    final Class<?> itemType = executable.getReturnItemType();
+			  final Class<?> itemType = operation.getReturnItemType();
 				final EditorContent content = new EditorContent(itemType, (Collection) result);
 				Workbench.getInstance().seek(content);
 
@@ -136,7 +136,7 @@ class InvokeExecutableAction extends AbstractAction implements IObserver {
 
 	private void setEnabled() {
 		final Object model = editor.getModel();
-		setEnabled(executable.isStatic() || model != null);
+		setEnabled(operation.isStatic() || model != null);
 	}
 
 
