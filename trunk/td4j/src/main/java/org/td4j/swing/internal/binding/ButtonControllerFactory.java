@@ -31,7 +31,7 @@ import org.td4j.swing.binding.ButtonController;
 
 public class ButtonControllerFactory extends IndividualWidgetControllerFactory<ButtonController, AbstractButton> {
 
-	public ButtonControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, AbstractButton widget, Caption caption) {
+	public ButtonControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, AbstractButton widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 

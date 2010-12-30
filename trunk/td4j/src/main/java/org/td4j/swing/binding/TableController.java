@@ -35,8 +35,8 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
 import org.td4j.core.reflect.IndividualProperty;
-import org.td4j.swing.workbench.Navigator;
 import org.td4j.swing.workbench.Editor.EditorContent;
+import org.td4j.swing.workbench.Navigator;
 
 import ch.miranet.commons.ArrayTK;
 import ch.miranet.commons.ObjectTK;
@@ -52,7 +52,7 @@ public class TableController extends ListSwingWidgetController<JTable> {
 		this.table = ObjectTK.enforceNotNull(table, "table");
 		
 		proxy.ensureSensibleNestedProperties(null);
-		this.model = new MyTableModel(proxy, proxy.getNestedProperties());
+		this.model = new MyTableModel(proxy.getNestedProperties());
 
 		table.setModel(model);
 
@@ -100,14 +100,12 @@ public class TableController extends ListSwingWidgetController<JTable> {
 	public static class MyTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 1L;
 
-		private final Class<?> rowType;
 		private final IndividualProperty[] columnProperties;
 		private final List<Object> rowObjects = new ArrayList<Object>();
 
 		private final RowObserver rowObserver = new RowObserver(this);
 
-		private MyTableModel(final ListDataProxy proxy, IndividualProperty[] columnProperties) {			
-			this.rowType = ObjectTK.enforceNotNull(proxy.getValueType(), "proxy.getType()");
+		private MyTableModel(IndividualProperty[] columnProperties) {
 			this.columnProperties = ArrayTK.enforceNotEmpty(columnProperties, "columnProperties");
 		}
 

@@ -32,7 +32,7 @@ public abstract class ListWidgetControllerFactory<T extends ListWidgetController
 	private final W widget;
 	private final Caption caption;
 
-	protected ListWidgetControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
+	protected ListWidgetControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
 		super(mediator, connectorFactory);
 
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");

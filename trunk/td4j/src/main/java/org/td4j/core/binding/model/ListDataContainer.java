@@ -33,18 +33,18 @@ import ch.miranet.commons.StringTK;
 
 public class ListDataContainer<T> extends Observable {
 
-	private final Class<T> contentType;	
+	private final Class<?> contentType;	
 	private final boolean canRead;
 	private final boolean canWrite;
 	private final String propertyName;
 
 	private List<T> content;
 
-	public ListDataContainer(Class<T> contentType, String propertyName) {
+	public ListDataContainer(Class<?> contentType, String propertyName) {
 		this(contentType, propertyName, true, true);
 	}
 
-	public ListDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
+	public ListDataContainer(Class<?> contentType, String propertyName, boolean canRead, boolean canWrite) {
 		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
 		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
 
@@ -52,7 +52,7 @@ public class ListDataContainer<T> extends Observable {
 		this.canWrite = canWrite;
 	}
 
-	public Class<T> getContentType() {
+	public Class<?> getContentType() {
 		return contentType;
 	}
 	

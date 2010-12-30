@@ -61,19 +61,19 @@ import org.td4j.swing.workbench.Workbench;
 
 import ch.miranet.commons.ObjectTK;
 
-public class GenericEditor extends Editor<Object> {
+public class GenericEditor extends Editor {
 	
-	private final Mediator mediator;
+	private final Mediator<Object> mediator;
 	
 	private final JLabel typeLabel;
 	private final JPanel editor;
 	
-	private final ListDataContainer listDataContainer;
-	private final IndividualDataContainer listSelectionContainer;
+	private final ListDataContainer<Object> listDataContainer;
+	private final IndividualDataContainer<Object> listSelectionContainer;
 	
 	private final JSplitPane splitPane;
 	private final TableController listTableController;
-	private final Form<?> form;
+	private final Form form;
 
 	private static Icon operationsIcon;
 	
@@ -92,14 +92,12 @@ public class GenericEditor extends Editor<Object> {
 		return operationsIcon;
 	}
 	
-	// PEND: muss die connectorFactory in der Signatur sein - jetzt wird WidgetBuilder gebraucht um die Tabelle zu erzeugen
-
 	GenericEditor(Workbench workbench, Class<?> modelType, MetaModel model, FormFactory formFactory) {
 		
 		// PEND: richtige typsierung einführen nach Typisierung von IModelSocket
 		super(workbench, modelType);
 		
-		this.mediator = new Mediator(modelType);
+		this.mediator = new Mediator<Object>(modelType);
 		ObjectTK.enforceNotNull(model,       "model");
 		ObjectTK.enforceNotNull(formFactory, "formFactory");			
 
@@ -130,9 +128,9 @@ public class GenericEditor extends Editor<Object> {
 		header.add(menuBar, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 		
 		// list table
-		listDataContainer = new ListDataContainer(modelType, "listData");
+		listDataContainer = new ListDataContainer<Object>(modelType, "listData");
 		
-		final WidgetBuilder wb = new WidgetBuilder(modelType, model, null);
+		final WidgetBuilder<Object> wb = new WidgetBuilder<Object>(Object.class, model, null);
 		
 		final NestedPropertiesInEditorListFactory nestedPropsFactory = new NestedPropertiesInEditorListFactory(modelType, model);
 		final IndividualProperty[] nestedProperties = nestedPropsFactory.createNestedProperties();
@@ -156,13 +154,14 @@ public class GenericEditor extends Editor<Object> {
 		final JScrollPane bodyScrollPane = new JScrollPane(bodyContainer);		
 		
 		// connect table selection to mediator
-		listSelectionContainer = new IndividualDataContainer(modelType, "listSelection");
+		listSelectionContainer = new IndividualDataContainer<Object>(modelType, "listSelection");
 		final IndividualDataProxy listSelectionProxy = listSelectionContainer.createProxy();
 		final TableModelAdapter tableModelAdapter = new TableModelAdapter(listTableController.getModel());
 		final TableSelectionWidgetAdapter selectionWidget = new TableSelectionWidgetAdapter(listTable);
-		final SelectionController listTableSelection = new SelectionController(listTable.getSelectionModel(), tableModelAdapter, listSelectionProxy, selectionWidget);
-		final IndividualDataRelay relayMediator = new IndividualDataRelay(listSelectionProxy, mediator);
-		final IndividualDataRelay relayForm = new IndividualDataRelay(listSelectionProxy, form);		
+		
+		SelectionController.createSelectionController(listTable.getSelectionModel(), tableModelAdapter, listSelectionProxy, selectionWidget);
+		IndividualDataRelay.createMasterSlaveRelay(listSelectionProxy, mediator);
+		IndividualDataRelay.createMasterSlaveRelay(listSelectionProxy, form);		
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setTopComponent(listTableScrollPane);		
@@ -173,7 +172,7 @@ public class GenericEditor extends Editor<Object> {
 		editor.add(splitPane, BorderLayout.CENTER);			
 	}
 	
-	public Mediator getMediator() {
+	public Mediator<Object> getMediator() {
 		return mediator;
 	}
 		
@@ -181,7 +180,7 @@ public class GenericEditor extends Editor<Object> {
 		return mediator.getContext();
 	}
 	
-	public Form<?> getForm() {
+	public Form getForm() {
 		return form;
 	}
 	

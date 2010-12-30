@@ -118,7 +118,7 @@ class InvokeOperationAction extends AbstractAction implements IObserver {
 				// navigation durchführen können
 			  
 			  final Class<?> itemType = operation.getReturnItemType();
-				final EditorContent content = new EditorContent(itemType, (Collection) result);
+				final EditorContent content = new EditorContent(itemType, (Collection<?>) result);
 				Workbench.getInstance().seek(content);
 
 				// PEND: handle arrays -> make ArrayList

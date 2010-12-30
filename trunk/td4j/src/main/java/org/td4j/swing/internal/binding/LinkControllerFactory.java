@@ -35,7 +35,7 @@ import ch.miranet.commons.ObjectTK;
 public class LinkControllerFactory extends IndividualWidgetControllerFactory<LinkController, JLabel> {
 	private final Navigator navigator;
 
-	public LinkControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JLabel widget, Caption caption, Navigator navigator) {
+	public LinkControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JLabel widget, Caption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
 		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
 	}

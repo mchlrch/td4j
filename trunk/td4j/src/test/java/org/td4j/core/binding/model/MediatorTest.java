@@ -37,18 +37,18 @@ public class MediatorTest {
 	}
 
 	@Test(dataProvider = "harness")
-	public void testModelKeeper(Mediator mediator, Object model, CountingContextSocket socket) {
+	public void testModelKeeper(Mediator<String> mediator, Object model, CountingContextSocket socket) {
 		assert model == mediator.getContext();
 		assert String.class == mediator.getContextType();
 	}
 
 	@Test(dataProvider = "harness", expectedExceptions = { IllegalArgumentException.class }, dependsOnMethods = { "testModelKeeper" })
-	public void testInvalidModel(Mediator mediator, Object model, CountingContextSocket socket) {
+	public void testInvalidModel(Mediator<Object> mediator, Object model, CountingContextSocket socket) {
 		mediator.setContext(new Integer(1));
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelKeeper" })
-	public void testModelSocketDelegate(Mediator mediator, Object model, CountingContextSocket socket) {
+	public void testModelSocketDelegate(Mediator<String> mediator, Object model, CountingContextSocket socket) {
 		assert socket.setContextCount == 1;
 		assert socket.getContext() == model;
 
@@ -63,7 +63,7 @@ public class MediatorTest {
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelSocketDelegate" })
-	public void testModelSocketDelegateRemoval(Mediator mediator, Object model, CountingContextSocket socket) {
+	public void testModelSocketDelegateRemoval(Mediator<String> mediator, Object model, CountingContextSocket socket) {
 		mediator.removeContextSocket(socket);
 		assert socket.setContextCount == 2;
 		assert socket.getContext() == null;
@@ -74,7 +74,7 @@ public class MediatorTest {
 	}
 
 	@Test(dataProvider = "harness", dependsOnMethods = { "testModelKeeper" })
-	public void testReloadModel(Mediator mediator, Object model, CountingContextSocket socket) {
+	public void testReloadModel(Mediator<String> mediator, Object model, CountingContextSocket socket) {
 		assert socket.refreshFromContextCount == 0;
 
 		mediator.refreshFromContext();
@@ -82,8 +82,8 @@ public class MediatorTest {
 	}
 
 	@Test(dataProvider = "harness")
-	public void testMediatorCascade(Mediator mediator, Object model, CountingContextSocket socket) {
-		final Mediator subMediator = new Mediator(String.class);
+	public void testMediatorCascade(Mediator<String> mediator, Object model, CountingContextSocket socket) {
+		final Mediator<String> subMediator = new Mediator<String>(String.class);
 		final CountingContextSocket subSocket = new CountingContextSocket(String.class);
 		subMediator.addContextSocket(subSocket);
 		assert subMediator.getContext() == null;

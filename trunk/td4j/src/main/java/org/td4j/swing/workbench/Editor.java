@@ -29,7 +29,7 @@ import javax.swing.JComponent;
 import ch.miranet.commons.ObjectTK;
 
 
-public abstract class Editor<T> {
+public abstract class Editor {
 
 	private final Workbench workbench;
 	private final Class<?> contentType;
@@ -71,7 +71,7 @@ public abstract class Editor<T> {
 	public static class EditorContent {
 		
 		private final Class<?> contentType;
-		private final List<?> instances;
+		private final List<Object> instances;
 		private final Object mainObject;
 		
 		private static List<Object> wrapInList(Object obj) {
@@ -96,7 +96,7 @@ public abstract class Editor<T> {
 		
 		public EditorContent(Class<?> contentType, Collection<?> instances, Object mainObject) {
 			this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
-			this.instances = new ArrayList(ObjectTK.enforceNotNull(instances, "instances"));
+			this.instances = new ArrayList<Object>(ObjectTK.enforceNotNull(instances, "instances"));
 			this.mainObject = mainObject;
 		}
 		

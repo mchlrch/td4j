@@ -31,7 +31,7 @@ import org.td4j.swing.binding.ListController;
 
 public class ListControllerFactory extends ListWidgetControllerFactory<ListController, JList> {
 
-	public ListControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, JList widget, Caption caption) {
+	public ListControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JList widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 

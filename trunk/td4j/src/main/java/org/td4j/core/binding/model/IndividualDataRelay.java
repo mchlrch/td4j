@@ -30,9 +30,13 @@ import ch.miranet.commons.ObjectTK;
 public class IndividualDataRelay implements IObserver {
 
 	private IndividualDataProxy master;
-	private ContextSocket slave;
+	private ContextSocket<Object> slave;
 
-	public IndividualDataRelay(IndividualDataProxy master, ContextSocket slave) {
+	public static IndividualDataRelay createMasterSlaveRelay(IndividualDataProxy master, ContextSocket<Object> slave) {
+		return new IndividualDataRelay(master, slave);
+	}
+	
+	public IndividualDataRelay(IndividualDataProxy master, ContextSocket<Object> slave) {
 		this.master = ObjectTK.enforceNotNull(master, "master");
 		this.slave = ObjectTK.enforceNotNull(slave, "slave");
 

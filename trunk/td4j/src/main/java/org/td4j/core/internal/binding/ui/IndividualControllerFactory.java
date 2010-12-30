@@ -28,10 +28,10 @@ import ch.miranet.commons.ObjectTK;
 
 
 public abstract class IndividualControllerFactory<T> {
-	private final Mediator mediator;
+	private final Mediator<?> mediator;
 	private final DataConnectorFactory conFactory;
 
-	protected IndividualControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
+	protected IndividualControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory) {
 		this.mediator   = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");			
 	}

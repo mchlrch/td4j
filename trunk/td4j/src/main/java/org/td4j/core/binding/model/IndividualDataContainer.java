@@ -31,18 +31,18 @@ import ch.miranet.commons.StringTK;
 
 public class IndividualDataContainer<T> extends Observable {
 
-	private final Class<T> contentType;
+	private final Class<?> contentType;
 	private final boolean canRead;
 	private final boolean canWrite;
 	private final String propertyName;
 
 	private T content;
 
-	public IndividualDataContainer(Class<T> contentType, String propertyName) {
+	public IndividualDataContainer(Class<?> contentType, String propertyName) {
 		this(contentType, propertyName, true, true);
 	}
 
-	public IndividualDataContainer(Class<T> contentType, String propertyName, boolean canRead, boolean canWrite) {
+	public IndividualDataContainer(Class<?> contentType, String propertyName, boolean canRead, boolean canWrite) {
 		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
 		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
 
@@ -50,7 +50,7 @@ public class IndividualDataContainer<T> extends Observable {
 		this.canWrite = canWrite;
 	}
 
-	public Class<T> getContentType() {
+	public Class<?> getContentType() {
 		return contentType;
 	}
 

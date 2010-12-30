@@ -24,7 +24,7 @@ import org.td4j.core.binding.ContextSocket;
 import ch.miranet.commons.ObjectTK;
 
 
-class CountingContextSocket implements ContextSocket {
+class CountingContextSocket implements ContextSocket<Object> {
 
 	private final Class<?> ctxType;
 

@@ -40,6 +40,10 @@ public class SelectionController implements ListSelectionListener, IObserver {
 
 	private boolean proxyToSelectionSyncInProgress;
 
+	public static SelectionController createSelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy, SelectionWidget selectionWidget) {
+		return new SelectionController(selectionModel, dataModel, proxy, selectionWidget);
+	}
+	
 	public SelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy, SelectionWidget selectionWidget) {
 		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
 		this.proxy = ObjectTK.enforceNotNull(proxy, "proxy");

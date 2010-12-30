@@ -417,10 +417,8 @@ public class JavaModelInspector {
 		
 		private void setChoiceProvider(ListDataConnector conn) { this.choiceProvider = conn; }
 		private ListDataConnector getChoiceProvider()          { return choiceProvider; }
-		private boolean isChoiceConsumer()                     { return choiceProvider != null; }
 		
 		private void setChoiceConsumer(IndividualDataConnector conn) { this.choiceConsumer = conn; }
-		private IndividualDataConnector getChoiceConsumer()          { return choiceConsumer; }
 		private boolean isChoiceProvider()                           { return choiceConsumer != null; }
 				
 		@Override

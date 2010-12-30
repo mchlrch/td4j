@@ -31,7 +31,7 @@ import org.td4j.swing.binding.LabelController;
 
 public class LabelControllerFactory<T extends Component> extends IndividualWidgetControllerFactory<LabelController<T>, T> {
 
-	public LabelControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory, T widget, Caption caption) {
+	public LabelControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, T widget, Caption caption) {
 		super(mediator, connectorFactory, widget, caption);
 	}
 

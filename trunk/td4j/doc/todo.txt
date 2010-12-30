@@ -12,4 +12,12 @@ x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclas
 - Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern
 
 
+
+__INCOMING__
 - setup code coverage analysis (http://emma.sourceforge.net/intro.html)
+x Typisierung ContextSocket und Mediator sauber durchziehen
+x Typisierung Editor aufheben
+x Typisierung Form aufheben
+x Typisierung WidgetBuilder als Folge von Typisierung Mediator
+x IndividualDataContainer und ListDataContainer- Typisierung des contentTypes weglassen (Class<T> contentType)
+x SelectionController und IndividualDataRelay über statische methoden erzeugen, da bei Erzeugen über Konstruktor referenz nie gebraucht wird. (z.B.: GenericEditor)

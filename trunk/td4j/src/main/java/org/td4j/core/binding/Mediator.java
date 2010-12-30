@@ -32,15 +32,15 @@ import ch.miranet.commons.ObjectTK;
 
 
 
-public class Mediator<T> extends Observable implements ContextSocket {
+public class Mediator<T> extends Observable implements ContextSocket<T> {
 
-	private final List<ContextSocket> sockets = new ArrayList<ContextSocket>();
-	private final Class<T> ctxType;
+	private final List<ContextSocket<? super T>> sockets = new ArrayList<ContextSocket<? super T>>();
+	private final Class<?> ctxType;
 	private T ctx;
 
 	private final LoopbackObserver loopbackObserver = new LoopbackObserver(this);
 
-	public Mediator(Class<T> ctxType) {
+	public Mediator(Class<?> ctxType) {
 		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
 	}
 
@@ -52,7 +52,7 @@ public class Mediator<T> extends Observable implements ContextSocket {
 		return ctx;
 	}
 
-	public void setContext(Object ctx) {
+	public void setContext(T ctx) {
 		
 		// TODO: rename model-2-ctx für changeEvent nicht durchgeführt :: besser spezifisches Event für Mediator machen, nicht standard changeEvent
 		final ChangeEvent changeEvent = changeSupport.preparePropertyChange("model", this.ctx, ctx);
@@ -62,9 +62,9 @@ public class Mediator<T> extends Observable implements ContextSocket {
 			throw new IllegalArgumentException("type mismatch: " + ctx.getClass().getName() + " != " + ctxType.getName());
 		}
 
-		this.ctx = (T) ctx;
+		this.ctx = ctx;
 		
-		for (ContextSocket delegate : sockets) {
+		for (ContextSocket<? super T> delegate : sockets) {
 			delegate.setContext(ctx);
 		}
 		
@@ -72,7 +72,7 @@ public class Mediator<T> extends Observable implements ContextSocket {
 	}
 
 	public void refreshFromContext() {
-		for (ContextSocket delegate : sockets) {
+		for (ContextSocket<? super T> delegate : sockets) {
 			delegate.refreshFromContext();
 		}
 		
@@ -82,7 +82,7 @@ public class Mediator<T> extends Observable implements ContextSocket {
 	// interface to controller delegates
 	// PEND: ev. mit callback methode auf delegate prüfen, ob delegate nicht schon
 	// an anderem mediator angehängt ist (IndividualWidgetController.bindPlug())
-	public void addContextSocket(ContextSocket delegate) {
+	public void addContextSocket(ContextSocket<? super T> delegate) {
 		if ( ! sockets.contains(delegate)) {
 			addLoopbackObserver(delegate);
 			sockets.add(delegate);
@@ -90,20 +90,20 @@ public class Mediator<T> extends Observable implements ContextSocket {
 		}
 	}
 
-	public void removeContextSocket(ContextSocket delegate) {
+	public void removeContextSocket(ContextSocket<? super T> delegate) {
 		sockets.remove(delegate);
 		removeLoopbackObserver(delegate);
 		delegate.setContext(null);
 	}
 
-	private void addLoopbackObserver(ContextSocket delegate) {
+	private void addLoopbackObserver(ContextSocket<?> delegate) {
 		if (delegate instanceof DataProxy) {
 			final DataProxy proxy = (DataProxy) delegate;
 			proxy.addObserver(loopbackObserver, new ChangeEventFilter(proxy, ChangeEvent.Type.Custom));
 		}
 	}
 
-	private void removeLoopbackObserver(ContextSocket delegate) {
+	private void removeLoopbackObserver(ContextSocket<?> delegate) {
 		if (delegate instanceof DataProxy) {
 			final DataProxy proxy = (DataProxy) delegate;
 			proxy.removeObserver(loopbackObserver);

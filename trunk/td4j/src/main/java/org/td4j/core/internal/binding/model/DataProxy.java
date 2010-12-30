@@ -29,7 +29,7 @@ import org.td4j.core.model.ObservableTK;
 import ch.miranet.commons.ObjectTK;
 
 
-public abstract class DataProxy extends Observable implements ContextSocket, IObserver {
+public abstract class DataProxy extends Observable implements ContextSocket<Object>, IObserver {
 
 	private final String name;
 	private Object ctx;

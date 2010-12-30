@@ -31,10 +31,10 @@ import ch.miranet.commons.ObjectTK;
 
 
 public abstract class ListControllerFactory<T> {
-	private final Mediator mediator;
+	private final Mediator<?> mediator;
 	private final DataConnectorFactory conFactory;
 
-	protected ListControllerFactory(Mediator mediator, DataConnectorFactory connectorFactory) {
+	protected ListControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory) {
 		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
 		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
 	}
