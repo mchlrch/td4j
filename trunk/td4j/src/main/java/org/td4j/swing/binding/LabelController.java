@@ -27,8 +27,6 @@ import org.td4j.core.binding.model.IndividualDataProxy;
 import ch.miranet.commons.ObjectTK;
 
 
-
-// PEND: refactor into common superclass with swt.LabelAdapter
 public class LabelController<T extends Component> extends IndividualSwingWidgetController<T> {
 
 	private final T widget;
@@ -48,11 +46,17 @@ public class LabelController<T extends Component> extends IndividualSwingWidgetC
 		setAccess();
 		updateView();
 	}
+	
+	public T getWidget() {
+		return widget;
+	}
+	
+	protected void setAccess() {
+		// no action
+	}
 
 	protected void updateView0(Object newValue) {
 		try {
-
-			// PEND: solve in proxy
 			if (newValue != null && ! (newValue instanceof String)) {
 				newValue = newValue.toString();
 			}
@@ -63,18 +67,8 @@ public class LabelController<T extends Component> extends IndividualSwingWidgetC
 		}
 	}
 
-	protected Object updateModel0() {
+	protected Object readView0() {
 		throw new IllegalStateException("read-only widget");
-	}
-
-	@Override
-	public T getWidget() {
-		return widget;
-	}
-
-	@Override
-	protected void setAccess() {
-		// PEND:
 	}
 
 }

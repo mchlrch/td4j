@@ -51,6 +51,7 @@ public class TextController extends IndividualSwingWidgetController<JTextField> 
 			updateModel();
 		}
 	};
+	
 
 	public TextController(JTextField widget, IndividualDataProxy proxy) {
 		this(widget, proxy, true);
@@ -70,24 +71,23 @@ public class TextController extends IndividualSwingWidgetController<JTextField> 
 		setAccess();
 		updateView();
 	}
-
-	protected void updateView0(Object newValue) {
-		widget.setText(newValue != null ? newValue.toString() : "");
-	}
-
-	protected Object updateModel0() {
-		return widget.getText();
-	}
-
-	@Override
+	
 	public JTextField getWidget() {
 		return widget;
 	}
 
-	@Override
+	
 	protected void setAccess() {
 		widget.setEnabled(canRead());
 		widget.setEditable(canWrite());
+	}
+	
+	protected void updateView0(Object newValue) {
+		widget.setText(newValue != null ? newValue.toString() : "");
+	}
+
+	protected Object readView0() {
+		return widget.getText();
 	}
 
 }

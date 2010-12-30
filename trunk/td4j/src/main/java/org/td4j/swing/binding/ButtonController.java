@@ -38,6 +38,7 @@ public class ButtonController extends IndividualSwingWidgetController<AbstractBu
 		};
 	};
 
+	
 	public ButtonController(AbstractButton widget, IndividualDataProxy proxy) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");
@@ -47,25 +48,24 @@ public class ButtonController extends IndividualSwingWidgetController<AbstractBu
 		setAccess();
 		updateView();
 	}
-
-	protected void updateView0(Object newValue) {
-		final boolean selected = newValue instanceof Boolean && ((Boolean) newValue).booleanValue();
-
-		widget.setSelected(selected);
-	}
-
-	protected Object updateModel0() {
-		return widget.isSelected();
-	}
-
-	@Override
+	
 	public AbstractButton getWidget() {
 		return widget;
 	}
-
-	@Override
+	
+	
 	protected void setAccess() {
 		widget.setEnabled(canWrite());
+	}
+
+	protected void updateView0(Object newValue) {
+		final boolean selected = newValue instanceof Boolean && ((Boolean) newValue).booleanValue();
+		
+		widget.setSelected(selected);
+	}
+
+	protected Object readView0() {
+		return widget.isSelected();
 	}
 
 }
