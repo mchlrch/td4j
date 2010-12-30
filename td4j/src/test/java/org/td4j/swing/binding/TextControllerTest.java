@@ -54,7 +54,7 @@ public class TextControllerTest {
 	@Test(dataProvider = "harness")
 	public void testWriteWidgetValueToModel(final TestHarness harness) {
 		harness.textField.setText(DataContainer.ACCEPTED_VALUE);
-		harness.textController.updateModel();
+		harness.textController.doUpdateModel();
 		
 		assertTextFieldContent(DataContainer.ACCEPTED_VALUE, harness);
 		assertDataContainerContent(DataContainer.ACCEPTED_VALUE, harness);
@@ -65,7 +65,7 @@ public class TextControllerTest {
 		harness.textField.setText(DataContainer.REJECTED_VALUE);
 		
 		try {
-			harness.textController.updateModel();
+			harness.textController.doUpdateModel();
 		} catch (Exception ex) {			
 			assertTextFieldContent(DataContainer.INITIAL_VALUE, harness);
 			assertDataContainerContent(DataContainer.INITIAL_VALUE, harness);
@@ -151,8 +151,8 @@ public class TextControllerTest {
 			super(widget, proxy);
 		}
 		
-		@Override  // open access
-		public void updateModel() {
+		// open access
+		public void doUpdateModel() {
 			super.updateModel();
 		}
 	}

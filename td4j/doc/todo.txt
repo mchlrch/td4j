@@ -7,8 +7,8 @@ x Aufrufe zu Model und zu Widget immer in try-catch-finally: keine undefinierten
 
 ::ODS-A
 x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclasses)
-- code duplication: GenericForm
-- code duplication: CollectionWidgetController
+?! code duplication: GenericForm
+x code duplication: IndividualWidgetController & ListWidgetController
 - Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern
 
 

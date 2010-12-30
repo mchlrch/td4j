@@ -19,117 +19,45 @@
 
 package org.td4j.core.internal.binding.ui;
 
-import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.model.ChangeEvent;
-import org.td4j.core.model.ChangeEventFilter;
-import org.td4j.core.model.IObserver;
 
-import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.ObjectTK;
 
 
-
-public abstract class IndividualWidgetController<W> implements IObserver {
+public abstract class IndividualWidgetController<W> extends BaseWidgetController<W> {
 
 	private final IndividualDataProxy dataProxy;
 
-	private Caption caption;
-
-	private boolean modelUpdateInProgress;
-	private boolean viewUpdateInProgress;
-
+	
 	protected IndividualWidgetController(IndividualDataProxy proxy) {
-		dataProxy = proxy;
-		dataProxy.addObserver(this, new ChangeEventFilter(dataProxy, ChangeEvent.Type.StateChange));
+		dataProxy = ObjectTK.enforceNotNull(proxy, "proxy");
+		registerAsObserver(proxy);
 	}
 
 	public IndividualDataProxy getDataProxy() {
 		return dataProxy;
 	}
-
-	public void observableChanged(ChangeEvent event) {
-		updateView();
+	
+	
+	protected void readModelAndUpdateView() {
+		final Object modelValue = canRead() ? dataProxy.readValue() : null;
+		updateView0(modelValue);
 	}
 
-	protected void updateCaption() {
-		final String name = ReflectionTK.humanize(dataProxy.getName());
-		if (caption != null) caption.setText(name);
+	protected void readViewAndUpdateModel() {
+		final Object viewValue = readView0();
+		dataProxy.writeValue(viewValue);
 	}
-
-	protected void updateView() {
-		if (modelUpdateInProgress) return;
-		if (getWidget() == null) return; // during construction phase
-
-		setAccess();
-		
-		final Object value = canRead() ? dataProxy.readValue() : null;
-		updateView(value);
-	}
-
-	protected void updateView(Object newValue) {
-		if (modelUpdateInProgress) return;
-
-		viewUpdateInProgress = true;
-		try {
-			updateView0(newValue);
-		} finally {
-			viewUpdateInProgress = false;
-		}
-	}
-
-	protected void updateModel() {
-		if (viewUpdateInProgress) return;
-		if ( ! canWrite()) return;
-
-		modelUpdateInProgress = true;
-		try {
-			dataProxy.writeValue(updateModel0());
-		} finally {
-			modelUpdateInProgress = false;
-			
-			// refetch the display value from the model
-			updateView();
-		}
-
-	}
-
-	protected boolean isViewUpdateInProgress() {
-		return viewUpdateInProgress;
-	}
-
-	protected boolean isModelUpdateInProgress() {
-		return modelUpdateInProgress;
-	}
-
-	public abstract W getWidget();
-
-	public Caption getCaption() {
-		return caption;
-	}
-
-	public void setCaption(Caption caption) {
-		this.caption = caption;
-		updateCaption();
-	}
-
-	// PEND: better naming for those methods
-	protected abstract void updateView0(Object newValue);
-
-	protected abstract Object updateModel0();
-
-	protected abstract void setAccess();
 
 	protected boolean canWrite() {
-		return getDataProxy() != null && getDataProxy().canWrite();
+		return dataProxy.canWrite();
 	}
 
 	protected boolean canRead() {
-		return getDataProxy() != null && getDataProxy().canRead();
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + ": " + dataProxy.getName();
-	}
+		return dataProxy.canRead();
+	}	
+
+	protected abstract void updateView0(Object newValue);
+	protected abstract Object readView0();
 
 }

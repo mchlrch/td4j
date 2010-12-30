@@ -49,6 +49,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 	private final Navigator navigator;
 	private final LinkTargetObserver linkTargetObserver = new LinkTargetObserver(this);
 	
+	
 	public LinkController(final JLabel widget, IndividualDataProxy proxy, final Navigator navigator) {
 		super(proxy);
 		this.widget = ObjectTK.enforceNotNull(widget, "widget");		
@@ -73,6 +74,11 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 		setAccess();
 		updateView();
 	}
+	
+	public JLabel getWidget() {
+		return widget;
+	}
+	
 	
 	protected void doNavigate() {
 		final IndividualDataProxy dataProxy = getDataProxy();
@@ -109,10 +115,19 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 			navigator.seek(value);
 		}
 	}
+	
+	protected void setAccess() {
+		// no write access necessary
+	}
 
 	protected void updateView0(Object newTarget) {
 		updateLinkTargetChanged(newTarget);
 	}
+
+	protected Object readView0() {
+		throw new IllegalStateException();
+	}
+	
 	
 	private void updateLinkTargetChanged(Object newTarget) {
 		linkTargetObserver.detachFromTarget();
@@ -132,21 +147,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
   	}		
 	}
 
-	protected Object updateModel0() {
-		throw new IllegalStateException();
-	}
-
-	@Override
-	public JLabel getWidget() {
-		return widget;
-	}
-
-	@Override
-	protected void setAccess() {
-		// no write access necessary
-	}
-
-	
+  
 	// --------------------------------
 	private static class LinkTargetObserver implements IObserver {
 		
@@ -174,8 +175,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 		public void observableChanged(ChangeEvent event) {
 			controller.updateLinkTargetStateChanged(target);			
 		}
-	};
-	
+	};	
 	
 	
 	// --------------------------------
