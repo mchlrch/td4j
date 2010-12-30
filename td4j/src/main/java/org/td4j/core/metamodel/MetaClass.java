@@ -22,7 +22,7 @@ package org.td4j.core.metamodel;
 import java.util.Collections;
 import java.util.List;
 
-import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.AbstractOperation;
 import org.td4j.core.metamodel.container.IndividualProperties;
 import org.td4j.core.metamodel.container.ListProperties;
 import org.td4j.core.metamodel.container.Operations;
@@ -74,7 +74,7 @@ public abstract class MetaClass implements FeatureProvider {
 		return props != null ? props.getByName(name) : null;
 	}
 	
-	public List<AbstractExecutable> getOperations() {
+	public List<AbstractOperation> getOperations() {
 		final Operations ops = getFeature(OperationsKey.ALL);
 		if (ops != null) {
 			return Collections.unmodifiableList(ops.get());
@@ -100,7 +100,7 @@ public abstract class MetaClass implements FeatureProvider {
 		putFeature(ListPropertiesKey.ALL, props);
 	}
 	
-	protected void setOperations(List<AbstractExecutable> operations) {
+	protected void setOperations(List<AbstractOperation> operations) {
 		final Operations ops = new Operations(operations);
 		putFeature(OperationsKey.ALL, ops);
 	}

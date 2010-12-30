@@ -25,7 +25,7 @@ import java.util.List;
 import ch.miranet.commons.StringTK;
 
 
-public abstract class AbstractExecutable {
+public abstract class AbstractOperation {
 
 	protected static List<InvokationParameter> createInvokationParameters(String[] paramNames, Class<?>[] paramTypes) {
 		final List<InvokationParameter> parameters = new ArrayList<InvokationParameter>();
@@ -59,6 +59,6 @@ public abstract class AbstractExecutable {
 
 	public abstract List<InvokationParameter> getParameters();
 	
-	public abstract Class getReturnItemType();
+	public abstract Class<?> getReturnItemType();
 
 }

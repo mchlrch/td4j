@@ -22,13 +22,13 @@ package org.td4j.core.metamodel.container;
 
 import java.util.List;
 
-import org.td4j.core.internal.reflect.AbstractExecutable;
+import org.td4j.core.internal.reflect.AbstractOperation;
 
 import ch.miranet.commons.container.ListContainer;
 
-public class Operations extends ListContainer<AbstractExecutable> {
+public class Operations extends ListContainer<AbstractOperation> {
 	
-	public Operations(List<AbstractExecutable> operations) {
+	public Operations(List<AbstractOperation> operations) {
 		super(operations);
 	}
 	

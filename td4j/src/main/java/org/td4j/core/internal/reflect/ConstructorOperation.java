@@ -19,49 +19,35 @@
 
 package org.td4j.core.internal.reflect;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-
 import ch.miranet.commons.ObjectTK;
 import ch.miranet.commons.StringTK;
-import ch.miranet.commons.reflect.ReflectionTK;
 
 
-public class ExecutableMethod extends AbstractExecutable {
+public class ConstructorOperation extends AbstractOperation {
 
-	private final Method method;
-	private final Class<?> itemType;
-	private final boolean statik;
+	private final Constructor<?> constructor;
 	private final List<InvokationParameter> parameters;
 
-	public ExecutableMethod(Method method, String... paramNames) {
-		this.method = ObjectTK.enforceNotNull(method, "method");
-		if ( ! method.isAccessible()) {
-			method.setAccessible(true);
+	public ConstructorOperation(Constructor<?> constructor, String... paramNames) {
+		this.constructor = ObjectTK.enforceNotNull(constructor, "constructor");
+		if ( ! constructor.isAccessible()) {
+			constructor.setAccessible(true);
 		}
 
-		itemType = ReflectionTK.getItemType(method);
-		statik = Modifier.isStatic(method.getModifiers());
-
-		parameters = createInvokationParameters(paramNames, method.getParameterTypes());
+		parameters = createInvokationParameters(paramNames, constructor.getParameterTypes());
 	}
 
 	@Override
 	public Object invoke(Object... args) {
-		Object target = null;
-		if ( ! Modifier.isStatic(method.getModifiers())) {
-			target = args[0];
-			args = args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new Object[0];
-		}
-		Object result = null;
+		Object instance = null;
 
 		try {
-			result = method.invoke(target, args);
+			instance = constructor.newInstance(args);
 		} catch (final Exception e) {
 			SwingUtilities.invokeLater(new Runnable() {				
 				public void run() {					
@@ -70,29 +56,29 @@ public class ExecutableMethod extends AbstractExecutable {
 			});
 		}
 
-		return result;
+		return instance;
 	}
 
 	@Override
 	public boolean isStatic() {
-		return statik;
+		return true;
 	}
 
 	@Override
 	public List<InvokationParameter> getParameters() {
 		return parameters;
 	}
-
+	
 	@Override
-	public Class getReturnItemType() {
-		return itemType;
+	public Class<?> getReturnItemType() {
+	  return constructor.getDeclaringClass();
 	}
 
 	@Override
 	public String toString() {
-		final String name = method.getName();
+		final String name = constructor.getDeclaringClass().getSimpleName();
 		final String paramNames = paramNamesToString(parameters);
-		return StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
+		return "+ " + (StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames));
 	}
 
 }

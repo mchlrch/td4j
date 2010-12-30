@@ -6,7 +6,7 @@ x Aufrufe zu Model und zu Widget immer in try-catch-finally: keine undefinierten
   - (offen) Checkbox, Selection (List, Table)
 
 ::ODS-A
-- Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclasses)
+x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclasses)
 - code duplication: GenericForm
 - code duplication: CollectionWidgetController
 - Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern

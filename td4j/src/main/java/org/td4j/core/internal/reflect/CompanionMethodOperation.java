@@ -25,13 +25,12 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-
 import ch.miranet.commons.ObjectTK;
 import ch.miranet.commons.StringTK;
 import ch.miranet.commons.reflect.ReflectionTK;
 
 
-public class ExecutableCompanionMethod extends AbstractExecutable {
+public class CompanionMethodOperation extends AbstractOperation {
 
 	private final Object companion;
 	private final Method method;
@@ -42,7 +41,7 @@ public class ExecutableCompanionMethod extends AbstractExecutable {
 
 	
 	// TODO die Bedeutung von statik ist, dass kein model context für die invokation gebraucht wird => contextIndependent
-	public ExecutableCompanionMethod(Class<?> modelType, Object companion, Method method, String... paramNames) {
+	public CompanionMethodOperation(Class<?> modelType, Object companion, Method method, String... paramNames) {
 		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
 		
 		final boolean statikMethod = Modifier.isStatic(method.getModifiers());		
@@ -63,7 +62,7 @@ public class ExecutableCompanionMethod extends AbstractExecutable {
 		
 		if ( ! parameters.isEmpty()) {
 			final Class<?> firstArgType = parameters.get(0).getType();
-			statik = ! modelType.isAssignableFrom(firstArgType);
+			statik = ! this.modelType.isAssignableFrom(firstArgType);
 		} else {
 			statik = true;
 		}
@@ -98,7 +97,7 @@ public class ExecutableCompanionMethod extends AbstractExecutable {
 	}
 
 	@Override
-	public Class getReturnItemType() {
+	public Class<?> getReturnItemType() {
 		return itemType;
 	}
 
