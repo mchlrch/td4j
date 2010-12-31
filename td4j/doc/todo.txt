@@ -1,24 +1,14 @@
-::ODS-B
-x Prüfen/Unit-Test dass @ShowProperties auf Methoden und Feldern funktioniert, insbesondere auch auf enum Typen und Arrays
-x equals und hashCode in connectors sauber implementieren
-x Aufrufe zu Model und zu Widget immer in try-catch-finally: keine undefinierten Zustände bei Exceptions
-  x TextController
-  - (offen) Checkbox, Selection (List, Table)
+::ODS-E -- Tests
+-	Analog TextControllerTest sollen alle WidgetController minimale Tests besitzen
+- Testcases refactoren: org.td4j.core.binding.model & org.td4j.core.internal.binding.model
+- getter only plugs richtig handhaben, Acess Rules beachten in writeValue0() (d.h. Exception werfen ?! ) :: Connector & Property
+  - graceful handling of getXY() ohne setXY() methode (Access)
+  - immutable & read-only: public final field (and optional public getter)
 
-::ODS-A
-x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclasses)
-?! code duplication: GenericForm
-x code duplication: IndividualWidgetController & ListWidgetController
-x Gemeinsame Teile von IndividualMethodConnector & AbstractListMethodConnector in gemeinsame delegate Klasse auslagern 
-x Gemeinsame Teile von IndividualFieldConnector  & AbstractListFieldConnector  in gemeinsame delegate Klasse auslagern
 
+::ODS-D -- Type-System
+- Type System: @PrimitiveType ersetzt ConverterRepo
 
 
 __INCOMING__
 - setup code coverage analysis (http://emma.sourceforge.net/intro.html)
-x Typisierung ContextSocket und Mediator sauber durchziehen
-x Typisierung Editor aufheben
-x Typisierung Form aufheben
-x Typisierung WidgetBuilder als Folge von Typisierung Mediator
-x IndividualDataContainer und ListDataContainer- Typisierung des contentTypes weglassen (Class<T> contentType)
-x SelectionController und IndividualDataRelay über statische methoden erzeugen, da bei Erzeugen über Konstruktor referenz nie gebraucht wird. (z.B.: GenericEditor)
