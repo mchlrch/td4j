@@ -20,18 +20,11 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.ObjectTK;
-
 
 
 public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 
-	private final Method getterMethod;
-	private final Method setterMethod;
-	private final Object[] argumentValues;
+	private final MethodConnectorParts parts;
 
 	public IndividualMethodConnector(Class<?> ctxType, Method getter, Method setter) {
 		this(ctxType, getter, setter, new Object[0]);
@@ -40,65 +33,31 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 	public IndividualMethodConnector(Class<?> ctxType, Method getter, Method setter, Object[] argumentValues) {
 		super(ctxType, getter.getReturnType());
 
-		this.getterMethod = getter;
-		this.setterMethod = setter;
-		
-		if ( ! getter.isAccessible()) getter.setAccessible(true);
-		if (setter != null && ! setter.isAccessible()) setter.setAccessible(true);
-		
-		this.argumentValues = ObjectTK.enforceNotNull(argumentValues, "argumentValues");
+		this.parts = new MethodConnectorParts(getter, setter, argumentValues);
 	}
 	
-	public Method getGetterMethod() {
-		return getterMethod;
-	}
+	public Method   getGetterMethod()   { return parts.getGetterMethod(); }
+	public Method   getSetterMethod()   { return parts.getSetterMethod(); }
+	public Object[] getArgumentValues() { return parts.getArgumentValues(); }
+
+	public boolean canRead()  { return parts.canRead();  }	
+	public boolean canWrite() { return parts.canWrite(); }
 	
-	public Method getSetterMethod() {
-		return setterMethod;
-	}
-
-	public boolean canRead()  { return getterMethod != null; }	
-	public boolean canWrite() { return setterMethod != null; }
+	public boolean canRead(Object ctx)  { return canRead()  && (ctx != null || parts.isGetterStatic()); }
+	public boolean canWrite(Object ctx) { return canWrite() && (ctx != null || parts.isSetterStatic()); }
 	
-	public boolean canRead(Object ctx)  { return canRead() && ctx != null;  }
-	public boolean canWrite(Object ctx) { return canWrite() && ctx != null; }
-
-	@Override
-	protected Object readValue0(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		return getterMethod.invoke(ctx, argumentValues);
-	}
-
-	@Override
-	protected void writeValue0(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		setterMethod.invoke(ctx, ArrayTK.append(argumentValues, val));
-	}
-
-	@Override
 	public String toString() {
-		return getContextType().getName() + "." + getterMethod.getName() + ":" + getterMethod.getReturnType().getName();
+		return getContextType().getName() + "." + parts.toString();
 	}
 	
-	@Override
-	public int hashCode() {
-		int hash = 41 * super.hashCode() + getterMethod.hashCode();
-		if (setterMethod != null) {
-			hash = 41 * hash + setterMethod.hashCode();
-		}
-		hash = 41 * hash + Arrays.hashCode(argumentValues); 
-		return hash;
-	}
+	public int hashCode() {	return parts.hashCode(); }
 	
-	@Override
 	public boolean equals(Object other) {
 		if (other instanceof IndividualMethodConnector) {
 			final IndividualMethodConnector that = (IndividualMethodConnector) other;
 			return super.equals(other)
-					&& that.canEqual(this)
-					&& this.getterMethod.equals(that.getterMethod)
-					&& methodsAreEqualOrBothNull(this.setterMethod, that.setterMethod)
-					&& Arrays.equals(this.argumentValues, that.argumentValues);
+			&& that.canEqual(this)
+			&& this.parts.equals(that.parts);
 		} else {
 			return false;
 		}
@@ -108,9 +67,16 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 	public boolean canEqual(Object other) {
 		return other instanceof IndividualMethodConnector;
 	}
+
 	
-	private static boolean methodsAreEqualOrBothNull(Method m1, Method m2) {
-		return m1 != null ? m1.equals(m2) : m2 == null;
+	@Override
+	protected Object readValue0(Object ctx) throws Exception {
+		return parts.readFromGetter(ctx);
+	}
+
+	@Override
+	protected void writeValue0(Object ctx, Object val) throws Exception {
+		parts.writeToSetter(ctx, val);
 	}
 
 }

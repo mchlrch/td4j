@@ -20,58 +20,41 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-
-import ch.miranet.commons.ObjectTK;
 
 
 public abstract class AbstractListMethodConnector extends AbstractListDataConnector {
 
-	private final Method getterMethod;
-	private final Object[] argumentValues;
+	private final MethodConnectorParts parts;
 
+	
 	public AbstractListMethodConnector(Class<?> contextType, Method getter, Class<?> valueType, Object[] argumentValues) {
 		super(contextType, valueType);
 
-		this.getterMethod = ObjectTK.enforceNotNull(getter, "getter");
-		if ( ! getter.isAccessible()) getter.setAccessible(true);
-		
-		this.argumentValues = ObjectTK.enforceNotNull(argumentValues, "argumentValues");
+		this.parts = new MethodConnectorParts(getter, null, argumentValues);		
 	}
 	
-	public Method getGetterMethod() {
-		return getterMethod;
-	}
-	
-	public Object[] getArgumentValues() {
-		return argumentValues;
-	}
+	public Method   getGetterMethod()   { return parts.getGetterMethod(); }
+	public Object[] getArgumentValues() { return parts.getArgumentValues(); }
 
-	public boolean canRead()  { return getterMethod != null; }
+	public boolean canRead()  { return parts.canRead();  }	
 	
-	public boolean canRead(Object ctx) {
-		return canRead() && (ctx != null || Modifier.isStatic(getterMethod.getModifiers()));
-	}
+	public boolean canRead(Object ctx) { return canRead() && (ctx != null || parts.isGetterStatic());	}
 	
-	@Override
-	public int hashCode() {
-		int hash = 41 * super.hashCode() + getterMethod.hashCode();
-		hash = 41 * hash + Arrays.hashCode(argumentValues); 
-		return hash;
-	}
+	public int hashCode() { return parts.hashCode(); }
 	
-	@Override
 	public boolean equals(Object other) {
 		if (other instanceof AbstractListMethodConnector) {
 			final AbstractListMethodConnector that = (AbstractListMethodConnector) other;
 			return super.equals(other)
 					&& that.canEqual(this)
-					&& this.getterMethod.equals(that.getterMethod)
-					&& Arrays.equals(this.argumentValues, that.argumentValues);
+					&& this.parts.equals(that.parts);
 		} else {
 			return false;
 		}
+	}
+	
+	protected Object readFromGetter(Object ctx) throws Exception {
+		return parts.readFromGetter(ctx);
 	}
 
 }
