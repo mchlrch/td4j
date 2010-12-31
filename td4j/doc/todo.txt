@@ -10,7 +10,7 @@ x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclas
 ?! code duplication: GenericForm
 x code duplication: IndividualWidgetController & ListWidgetController
 x Gemeinsame Teile von IndividualMethodConnector & AbstractListMethodConnector in gemeinsame delegate Klasse auslagern 
-- Gemeinsame Teile von IndividualFieldConnector  & AbstractListFieldConnector  in gemeinsame delegate Klasse auslagern
+x Gemeinsame Teile von IndividualFieldConnector  & AbstractListFieldConnector  in gemeinsame delegate Klasse auslagern
 
 
 

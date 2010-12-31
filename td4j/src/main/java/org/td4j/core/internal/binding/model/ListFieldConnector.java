@@ -29,14 +29,8 @@ public class ListFieldConnector extends AbstractListFieldConnector {
 		super(contextType, field, valueType);
 		
 		if ( ! Collection.class.isAssignableFrom(field.getType())) throw new IllegalArgumentException("not a collection type: " + field.getType());
-	}
+	}	
 	
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) getField().get(ctx);
-	}
-	
-	@Override
 	public String toString() {
 		return getContextType().getName() + "#" + getField().getName() + " : List<" + getValueType() + ">";
 	}
@@ -44,6 +38,12 @@ public class ListFieldConnector extends AbstractListFieldConnector {
 	@Override
 	public boolean canEqual(Object other) {
 		return other instanceof ListFieldConnector;
+	}
+	
+	
+	@Override
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		return (Collection<?>) readFromField(ctx);
 	}
 
 }

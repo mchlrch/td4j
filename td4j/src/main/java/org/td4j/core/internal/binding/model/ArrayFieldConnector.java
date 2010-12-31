@@ -31,14 +31,7 @@ public class ArrayFieldConnector extends AbstractListFieldConnector {
 
 		if ( ! field.getType().isArray()) throw new IllegalArgumentException("not an array type: " + field.getType());
 	}
-	
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		final Object[] value = (Object[]) getField().get(ctx);
-		return Arrays.asList(value);
-	}
-	
-	@Override
+
 	public String toString() {
 		return getContextType().getName() + "#" + getField().getName() + " : " + getValueType() + "[]";
 	}
@@ -48,4 +41,11 @@ public class ArrayFieldConnector extends AbstractListFieldConnector {
 		return other instanceof ArrayFieldConnector;
 	}
 
+	
+	@Override
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		final Object[] value = (Object[]) readFromField(ctx);
+		return Arrays.asList(value);
+	}
+	
 }
