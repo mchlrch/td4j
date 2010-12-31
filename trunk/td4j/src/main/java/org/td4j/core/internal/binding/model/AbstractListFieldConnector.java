@@ -20,35 +20,25 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import ch.miranet.commons.ObjectTK;
 
 
 public abstract class AbstractListFieldConnector extends AbstractListDataConnector {
 
-	private final Field field;
+	private final FieldConnectorParts parts;
 
 	public AbstractListFieldConnector(Class<?> contextType, Field field, Class<?> valueType) {
 		super(contextType, valueType);
 
-		this.field = ObjectTK.enforceNotNull(field, "field");		
+		this.parts = new FieldConnectorParts(field);	
 	}
 	
-	public Field getField() {
-		return field;
-	}
+	public Field getField() { return parts.getField(); }
 
-	public boolean canRead()  { return true; }
+	public boolean canRead()  { return parts.canRead(); }
 	
-	public boolean canRead(Object ctx) {
-		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
-	}
-	
-	@Override
-	public int hashCode() {
-		return 41 * super.hashCode() + field.hashCode();
-	}
+	public boolean canRead(Object ctx)  { return canRead()  && (ctx != null || parts.isFieldStatic());  }
+		
+	public int hashCode() { return 41 * super.hashCode() + parts.hashCode(); }
 	
 	@Override
 	public boolean equals(Object other) {
@@ -56,10 +46,15 @@ public abstract class AbstractListFieldConnector extends AbstractListDataConnect
 			final AbstractListFieldConnector that = (AbstractListFieldConnector) other;
 			return super.equals(other) 
 					&& that.canEqual(this)
-					&& this.field.equals(that.field);
+					&& this.parts.equals(that.parts);
 		} else {
 			return false;
 		}
+	}
+	
+	
+	protected Object readFromField(Object ctx) throws Exception {
+		return parts.readFromField(ctx);
 	}
 
 }

@@ -20,66 +20,39 @@
 package org.td4j.core.internal.binding.model;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import ch.miranet.commons.ObjectTK;
 
 
 
 public class IndividualFieldConnector extends AbstractIndividualDataConnector {
 
-	private final Field field;
+	private final FieldConnectorParts parts;
 
 	public IndividualFieldConnector(Class<?> ctxType, Field field) {
 		super(ctxType, field.getType());
 
-		this.field = field;
+		this.parts = new FieldConnectorParts(field);
 	}
 	
-	public Field getField() {
-		return field;
-	}
+	public Field getField() { return parts.getField(); }
 
-	public boolean canRead()  { return true; }
-	public boolean canWrite() { return ! Modifier.isFinal(field.getModifiers()); }
+	public boolean canRead()  { return parts.canRead(); }
+	public boolean canWrite() { return parts.canWrite(); }
 	
-	public boolean canRead(Object ctx) {
-		return canRead() && (ctx != null || Modifier.isStatic(field.getModifiers()));
-	}
+	public boolean canRead(Object ctx)  { return canRead()  && (ctx != null || parts.isFieldStatic());  }
+	public boolean canWrite(Object ctx) {	return canWrite() && (ctx != null || parts.isFieldStatic()); }
 
-	public boolean canWrite(Object ctx) {
-		return canWrite() && (ctx != null || Modifier.isStatic(field.getModifiers())); 
-	}
-
-	@Override
-	protected Object readValue0(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		return field.get(ctx);
-	}
-
-	@Override
-	protected void writeValue0(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		field.set(ctx, val);
-	}
-
-	@Override
 	public String toString() {
-		return getContextType().getName() + "#" + field.getName();
+		return getContextType().getName() + "#" + parts.toString();
 	}
 	
-	@Override
-	public int hashCode() {
-		return 41 * super.hashCode() + field.hashCode();
-	}
+	public int hashCode() { return 41 * super.hashCode() + parts.hashCode(); }
 	
-	@Override
 	public boolean equals(Object other) {
 		if (other instanceof IndividualFieldConnector) {
 			final IndividualFieldConnector that = (IndividualFieldConnector) other;
 			return super.equals(other)
 					&& that.canEqual(this)
-					&& this.field.equals(that.field);
+					&& this.parts.equals(that.parts);
 		} else {
 			return false;
 		}
@@ -88,6 +61,17 @@ public class IndividualFieldConnector extends AbstractIndividualDataConnector {
 	@Override
 	public boolean canEqual(Object other) {
 		return other instanceof IndividualFieldConnector;
+	}
+
+	
+	@Override
+	protected Object readValue0(Object ctx) throws Exception {
+		return parts.readFromField(ctx);
+	}
+
+	@Override
+	protected void writeValue0(Object ctx, Object val) throws Exception {
+		parts.writeToField(ctx, val);
 	}
 
 }
