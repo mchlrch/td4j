@@ -50,7 +50,7 @@ public class IndividualMethodConnector extends AbstractIndividualDataConnector {
 		return getContextType().getName() + "." + parts.toString();
 	}
 	
-	public int hashCode() {	return parts.hashCode(); }
+	public int hashCode() {	return 41 * super.hashCode() + parts.hashCode(); }
 	
 	public boolean equals(Object other) {
 		if (other instanceof IndividualMethodConnector) {

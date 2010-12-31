@@ -40,7 +40,7 @@ public abstract class AbstractListMethodConnector extends AbstractListDataConnec
 	
 	public boolean canRead(Object ctx) { return canRead() && (ctx != null || parts.isGetterStatic());	}
 	
-	public int hashCode() { return parts.hashCode(); }
+	public int hashCode() { return 41 * super.hashCode() + parts.hashCode(); }
 	
 	public boolean equals(Object other) {
 		if (other instanceof AbstractListMethodConnector) {
