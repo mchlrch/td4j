@@ -36,13 +36,6 @@ public class ArrayMethodConnector extends AbstractListMethodConnector {
 		if ( ! getter.getReturnType().isArray()) throw new IllegalArgumentException("not an array type: " + getter.getReturnType());
 	}
 	
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		final Object[] value = (Object[]) getGetterMethod().invoke(ctx, getArgumentValues());
-		return Arrays.asList(value);
-	}
-	
-	@Override
 	public String toString() {
 		return getContextType().getName() + "." + getGetterMethod().getName() + " : " + getValueType() + "[]";
 	}
@@ -51,5 +44,11 @@ public class ArrayMethodConnector extends AbstractListMethodConnector {
 	public boolean canEqual(Object other) {
 		return other instanceof ArrayMethodConnector;
 	}
+	
+	@Override
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		final Object[] value = (Object[]) readFromGetter(ctx);
+		return Arrays.asList(value);
+	}	
 
 }

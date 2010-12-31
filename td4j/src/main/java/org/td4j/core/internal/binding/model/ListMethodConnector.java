@@ -35,12 +35,6 @@ public class ListMethodConnector extends AbstractListMethodConnector {
 		if ( ! Collection.class.isAssignableFrom(returnType)) throw new IllegalArgumentException("not a collection type: " + returnType);
 	}
 	
-	@Override
-	protected Collection<?> readValue0(Object ctx) throws Exception {
-		return (Collection<?>) getGetterMethod().invoke(ctx, getArgumentValues());
-	}
-	
-	@Override
 	public String toString() {
 		return getContextType().getName() + "." + getGetterMethod().getName() + " : List<" + getValueType() + ">";
 	}
@@ -48,6 +42,11 @@ public class ListMethodConnector extends AbstractListMethodConnector {
 	@Override
 	public boolean canEqual(Object other) {
 		return other instanceof ListMethodConnector;
+	}
+	
+	@Override
+	protected Collection<?> readValue0(Object ctx) throws Exception {
+		return (Collection<?>) readFromGetter(ctx);
 	}
 	
 }

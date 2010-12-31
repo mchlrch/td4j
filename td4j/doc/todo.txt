@@ -9,7 +9,8 @@ x Aufrufe zu Model und zu Widget immer in try-catch-finally: keine undefinierten
 x Re-Naming to *Operation*: InvokeExecutableAction, AbstractExecutable (+Subclasses)
 ?! code duplication: GenericForm
 x code duplication: IndividualWidgetController & ListWidgetController
-- Gemeinsame Teile von XYMethodConnector respektive XYFieldConnectors in gemeinsame delegate Klasse auslagern
+x Gemeinsame Teile von IndividualMethodConnector & AbstractListMethodConnector in gemeinsame delegate Klasse auslagern 
+- Gemeinsame Teile von IndividualFieldConnector  & AbstractListFieldConnector  in gemeinsame delegate Klasse auslagern
 
 
 
