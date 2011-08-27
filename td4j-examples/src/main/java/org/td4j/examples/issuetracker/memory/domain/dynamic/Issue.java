@@ -29,7 +29,7 @@ import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.examples.issuetracker.memory.domain.master.Severity;
 import org.td4j.examples.issuetracker.memory.domain.master.Status;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 @ShowPropertiesInEditorList({"title", "status", "severity"})
 @Companions(CommentFactory.class)
@@ -55,7 +55,7 @@ public class Issue {
 	}
 	
 	public  IssueContainer getContainer()                         { return container; }
-	private void           setContainer(IssueContainer container) { this.container = ObjectTK.enforceNotNull(container, "container"); }
+	private void           setContainer(IssueContainer container) { this.container = TK.Objects.assertNotNull(container, "container"); }
 
 	public String getTitle()             { return title; }
 	public void   setTitle(String title) { this.title = title; }
