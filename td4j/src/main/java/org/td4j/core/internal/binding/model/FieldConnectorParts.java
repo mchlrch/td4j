@@ -22,7 +22,7 @@ package org.td4j.core.internal.binding.model;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class FieldConnectorParts {
 	
@@ -44,12 +44,12 @@ public class FieldConnectorParts {
 	
 	
 	public Object readFromField(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		return field.get(ctx);
 	}
 
 	public void writeToField(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		field.set(ctx, val);
 	}
 	

@@ -29,7 +29,7 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.swing.binding.SelectionWidget;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class ListSelectionWidgetAdapter implements SelectionWidget {
 	
@@ -41,7 +41,7 @@ public class ListSelectionWidgetAdapter implements SelectionWidget {
 	private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<MouseMotionListener>();
 	
 	public ListSelectionWidgetAdapter(JList list) {
-		this.list = ObjectTK.enforceNotNull(list, "list");
+		this.list = TK.Objects.assertNotNull(list, "list");
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 	

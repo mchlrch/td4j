@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.td4j.core.metamodel.feature.MetaClassKey;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.container.FeatureProvider;
 
 
@@ -34,7 +34,7 @@ public abstract class MetaModel implements FeatureProvider, MetaClassProvider {
 	
 	@Override
 	public MetaClass getMetaClass(Class<?> cls) {
-		ObjectTK.enforceNotNull(cls, "cls");		
+		TK.Objects.assertNotNull(cls, "cls");		
 		final MetaClassKey key = metaClassKey(cls);		
 		return getFeature(key);
 	}

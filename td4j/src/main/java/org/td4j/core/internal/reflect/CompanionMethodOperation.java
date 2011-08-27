@@ -25,9 +25,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
-import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.TK;
 
 
 public class CompanionMethodOperation extends AbstractOperation {
@@ -42,21 +40,21 @@ public class CompanionMethodOperation extends AbstractOperation {
 	
 	// TODO die Bedeutung von statik ist, dass kein model context für die invokation gebraucht wird => contextIndependent
 	public CompanionMethodOperation(Class<?> modelType, Object companion, Method method, String... paramNames) {
-		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
+		this.modelType = TK.Objects.assertNotNull(modelType, "modelType");
 		
 		final boolean statikMethod = Modifier.isStatic(method.getModifiers());		
 		if (statikMethod) {
 			this.companion = null;
 		} else {
-			this.companion = ObjectTK.enforceNotNull(companion, "companion");
+			this.companion = TK.Objects.assertNotNull(companion, "companion");
 		}		
 		
-		this.method = ObjectTK.enforceNotNull(method, "method");
+		this.method = TK.Objects.assertNotNull(method, "method");
 		if ( ! method.isAccessible()) {
 			method.setAccessible(true);
 		}
 
-		itemType = ReflectionTK.getItemType(method);
+		itemType = TK.Reflection.getItemType(method);
 
 		parameters = createInvokationParameters(paramNames, method.getParameterTypes());
 		
@@ -105,7 +103,7 @@ public class CompanionMethodOperation extends AbstractOperation {
 	public String toString() {
 		final String name = method.getName();
 		final String paramNames = paramNamesToString(parameters);
-		return StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
+		return TK.Strings.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
 	}
 
 }

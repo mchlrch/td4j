@@ -19,7 +19,7 @@
 
 package org.td4j.core.internal.metamodel;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 class StatefulJavaMetaClass {
 	
@@ -29,7 +29,7 @@ class StatefulJavaMetaClass {
 	private State state;
 	
 	StatefulJavaMetaClass(JavaMetaClass<?> metaClass, State state) {
-		this.metaClass = ObjectTK.enforceNotNull(metaClass, "metaClass");
+		this.metaClass = TK.Objects.assertNotNull(metaClass, "metaClass");
 		setState(state);
 	}
 	
@@ -42,7 +42,7 @@ class StatefulJavaMetaClass {
 	}
 	
 	void setState(State state) {
-		this.state = ObjectTK.enforceNotNull(state, "state");
+		this.state = TK.Objects.assertNotNull(state, "state");
 	}
 
 	@Override

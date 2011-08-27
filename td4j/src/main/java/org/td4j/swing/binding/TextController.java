@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class TextController extends IndividualSwingWidgetController<JTextField> {
@@ -60,7 +60,7 @@ public class TextController extends IndividualSwingWidgetController<JTextField> 
 	public TextController(JTextField widget, IndividualDataProxy proxy, boolean registerListeners) {
 		super(proxy);
 
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");
 
 		// PEND: test mode only - ChoiceUI
 		if (registerListeners) {

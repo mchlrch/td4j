@@ -20,8 +20,7 @@
 package org.td4j.core.internal.reflect;
 
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public class InvokationParameter {
@@ -30,8 +29,8 @@ public class InvokationParameter {
 	private final Class<?> type;
 
 	InvokationParameter(String name, Class<?> type) {
-		this.name = StringTK.enforceNotEmpty(name, "name");
-		this.type = ObjectTK.enforceNotNull(type, "type");
+		this.name = TK.Strings.assertNotEmpty(name, "name");
+		this.type = TK.Objects.assertNotNull(type, "type");
 	}
 
 	public String getName() {

@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class LabelController<T extends Component> extends IndividualSwingWidgetController<T> {
@@ -34,7 +34,7 @@ public class LabelController<T extends Component> extends IndividualSwingWidgetC
 
 	public LabelController(T widget, IndividualDataProxy proxy) {
 		super(proxy);
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");
 
 		try {
 			setTextMethod = widget.getClass().getMethod("setText", new Class[] { String.class });

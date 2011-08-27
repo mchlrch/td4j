@@ -53,7 +53,7 @@ import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -80,7 +80,7 @@ public class WidgetBuilder<T> {
 	}
 	
 	public WidgetBuilder(Mediator<T> mediator, MetaModel metaModel, Navigator navigator) {
-		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
+		this.mediator = TK.Objects.assertNotNull(mediator, "mediator");
 		this.metaModel = metaModel;
 		this.navigator = navigator;
 	}
@@ -167,7 +167,7 @@ public class WidgetBuilder<T> {
 
 	public WidgetBuilder<T> caption(Caption widget) {
 		if (currentCaption != null) throw new IllegalStateException("caption pending");
-		this.currentCaption = ObjectTK.enforceNotNull(widget, "widget");
+		this.currentCaption = TK.Objects.assertNotNull(widget, "widget");
 		return this;
 	}
 

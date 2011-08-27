@@ -59,7 +59,7 @@ import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
 import org.td4j.swing.workbench.Workbench;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class GenericEditor extends Editor {
 	
@@ -98,8 +98,8 @@ public class GenericEditor extends Editor {
 		super(workbench, modelType);
 		
 		this.mediator = new Mediator<Object>(modelType);
-		ObjectTK.enforceNotNull(model,       "model");
-		ObjectTK.enforceNotNull(formFactory, "formFactory");			
+		TK.Objects.assertNotNull(model,       "model");
+		TK.Objects.assertNotNull(formFactory, "formFactory");			
 
 		final JPanel header = new JPanel(new GridBagLayout());
 		typeLabel = new JLabel(modelType.getName());

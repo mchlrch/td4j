@@ -59,7 +59,7 @@ import org.td4j.swing.internal.workbench.GenericEditorFactory;
 import org.td4j.swing.internal.workbench.GenericFormFactory;
 import org.td4j.swing.workbench.Editor.EditorContent;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.service.SvcProvider;
 import ch.miranet.commons.service.SvcRepository;
 
@@ -189,8 +189,8 @@ public class Workbench extends JFrame {
   }
 
   private Workbench(final AppCtx appCtx, final EditorFactory editorFactory, final List<Class<?>> sidebarEntries) {
-  	this.appCtx = ObjectTK.enforceNotNull(appCtx, "appCtx");
-    this.editorFactory = ObjectTK.enforceNotNull(editorFactory, "editorFactory");
+  	this.appCtx = TK.Objects.assertNotNull(appCtx, "appCtx");
+    this.editorFactory = TK.Objects.assertNotNull(editorFactory, "editorFactory");
     this.navigator = new Navigator(this);
 
     this.sidebarModel = new SidebarModel(this, sidebarEntries);
@@ -340,8 +340,8 @@ public class Workbench extends JFrame {
     private Class<?> currentClass;
 
     private SidebarModel(final Workbench wb, final List<Class<?>> sidebarEntries) {
-      this.workbench = ObjectTK.enforceNotNull(wb, "wb");
-      this.currentClassOptions = ObjectTK.enforceNotNull(sidebarEntries, "sidebarEntries");
+      this.workbench = TK.Objects.assertNotNull(wb, "wb");
+      this.currentClassOptions = TK.Objects.assertNotNull(sidebarEntries, "sidebarEntries");
     }
 
     public Class<?> getCurrentClass() {
@@ -350,7 +350,7 @@ public class Workbench extends JFrame {
 
     // called via sidebar selection
     public void setCurrentClass(Class<?> currentClass) {
-      if (ObjectTK.equal(this.currentClass, currentClass))
+      if (TK.Objects.equal(this.currentClass, currentClass))
         return;
 
       workbench.seek(currentClass);

@@ -22,7 +22,7 @@ package org.td4j.core.internal.reflect;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class AbstractOperation {
@@ -44,7 +44,7 @@ public abstract class AbstractOperation {
 		for (InvokationParameter param : parameters) {
 			if (paramNames.length() > 0) paramNames.append(", ");
 			final String paramName = param.getName();
-			if ( ! StringTK.isEmpty(paramName)) {
+			if ( ! TK.Strings.isEmpty(paramName)) {
 				paramNames.append(paramName);
 			} else {
 				paramNames.append(param.getType().getSimpleName());

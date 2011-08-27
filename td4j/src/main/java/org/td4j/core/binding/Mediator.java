@@ -28,7 +28,7 @@ import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -41,7 +41,7 @@ public class Mediator<T> extends Observable implements ContextSocket<T> {
 	private final LoopbackObserver loopbackObserver = new LoopbackObserver(this);
 
 	public Mediator(Class<?> ctxType) {
-		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
+		this.ctxType = TK.Objects.assertNotNull(ctxType, "ctxType");
 	}
 
 	public Class<?> getContextType() {
@@ -115,7 +115,7 @@ public class Mediator<T> extends Observable implements ContextSocket<T> {
 		private final Mediator<?> mediator;
 
 		private LoopbackObserver(Mediator<?> mediator) {
-			this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
+			this.mediator = TK.Objects.assertNotNull(mediator, "mediator");
 		}
 
 		public void observableChanged(ChangeEvent event) {

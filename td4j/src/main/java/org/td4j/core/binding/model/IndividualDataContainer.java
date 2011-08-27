@@ -24,8 +24,7 @@ import org.td4j.core.internal.binding.model.converter.DefaultConverterRepository
 import org.td4j.core.internal.binding.model.converter.IConverter;
 import org.td4j.core.model.Observable;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -43,8 +42,8 @@ public class IndividualDataContainer<T> extends Observable {
 	}
 
 	public IndividualDataContainer(Class<?> contentType, String propertyName, boolean canRead, boolean canWrite) {
-		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
-		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
+		this.contentType = TK.Objects.assertNotNull(contentType, "contentType");
+		this.propertyName = TK.Strings.assertNotEmpty(propertyName, "propertyName");
 
 		this.canRead = canRead;
 		this.canWrite = canWrite;
@@ -71,7 +70,7 @@ public class IndividualDataContainer<T> extends Observable {
 	}
 
 	public void setContent(T newContent) {
-		if (ObjectTK.equal(this.content, newContent)) return;
+		if (TK.Objects.equal(this.content, newContent)) return;
 
 		this.content = newContent;
 		changeSupport.fireStateChange();

@@ -23,15 +23,14 @@ import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
 
-import ch.miranet.commons.ArrayTK;
-
+import ch.miranet.commons.TK;
 
 public class CompositeFormFactory implements FormFactory {
 
 	private final FormFactory[] delegates;
 
 	public CompositeFormFactory(FormFactory... delegates) {
-		this.delegates = ArrayTK.enforceNotEmpty(delegates, "delegates");
+		this.delegates = TK.Arrays.assertNotEmpty(delegates, "delegates");
 	}
 
 	@Override

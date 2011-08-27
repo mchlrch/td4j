@@ -28,7 +28,7 @@ import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class ByClassNameFormFactory implements FormFactory {
@@ -68,7 +68,7 @@ public class ByClassNameFormFactory implements FormFactory {
 
 		private ByClassNameForm(Editor editor, Class<?> modelType, Constructor<? extends JComponent> panelConstructor) {
 			super(editor, modelType);
-			this.panelConstructor = ObjectTK.enforceNotNull(panelConstructor, "panelConstructor");
+			this.panelConstructor = TK.Objects.assertNotNull(panelConstructor, "panelConstructor");
 		}
 
 		@Override

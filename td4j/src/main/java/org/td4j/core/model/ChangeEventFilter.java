@@ -20,7 +20,7 @@
 package org.td4j.core.model;
 
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.filter.Filter;
 
 
@@ -30,8 +30,8 @@ public class ChangeEventFilter implements Filter<ChangeEvent> {
 	private final ChangeEvent.Type type;
 
 	public ChangeEventFilter(Object src, ChangeEvent.Type type) {
-		this.src = ObjectTK.enforceNotNull(src, "src");
-		this.type = ObjectTK.enforceNotNull(type, "type");
+		this.src = TK.Objects.assertNotNull(src, "src");
+		this.type = TK.Objects.assertNotNull(type, "type");
 	}
 
 	public boolean accept(ChangeEvent element) {

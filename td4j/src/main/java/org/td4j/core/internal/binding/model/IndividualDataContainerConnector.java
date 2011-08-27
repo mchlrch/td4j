@@ -21,7 +21,7 @@ package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.binding.model.IndividualDataContainer;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class IndividualDataContainerConnector extends AbstractIndividualDataConnector {
@@ -43,13 +43,13 @@ public class IndividualDataContainerConnector extends AbstractIndividualDataConn
 
 	@Override
 	protected Object readValue0(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		return contextAsContainer(ctx).getContent();
 	}
 
 	@Override
 	protected void writeValue0(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		contextAsContainer(ctx).setContent(val);
 	}
 

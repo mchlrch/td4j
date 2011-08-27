@@ -22,8 +22,7 @@ package org.td4j.core.reflect;
 import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.ListDataConnector;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 public class IndividualProperty implements IndividualDataConnector, Property {
 	
@@ -36,8 +35,8 @@ public class IndividualProperty implements IndividualDataConnector, Property {
 	}
 	
 	public IndividualProperty(String name, IndividualDataConnector dataConnector, ListDataConnector choiceOptionsConnector) {
-		this.name = StringTK.enforceNotEmpty(name, "name");
-		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
+		this.name = TK.Strings.assertNotEmpty(name, "name");
+		this.dataConnector = TK.Objects.assertNotNull(dataConnector, "dataConnector");
 		this.choiceOptionsConnector = choiceOptionsConnector;
 	}
 	
@@ -54,12 +53,12 @@ public class IndividualProperty implements IndividualDataConnector, Property {
 	}
 	
 	public Object readValue(Object ctx) {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		return dataConnector.readValue(ctx);
 	}
 
 	public void writeValue(Object ctx, Object val) {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		dataConnector.writeValue(ctx, val);
 	}
 

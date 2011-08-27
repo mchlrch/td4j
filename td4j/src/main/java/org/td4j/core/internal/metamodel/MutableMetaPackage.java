@@ -25,8 +25,7 @@ import java.util.List;
 
 import org.td4j.core.metamodel.MetaPackage;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 public class MutableMetaPackage extends MetaPackage {
 	
@@ -42,7 +41,7 @@ public class MutableMetaPackage extends MetaPackage {
 	
 	// TODO: handle DEFAULT (root) package without name -> root pkg is the only one not requiring a name (necessary to allow Classes in the default Pkg -> write testcase for that)
 	protected MutableMetaPackage(String simpleName, MutableMetaPackage parent) {
-		this.simpleName = StringTK.enforceNotEmpty(simpleName, "simpleName");		
+		this.simpleName = TK.Strings.assertNotEmpty(simpleName, "simpleName");		
 		this.fqn = parent != null ? parent.getName() + PKG_SEPARATOR + simpleName : simpleName;
 		
 		this.parent = parent;
@@ -72,7 +71,7 @@ public class MutableMetaPackage extends MetaPackage {
 	}
 	
 	protected void addChild(MetaPackage pkg) {
-		ObjectTK.enforceNotNull(pkg, "pkg");
+		TK.Objects.assertNotNull(pkg, "pkg");
 		
 		// avoid duplicate packages
 		for (MetaPackage child : children) {
@@ -94,7 +93,7 @@ public class MutableMetaPackage extends MetaPackage {
 	public boolean equals(Object other) {
 		if (other instanceof MutableMetaPackage) {
 			final MutableMetaPackage that = (MutableMetaPackage) other;
-			return that.canEqual(this) && ObjectTK.equal(this.getParent(), that.getParent()) && ObjectTK.equal(this.getSimpleName(), that.getSimpleName());
+			return that.canEqual(this) && TK.Objects.equal(this.getParent(), that.getParent()) && TK.Objects.equal(this.getSimpleName(), that.getSimpleName());
 			
 		} else {
 			return false;

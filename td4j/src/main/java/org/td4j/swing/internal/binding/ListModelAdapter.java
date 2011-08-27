@@ -23,7 +23,7 @@ import javax.swing.ListModel;
 
 import org.td4j.swing.binding.OrderedElementModel;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class ListModelAdapter implements OrderedElementModel {
@@ -31,7 +31,7 @@ public class ListModelAdapter implements OrderedElementModel {
 	private final ListModel listModel;
 
 	public ListModelAdapter(ListModel listModel) {
-		this.listModel = ObjectTK.enforceNotNull(listModel, "listModel");
+		this.listModel = TK.Objects.assertNotNull(listModel, "listModel");
 	}
 
 	@Override

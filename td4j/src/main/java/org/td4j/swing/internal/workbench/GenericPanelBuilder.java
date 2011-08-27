@@ -49,7 +49,7 @@ import org.td4j.swing.binding.TextController;
 import org.td4j.swing.binding.WidgetBuilder;
 import org.td4j.swing.internal.binding.TableControllerFactory;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class GenericPanelBuilder {
 	
@@ -57,7 +57,7 @@ public class GenericPanelBuilder {
 	private final JPanel panel;
 	
 	public GenericPanelBuilder(final WidgetBuilder<?> wBuilder) {
-		this.wBuilder = ObjectTK.enforceNotNull(wBuilder, "wBuilder");
+		this.wBuilder = TK.Objects.assertNotNull(wBuilder, "wBuilder");
 		this.panel = new JPanel(new GridBagLayout());		
 	}
 	

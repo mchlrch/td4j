@@ -25,10 +25,7 @@ import java.util.Map.Entry;
 
 import org.td4j.core.model.ChangeEvent;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
-
-
+import ch.miranet.commons.TK;
 
 public class ChangeEventImpl extends ChangeEvent {
 
@@ -46,8 +43,8 @@ public class ChangeEventImpl extends ChangeEvent {
 	private Object customPayload;
 
 	public ChangeEventImpl(Object source, Type type) {
-		this.source = ObjectTK.enforceNotNull(source, "source");
-		this.type = ObjectTK.enforceNotNull(type, "type");
+		this.source = TK.Objects.assertNotNull(source, "source");
+		this.type = TK.Objects.assertNotNull(type, "type");
 	}
 
 	@Override
@@ -123,7 +120,7 @@ public class ChangeEventImpl extends ChangeEvent {
 	}
 
 	public void addChangeRecord(String propertyName, ChangeRecord changeRecord) {
-		if (StringTK.isEmpty(propertyName)) throw new IllegalArgumentException("propertyName is empty");
+		if (TK.Strings.isEmpty(propertyName)) throw new IllegalArgumentException("propertyName is empty");
 
 		if ( ! (type == Type.PropertyChange || type == Type.LazyPropertyChange)) throw new IllegalStateException("event type is NOT propertyChange");
 

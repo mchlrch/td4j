@@ -21,7 +21,7 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.binding.ContextSocket;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 class CountingContextSocket implements ContextSocket<Object> {
@@ -33,7 +33,7 @@ class CountingContextSocket implements ContextSocket<Object> {
 	public int refreshFromContextCount;
 
 	CountingContextSocket(Class<?> ctxType) {
-		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
+		this.ctxType = TK.Objects.assertNotNull(ctxType, "ctxType");
 	}
 
 	public Object getContext() {

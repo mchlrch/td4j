@@ -27,7 +27,7 @@ import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.IObserver;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -45,9 +45,9 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	}
 	
 	public SelectionController(ListSelectionModel selectionModel, OrderedElementModel dataModel, IndividualDataProxy proxy, SelectionWidget selectionWidget) {
-		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
-		this.proxy = ObjectTK.enforceNotNull(proxy, "proxy");
-		this.selectionWidget = ObjectTK.enforceNotNull(selectionWidget, "selectionWidget");
+		this.dataModel = TK.Objects.assertNotNull(dataModel, "dataModel");
+		this.proxy = TK.Objects.assertNotNull(proxy, "proxy");
+		this.selectionWidget = TK.Objects.assertNotNull(selectionWidget, "selectionWidget");
 
 		this.selectionModel = selectionModel;
 
@@ -100,7 +100,7 @@ public class SelectionController implements ListSelectionListener, IObserver {
 	}
 
 	private int indexOfObject(Object obj) {
-		ObjectTK.enforceNotNull(obj, "obj");
+		TK.Objects.assertNotNull(obj, "obj");
 
 		for (int i = 0, n = dataModel.getSize(); i < n; i++) {
 			final Object candidate = dataModel.getElementAt(i);

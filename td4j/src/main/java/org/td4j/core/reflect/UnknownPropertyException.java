@@ -20,19 +20,18 @@
 package org.td4j.core.reflect;
 
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public class UnknownPropertyException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	private static String prepareSinglePropertyMsg(Class<?> cls, String propertyName) {
-		return String.format("Property not found: %1$s#%2$s", cls.getName(), StringTK.enforceNotEmpty(propertyName, "propertyName"));
+		return String.format("Property not found: %1$s#%2$s", cls.getName(), TK.Strings.assertNotEmpty(propertyName, "propertyName"));
 	}
 	
 	private static String prepareMultiPropertiesMsg(Class<?> cls, String... propertyNames) {
-		ArrayTK.enforceNotEmpty(propertyNames, "propertyNames");
+		TK.Arrays.assertNotEmpty(propertyNames, "propertyNames");
 		final StringBuilder sb = new StringBuilder("Properties not found " + cls.getName() + ": ");
 		boolean firstElement = true;
 		for (String pName : propertyNames) {

@@ -51,8 +51,7 @@ import org.td4j.core.internal.binding.model.converter.IConverterRepository;
 import org.td4j.core.internal.reflect.InvokationParameter;
 import org.td4j.swing.binding.WidgetBuilder;
 
-import ch.miranet.commons.ListTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class InvokationParameterDialog extends JDialog {
@@ -101,7 +100,7 @@ public class InvokationParameterDialog extends JDialog {
 	};
 
 	public InvokationParameterDialog(List<InvokationParameter> params) {
-		ListTK.enforceNotEmpty(params, "params");
+		TK.Lists.assertNotEmpty(params, "params");
 		this.parameterList = new ArrayList<InvokationParameter>(params);
 
 		wBuilder.getMediator().setContext(this);
@@ -203,7 +202,7 @@ public class InvokationParameterDialog extends JDialog {
 		private final Component comp;
 		
 		private FocusRequester(Component comp) {
-			this.comp = ObjectTK.enforceNotNull(comp, "comp");
+			this.comp = TK.Objects.assertNotNull(comp, "comp");
 		}		
 		
 		@Override

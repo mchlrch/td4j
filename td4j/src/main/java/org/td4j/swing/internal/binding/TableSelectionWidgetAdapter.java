@@ -24,7 +24,7 @@ import javax.swing.ListSelectionModel;
 
 import org.td4j.swing.binding.SelectionWidget;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class TableSelectionWidgetAdapter implements SelectionWidget {
 	
@@ -32,7 +32,7 @@ public class TableSelectionWidgetAdapter implements SelectionWidget {
 	private Boolean prevState;
 	
 	public TableSelectionWidgetAdapter(JTable table) {
-		this.table = ObjectTK.enforceNotNull(table, "table");
+		this.table = TK.Objects.assertNotNull(table, "table");
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 	

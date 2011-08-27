@@ -22,7 +22,7 @@ package org.td4j.swing.internal.binding;
 import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.TableController;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class TableModelAdapter implements OrderedElementModel {
@@ -30,7 +30,7 @@ public class TableModelAdapter implements OrderedElementModel {
 	private final TableController.MyTableModel tableModel;
 
 	public TableModelAdapter(TableController.MyTableModel tableModel) {
-		this.tableModel = ObjectTK.enforceNotNull(tableModel, "tableModel");
+		this.tableModel = TK.Objects.assertNotNull(tableModel, "tableModel");
 	}
 
 	@Override

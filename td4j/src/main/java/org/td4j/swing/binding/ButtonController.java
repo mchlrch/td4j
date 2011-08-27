@@ -25,7 +25,7 @@ import javax.swing.AbstractButton;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class ButtonController extends IndividualSwingWidgetController<AbstractButton> {
@@ -41,7 +41,7 @@ public class ButtonController extends IndividualSwingWidgetController<AbstractBu
 	
 	public ButtonController(AbstractButton widget, IndividualDataProxy proxy) {
 		super(proxy);
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");
 		
 		widget.addActionListener(actionListener);
 

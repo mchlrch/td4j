@@ -25,7 +25,7 @@ import org.td4j.swing.workbench.EditorFactory;
 import org.td4j.swing.workbench.FormFactory;
 import org.td4j.swing.workbench.Workbench;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class GenericEditorFactory implements EditorFactory {
@@ -34,8 +34,8 @@ public class GenericEditorFactory implements EditorFactory {
 	private final FormFactory formFactory;
 
 	public GenericEditorFactory(MetaModel model, FormFactory formFactory) {
-		this.metaModel = ObjectTK.enforceNotNull(model, "model");
-		this.formFactory = ObjectTK.enforceNotNull(formFactory, "formFactory");
+		this.metaModel = TK.Objects.assertNotNull(model, "model");
+		this.formFactory = TK.Objects.assertNotNull(formFactory, "formFactory");
 	}
 
 	public Editor createEditor(Workbench workbench, Class<?> cls) {

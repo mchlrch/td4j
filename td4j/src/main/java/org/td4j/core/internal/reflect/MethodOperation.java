@@ -26,9 +26,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
-import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.TK;
 
 
 public class MethodOperation extends AbstractOperation {
@@ -39,12 +37,12 @@ public class MethodOperation extends AbstractOperation {
 	private final List<InvokationParameter> parameters;
 
 	public MethodOperation(Method method, String... paramNames) {
-		this.method = ObjectTK.enforceNotNull(method, "method");
+		this.method = TK.Objects.assertNotNull(method, "method");
 		if ( ! method.isAccessible()) {
 			method.setAccessible(true);
 		}
 
-		itemType = ReflectionTK.getItemType(method);
+		itemType = TK.Reflection.getItemType(method);
 		statik = Modifier.isStatic(method.getModifiers());
 
 		parameters = createInvokationParameters(paramNames, method.getParameterTypes());
@@ -91,7 +89,7 @@ public class MethodOperation extends AbstractOperation {
 	public String toString() {
 		final String name = method.getName();
 		final String paramNames = paramNamesToString(parameters);
-		return StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
+		return TK.Strings.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames);
 	}
 
 }

@@ -27,11 +27,8 @@ import java.util.Map.Entry;
 
 import org.td4j.core.internal.model.ChangeEventImpl;
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.filter.Filter;
-
-
 
 public class ChangeSupport {
 
@@ -39,7 +36,7 @@ public class ChangeSupport {
 	private final Map<IObserver, Filter<ChangeEvent>> observers = new HashMap<IObserver, Filter<ChangeEvent>>();
 
 	public ChangeSupport(Object source) {
-		this.source = ObjectTK.enforceNotNull(source, "source");
+		this.source = TK.Objects.assertNotNull(source, "source");
 	}
 
 	public ChangeEvent preparePropertyChange(String propertyName, Object oldValue, Object newValue) {
@@ -72,7 +69,7 @@ public class ChangeSupport {
 	}
 
 	public void fireLazyPropertyChange(String... propertyNames) {
-		if (ArrayTK.isEmpty(propertyNames)) return;
+		if (TK.Arrays.isEmpty(propertyNames)) return;
 
 		final ChangeEventImpl eventImpl = new ChangeEventImpl(source, ChangeEvent.Type.LazyPropertyChange);
 		for (String pName : propertyNames) {

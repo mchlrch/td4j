@@ -21,14 +21,14 @@ package org.td4j.swing.workbench;
 
 import org.td4j.swing.workbench.Editor.EditorContent;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class Navigator {
 
 	private final Workbench workbench;
 
 	Navigator(Workbench workbench) {
-		this.workbench = ObjectTK.enforceNotNull(workbench, "workbench");
+		this.workbench = TK.Objects.assertNotNull(workbench, "workbench");
 	}
 
 	public void seek(Class<?> cls) {

@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class DefaultConverterRepository implements IConverterRepository {
 
@@ -70,7 +70,7 @@ public class DefaultConverterRepository implements IConverterRepository {
   }
 
   private void addConverter(Class<?> fromType, Class<?> toType, IConverter converter) {
-    ObjectTK.enforceNotNull(converter, "converter");
+  	TK.Objects.assertNotNull(converter, "converter");
     map.put(new ConverterKey(fromType, toType), converter);
 
     final IConverter reverseConverter = new ReverseConverter(converter);
@@ -89,8 +89,8 @@ public class DefaultConverterRepository implements IConverterRepository {
     private final Class<?> clsTo;
 
     private ConverterKey(Class<?> clsFrom, Class<?> clsTo) {
-      this.clsFrom = ObjectTK.enforceNotNull(clsFrom, "clsFrom");
-      this.clsTo = ObjectTK.enforceNotNull(clsTo, "clsTo");
+      this.clsFrom = TK.Objects.assertNotNull(clsFrom, "clsFrom");
+      this.clsTo = TK.Objects.assertNotNull(clsTo, "clsTo");
     }
 
     @Override

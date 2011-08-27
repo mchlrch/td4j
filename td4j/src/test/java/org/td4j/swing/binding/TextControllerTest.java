@@ -28,8 +28,7 @@ import org.td4j.core.internal.binding.model.IndividualMethodConnector;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import ch.miranet.commons.ExceptionTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class TextControllerTest {
 	
@@ -70,7 +69,7 @@ public class TextControllerTest {
 			assertTextFieldContent(DataContainer.INITIAL_VALUE, harness);
 			assertDataContainerContent(DataContainer.INITIAL_VALUE, harness);
 			
-			throw ExceptionTK.unwrap(ex);
+			throw TK.Exceptions.unwrap(ex);
 		}		
 	}
 
@@ -121,10 +120,10 @@ public class TextControllerTest {
 		public final JTextField          textField;
 		
 		private TestHarness(DataContainer dataContainer, IndividualDataProxy dataProxy, TestTextController textController, JTextField textField) {
-			this.dataContainer  = ObjectTK.enforceNotNull(dataContainer,  "dataContainer");
-			this.dataProxy      = ObjectTK.enforceNotNull(dataProxy,      "dataProxy");
-			this.textController = ObjectTK.enforceNotNull(textController, "textController");
-			this.textField      = ObjectTK.enforceNotNull(textField,      "textField");
+			this.dataContainer  = TK.Objects.assertNotNull(dataContainer,  "dataContainer");
+			this.dataProxy      = TK.Objects.assertNotNull(dataProxy,      "dataProxy");
+			this.textController = TK.Objects.assertNotNull(textController, "textController");
+			this.textField      = TK.Objects.assertNotNull(textField,      "textField");
 		}
 	}
 	

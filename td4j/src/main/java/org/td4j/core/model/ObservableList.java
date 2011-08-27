@@ -24,9 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -43,17 +41,17 @@ public class ObservableList<E> implements List<E> {
 
 	public ObservableList(List<E> delegate, ChangeSupport changeSupport, String propertyName) {
 		this(changeSupport, propertyName, delegate);
-		ObjectTK.enforceNotNull(propertyName, "propertyName");
+		TK.Objects.assertNotNull(propertyName, "propertyName");
 	}
 
 	private ObservableList(ChangeSupport changeSupport, String propertyName, List<E> delegate) {
-		this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
-		this.changeSupport = ObjectTK.enforceNotNull(changeSupport, "changeSupport");
+		this.delegate = TK.Objects.assertNotNull(delegate, "delegate");
+		this.changeSupport = TK.Objects.assertNotNull(changeSupport, "changeSupport");
 		this.propertyName = propertyName;
 	}
 
 	private void fireChange() {
-		if (StringTK.isEmpty(propertyName)) {
+		if (TK.Strings.isEmpty(propertyName)) {
 			changeSupport.fireStateChange();
 		} else {
 			changeSupport.fireLazyPropertyChange(propertyName);

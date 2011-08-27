@@ -37,8 +37,7 @@ import org.td4j.core.model.IObserver;
 import org.td4j.core.model.ObservableTK;
 import org.td4j.swing.workbench.Navigator;
 
-import ch.miranet.commons.ObjectTK;
-
+import ch.miranet.commons.TK;
 
 
 public class LinkController extends IndividualSwingWidgetController<JLabel> {
@@ -52,8 +51,8 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 	
 	public LinkController(final JLabel widget, IndividualDataProxy proxy, final Navigator navigator) {
 		super(proxy);
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");		
-		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");		
+		this.navigator = TK.Objects.assertNotNull(navigator, "navigator");
 		
 		widget.addMouseListener(new MouseAdapter() {
 			@Override
@@ -155,7 +154,7 @@ public class LinkController extends IndividualSwingWidgetController<JLabel> {
 		private Object target;
 		
 		private LinkTargetObserver(LinkController controller) {
-			this.controller = ObjectTK.enforceNotNull(controller, "controller");		
+			this.controller = TK.Objects.assertNotNull(controller, "controller");		
 		}
 		
 		private boolean attachToTarget(Object target) {
