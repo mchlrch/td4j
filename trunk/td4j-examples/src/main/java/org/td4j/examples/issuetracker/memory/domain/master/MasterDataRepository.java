@@ -24,14 +24,14 @@ import java.util.List;
 import org.td4j.core.reflect.Operation;
 import org.td4j.examples.issuetracker.memory.EntityRepo;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class MasterDataRepository {
 	
 	private final EntityRepo repo;
 	
 	public MasterDataRepository(EntityRepo repo) {
-		this.repo = ObjectTK.enforceNotNull(repo, "repo");
+		this.repo = TK.Objects.assertNotNull(repo, "repo");
 	}
 	
 	@Operation

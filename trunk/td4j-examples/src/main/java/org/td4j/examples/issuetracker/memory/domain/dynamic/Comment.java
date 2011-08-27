@@ -25,7 +25,7 @@ import java.util.Date;
 
 import org.td4j.core.reflect.ShowPropertiesInEditorList;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 @ShowPropertiesInEditorList({ "description", "commentedAt", "withLink" })
 public class Comment {
@@ -45,7 +45,7 @@ public class Comment {
 	}
 	
 	public  Issue getIssue()            { return issue; }
-	private void  setIssue(Issue issue) { this.issue = ObjectTK.enforceNotNull(issue, "issue"); } 
+	private void  setIssue(Issue issue) { this.issue = TK.Objects.assertNotNull(issue, "issue"); } 
 	
 	public String getDescription()                   { return description; }
 	public void   setDescription(String description) { this.description = description; }

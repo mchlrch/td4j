@@ -25,7 +25,7 @@ import org.td4j.examples.issuetracker.memory.domain.dynamic.IssueContainer;
 import org.td4j.examples.issuetracker.memory.domain.master.IssueContainerTemplate;
 import org.td4j.examples.issuetracker.memory.domain.master.MasterDataFactory;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 /**
  * This factory delegates to the MasterDataFactory.
@@ -42,8 +42,8 @@ public class FluentMasterDataFactory {
 	private final DynamicDataFactory dynamic;
 	
 	public FluentMasterDataFactory(MasterDataFactory master, DynamicDataFactory dynamic) {
-		this.master  = ObjectTK.enforceNotNull(master, "master");
-		this.dynamic = ObjectTK.enforceNotNull(dynamic, "dynamic");
+		this.master  = TK.Objects.assertNotNull(master, "master");
+		this.dynamic = TK.Objects.assertNotNull(dynamic, "dynamic");
 	}
 	
 	@Operation(paramNames={"name"})

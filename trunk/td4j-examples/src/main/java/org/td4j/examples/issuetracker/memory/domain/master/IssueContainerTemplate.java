@@ -28,7 +28,7 @@ import org.td4j.examples.issuetracker.memory.FluentMasterDataFactory;
 import org.td4j.examples.issuetracker.memory.domain.NamedElement;
 import org.td4j.examples.issuetracker.memory.domain.dynamic.IssueContainer;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 @Companions({ FluentMasterDataFactory.class, MasterDataRepository.class })
 public class IssueContainerTemplate extends NamedElement {
@@ -53,15 +53,15 @@ public class IssueContainerTemplate extends NamedElement {
 	}
 
 	void addSeverity(Severity severity) {
-		severities.add(ObjectTK.enforceNotNull(severity, "severity"));
+		severities.add(TK.Objects.assertNotNull(severity, "severity"));
 	}
 
 	void addStatus(Status status) {
-		stati.add(ObjectTK.enforceNotNull(status, "status"));
+		stati.add(TK.Objects.assertNotNull(status, "status"));
 	}
 
 	public void addDerivate(IssueContainer container) {
-		derivates.add(ObjectTK.enforceNotNull(container, "container"));
+		derivates.add(TK.Objects.assertNotNull(container, "container"));
 	}
 
 }

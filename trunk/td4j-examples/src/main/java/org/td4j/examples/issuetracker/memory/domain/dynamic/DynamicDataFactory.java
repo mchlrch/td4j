@@ -23,7 +23,7 @@ import org.td4j.core.reflect.Operation;
 import org.td4j.examples.issuetracker.memory.EntityRepo;
 import org.td4j.examples.issuetracker.memory.domain.master.IssueContainerTemplate;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 /**
  * Responsibilities of the DynamicDataFactory:
@@ -36,7 +36,7 @@ public class DynamicDataFactory {
 	private final EntityRepo repo;
 	
 	public DynamicDataFactory(EntityRepo repo) {
-		this.repo = ObjectTK.enforceNotNull(repo, "repo");
+		this.repo = TK.Objects.assertNotNull(repo, "repo");
 	}
 	
 	@Operation
