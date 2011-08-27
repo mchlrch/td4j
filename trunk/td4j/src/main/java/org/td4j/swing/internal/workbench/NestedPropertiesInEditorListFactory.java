@@ -26,11 +26,11 @@ import java.util.Map;
 
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
-import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.core.reflect.IndividualProperty;
+import org.td4j.core.reflect.ShowPropertiesInEditorList;
 import org.td4j.core.reflect.UnknownPropertyException;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 // TODO: rewrite to get nestedProperties form OpenClassRepository
 public class NestedPropertiesInEditorListFactory {
@@ -40,8 +40,8 @@ public class NestedPropertiesInEditorListFactory {
 	
 	
 	protected NestedPropertiesInEditorListFactory(Class<?> modelType, MetaModel model) {
-		this.modelType = ObjectTK.enforceNotNull(modelType, "modelType");
-		this.metaModel = ObjectTK.enforceNotNull(model, "model");		
+		this.modelType = TK.Objects.assertNotNull(modelType, "modelType");
+		this.metaModel = TK.Objects.assertNotNull(model, "model");		
 	}
 	
 	public IndividualProperty[] createNestedProperties() {

@@ -30,7 +30,7 @@ import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.Navigator;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class GenericForm extends Form {
@@ -39,7 +39,7 @@ public class GenericForm extends Form {
 
 	GenericForm(Editor editor, Class<?> modelType, MetaModel model) {
 		super(editor, modelType);
-		this.metaModel = ObjectTK.enforceNotNull(model, "model");
+		this.metaModel = TK.Objects.assertNotNull(model, "model");
 	}
 
 	@Override

@@ -54,10 +54,8 @@ import org.td4j.core.reflect.Show;
 import org.td4j.core.reflect.ShowProperties;
 import org.td4j.core.reflect.UnknownPropertyException;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.filter.Filter;
-import ch.miranet.commons.reflect.ReflectionTK;
 import ch.miranet.commons.service.SvcProvider;
 
 public class JavaModelInspector {
@@ -177,7 +175,7 @@ public class JavaModelInspector {
 		if (exposeProps != null && exposeProps.value() != null && exposeProps.value().length > 0) {
 			for (String name : exposeProps.value()) {
 				final DataConnector con = connectorFactory.createConnector(cls, name);
-				ObjectTK.enforceNotNull(con, "con");
+				TK.Objects.assertNotNull(con, "con");
 				final NamedDataConnector nc = new NamedDataConnector(con, name);
 				result.add(nc);
 				
@@ -219,14 +217,14 @@ public class JavaModelInspector {
 	}
 	
 	private List<NamedDataConnector> createDefaultMethodConnectors(final Class<?> cls, final Level level, final HashSet<String> propertyNames) {
-		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
+		final List<Method> allMethods = TK.Reflection.getAllMethods(cls);
 		final List<NamedDataConnector> methodConnectors = new ArrayList<NamedDataConnector>();
 		for (Method m : allMethods) {
 			if ( ! defaultMethodFilter.accept(m)) continue;
 			final String pName = getterToPropertyName(m, level);
 			if (pName != null && ! propertyNames.contains(pName)) {
 				final DataConnector con = connectorFactory.createMethodConnector(cls, pName);
-				ObjectTK.enforceNotNull(con, "con");
+				TK.Objects.assertNotNull(con, "con");
 				methodConnectors.add(new NamedDataConnector(con, pName));
 				propertyNames.add(pName);
 			}
@@ -235,14 +233,14 @@ public class JavaModelInspector {
 	}
 
 	private List<NamedDataConnector> createDefaultFieldConnectors(final Class<?> cls, final Level level, final HashSet<String> propertyNames) {
-		final List<Field> allFields = ReflectionTK.getAllFields(cls);
+		final List<Field> allFields = TK.Reflection.getAllFields(cls);
 		final List<NamedDataConnector> fieldConnectors = new ArrayList<NamedDataConnector>();
 		for (Field f : allFields) {
 			final String pName = fieldToPropertyName(f, level);
 			if (pName != null && ! propertyNames.contains(pName)) {
 				f.setAccessible(true);
 				final DataConnector con = connectorFactory.createFieldConnector(cls, pName);
-				ObjectTK.enforceNotNull(con, "con");
+				TK.Objects.assertNotNull(con, "con");
 				fieldConnectors.add(new NamedDataConnector(con, pName));
 				propertyNames.add(pName);
 			}
@@ -264,7 +262,7 @@ public class JavaModelInspector {
 		}
 
 		// methods
-		final List<Method> allMethods = ReflectionTK.getAllMethods(cls);
+		final List<Method> allMethods = TK.Reflection.getAllMethods(cls);
 		for (Method method : allMethods) {
 			final Operation operationTag = method.getAnnotation(Operation.class);
 			if (operationTag != null) {
@@ -278,7 +276,7 @@ public class JavaModelInspector {
 			for (Class<?> compCls : companionSpec.value()) {
 				final Object svc = svcProvider.requireService(compCls);
 	
-				final List<Method> compMethods = ReflectionTK.getAllMethods(compCls);
+				final List<Method> compMethods = TK.Reflection.getAllMethods(compCls);
 				for (Method method : compMethods) {
 					final Operation operationTag = method.getAnnotation(Operation.class);
 					if (operationTag != null) {
@@ -355,11 +353,11 @@ public class JavaModelInspector {
 		if (returnType != null && paramTypes.length == 0 && isExposed(m, level)) {
 			final String name = m.getName();
 			if (name.startsWith("get") && name.length() > 3) {
-				return ReflectionTK.decapitalize(name.substring(3));
+				return TK.Strings.decapitalize(name.substring(3));
 
 			} else if (name.startsWith("is") && name.length() > 2) {
 				if (Boolean.class.isAssignableFrom(returnType) || boolean.class.isAssignableFrom(returnType)) {
-					return ReflectionTK.decapitalize(name.substring(2));
+					return TK.Strings.decapitalize(name.substring(2));
 				}
 			}
 		}
@@ -411,8 +409,8 @@ public class JavaModelInspector {
 		private IndividualDataConnector choiceConsumer;
 		
 		private NamedDataConnector(DataConnector connector, String name) {
-			this.connector = ObjectTK.enforceNotNull(connector, "connector");
-			this.name = StringTK.enforceNotEmpty(name, "name");
+			this.connector = TK.Objects.assertNotNull(connector, "connector");
+			this.name = TK.Strings.assertNotEmpty(name, "name");
 		}
 		
 		private void setChoiceProvider(ListDataConnector conn) { this.choiceProvider = conn; }

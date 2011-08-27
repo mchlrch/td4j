@@ -21,7 +21,7 @@ package org.td4j.core.binding.model;
 
 import org.td4j.core.model.Observable;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -37,7 +37,7 @@ public class TestObservable extends Observable {
 	private int int2;
 
 	public TestObservable(NotificationMode notificationMode) {
-		this.mode = ObjectTK.enforceNotNull(notificationMode, "notificationMode");
+		this.mode = TK.Objects.assertNotNull(notificationMode, "notificationMode");
 	}
 
 	public int getInt1() {

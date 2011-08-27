@@ -28,8 +28,7 @@ import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.reflect.DataConnector;
 import org.td4j.core.reflect.UnknownPropertyException;
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.TK;
 
 public class JavaDataConnectorFactory implements DataConnectorFactory {
 	
@@ -75,11 +74,11 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 		}
 
 		if (Collection.class.isAssignableFrom(field.getType())) {
-			final Class<?> itemType = ReflectionTK.getItemType(field);
+			final Class<?> itemType = TK.Reflection.getItemType(field);
 			final ListFieldConnector connector = new ListFieldConnector(cls, field, itemType);
 			return connector;
 		} else if (field.getType().isArray()) {
-			final Class<?> itemType = ReflectionTK.getItemType(field);
+			final Class<?> itemType = TK.Reflection.getItemType(field);
 			final ArrayFieldConnector connector = new ArrayFieldConnector(cls, field, itemType);
 			return connector;			
 		} else {
@@ -115,24 +114,24 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 
 		final Class<?> valueType = getter.getReturnType();
 		Method setter = null;
-		final Class<?>[] setterArgTypes = ArrayTK.append(argumentTypes, valueType);
+		final Class<?>[] setterArgTypes = TK.Arrays.append(argumentTypes, valueType);
 		try {
-			setter = cls.getMethod("set" + ReflectionTK.capitalize(name), setterArgTypes);
+			setter = cls.getMethod("set" + TK.Strings.capitalize(name), setterArgTypes);
 		} catch (Exception e) {
 			try {
-				setter = cls.getDeclaredMethod("set" + ReflectionTK.capitalize(name), setterArgTypes);
+				setter = cls.getDeclaredMethod("set" + TK.Strings.capitalize(name), setterArgTypes);
 			}	catch (Exception e2) {
 			}
 		}
 		if (setter != null && ! Modifier.isPublic(setter.getModifiers())) setter.setAccessible(true);
 
 		if (Collection.class.isAssignableFrom(valueType)) {
-			final Class<?> itemType = ReflectionTK.getItemType(getter);
+			final Class<?> itemType = TK.Reflection.getItemType(getter);
 			final ListMethodConnector connector = new ListMethodConnector(cls, getter, itemType, argumentValues); 
 			return connector;
 
 		} else if (valueType.isArray()) {
-			final Class<?> itemType = ReflectionTK.getItemType(getter);
+			final Class<?> itemType = TK.Reflection.getItemType(getter);
 			final ArrayMethodConnector connector = new ArrayMethodConnector(cls, getter, itemType);
 			return connector;
 			
@@ -144,7 +143,7 @@ public class JavaDataConnectorFactory implements DataConnectorFactory {
 	// ============================================================================
 	
 	protected Method findReadMethod(Class<?> cls, String name, Class<?>[] argTypes) {
-		name = ReflectionTK.capitalize(name);
+		name = TK.Strings.capitalize(name);
 		try {
 			return cls.getMethod("get" + name, argTypes);
 		} catch (Exception e) {

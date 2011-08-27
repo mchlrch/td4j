@@ -24,7 +24,7 @@ import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -35,7 +35,7 @@ public abstract class ListWidgetControllerFactory<T extends ListWidgetController
 	protected ListWidgetControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
 		super(mediator, connectorFactory);
 
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");
 		this.caption = caption;
 	}
 

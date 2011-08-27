@@ -24,7 +24,7 @@ import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class GenericFormFactory implements FormFactory {
@@ -32,7 +32,7 @@ public class GenericFormFactory implements FormFactory {
 	private final MetaModel metaModel;
 
 	public GenericFormFactory(MetaModel model) {
-		this.metaModel = ObjectTK.enforceNotNull(model, "model");
+		this.metaModel = TK.Objects.assertNotNull(model, "model");
 	}
 
 	@Override

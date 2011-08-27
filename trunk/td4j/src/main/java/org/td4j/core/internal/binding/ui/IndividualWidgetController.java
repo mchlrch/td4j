@@ -21,7 +21,7 @@ package org.td4j.core.internal.binding.ui;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class IndividualWidgetController<W> extends BaseWidgetController<W> {
@@ -30,7 +30,7 @@ public abstract class IndividualWidgetController<W> extends BaseWidgetController
 
 	
 	protected IndividualWidgetController(IndividualDataProxy proxy) {
-		dataProxy = ObjectTK.enforceNotNull(proxy, "proxy");
+		dataProxy = TK.Objects.assertNotNull(proxy, "proxy");
 		registerAsObserver(proxy);
 	}
 

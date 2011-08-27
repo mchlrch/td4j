@@ -23,8 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class MethodConnectorParts {
@@ -41,7 +40,7 @@ public class MethodConnectorParts {
 		if ( ! getter.isAccessible()) getter.setAccessible(true);
 		if (setter != null && ! setter.isAccessible()) setter.setAccessible(true);
 		
-		this.argumentValues = ObjectTK.enforceNotNull(argumentValues, "argumentValues");
+		this.argumentValues = TK.Objects.assertNotNull(argumentValues, "argumentValues");
 	}
 	
 	public Method   getGetterMethod()   { return getterMethod; }	
@@ -55,13 +54,13 @@ public class MethodConnectorParts {
 	public boolean isSetterStatic() { return Modifier.isStatic(setterMethod.getModifiers()); }
 	
 	public Object readFromGetter(Object ctx) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		return getterMethod.invoke(ctx, argumentValues);
 	}
 
 	public void writeToSetter(Object ctx, Object val) throws Exception {
-		ObjectTK.enforceNotNull(ctx, "ctx");
-		setterMethod.invoke(ctx, ArrayTK.append(argumentValues, val));
+		TK.Objects.assertNotNull(ctx, "ctx");
+		setterMethod.invoke(ctx, TK.Arrays.append(argumentValues, val));
 	}
 
 	public String toString() {

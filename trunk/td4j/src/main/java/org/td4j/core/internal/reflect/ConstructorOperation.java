@@ -24,8 +24,7 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public class ConstructorOperation extends AbstractOperation {
@@ -34,7 +33,7 @@ public class ConstructorOperation extends AbstractOperation {
 	private final List<InvokationParameter> parameters;
 
 	public ConstructorOperation(Constructor<?> constructor, String... paramNames) {
-		this.constructor = ObjectTK.enforceNotNull(constructor, "constructor");
+		this.constructor = TK.Objects.assertNotNull(constructor, "constructor");
 		if ( ! constructor.isAccessible()) {
 			constructor.setAccessible(true);
 		}
@@ -78,7 +77,7 @@ public class ConstructorOperation extends AbstractOperation {
 	public String toString() {
 		final String name = constructor.getDeclaringClass().getSimpleName();
 		final String paramNames = paramNamesToString(parameters);
-		return "+ " + (StringTK.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames));
+		return "+ " + (TK.Strings.isEmpty(paramNames) ? name : String.format("%1$s: %2$s", name, paramNames));
 	}
 
 }

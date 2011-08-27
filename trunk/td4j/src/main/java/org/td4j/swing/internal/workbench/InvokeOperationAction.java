@@ -34,7 +34,7 @@ import org.td4j.core.model.IObserver;
 import org.td4j.swing.workbench.Editor.EditorContent;
 import org.td4j.swing.workbench.Workbench;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.filter.Filter;
 
 
@@ -50,8 +50,8 @@ class InvokeOperationAction extends AbstractAction implements IObserver {
 
 	InvokeOperationAction(GenericEditor editor, AbstractOperation operation) {
 		super(operation.toString());
-		this.editor = ObjectTK.enforceNotNull(editor, "editor");
-		this.operation = ObjectTK.enforceNotNull(operation, "operation");
+		this.editor = TK.Objects.assertNotNull(editor, "editor");
+		this.operation = TK.Objects.assertNotNull(operation, "operation");
 
 		final Mediator<?> mediator = editor.getMediator();
 		mediator.addObserver(this, mediatorEventFilter);

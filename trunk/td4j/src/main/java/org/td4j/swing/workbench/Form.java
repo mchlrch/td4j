@@ -23,7 +23,7 @@ import javax.swing.JComponent;
 
 import org.td4j.core.binding.MediatorForwarder;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class Form extends MediatorForwarder<Object> {
@@ -34,13 +34,13 @@ public abstract class Form extends MediatorForwarder<Object> {
 
 	protected Form(Editor editor, Class<?> ctxType) {
 		super(ctxType);
-		this.editor = ObjectTK.enforceNotNull(editor, "editor");
+		this.editor = TK.Objects.assertNotNull(editor, "editor");
 	}
 
 	public JComponent getComponent() {
 		if (this.form == null) {
 			this.form = createForm();
-			ObjectTK.enforceNotNull(form, "form");
+			TK.Objects.assertNotNull(form, "form");
 		}
 
 		return form;

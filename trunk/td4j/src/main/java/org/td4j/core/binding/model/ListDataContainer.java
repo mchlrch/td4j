@@ -26,8 +26,7 @@ import java.util.List;
 import org.td4j.core.internal.binding.model.ListDataContainerConnector;
 import org.td4j.core.model.Observable;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -45,8 +44,8 @@ public class ListDataContainer<T> extends Observable {
 	}
 
 	public ListDataContainer(Class<?> contentType, String propertyName, boolean canRead, boolean canWrite) {
-		this.contentType = ObjectTK.enforceNotNull(contentType, "contentType");
-		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
+		this.contentType = TK.Objects.assertNotNull(contentType, "contentType");
+		this.propertyName = TK.Strings.assertNotEmpty(propertyName, "propertyName");
 
 		this.canRead = canRead;
 		this.canWrite = canWrite;
@@ -77,7 +76,7 @@ public class ListDataContainer<T> extends Observable {
 	}
 
 	public void setContent(List<T> newContent) {
-		if (this.content != null && ObjectTK.equal(this.content, newContent)) return;
+		if (this.content != null && TK.Objects.equal(this.content, newContent)) return;
 
 		if (newContent != null) {
 			this.content =  newContent;
@@ -93,7 +92,7 @@ public class ListDataContainer<T> extends Observable {
 	}
 	
 	public void addContent(T newContent) {
-		ObjectTK.enforceNotNull(newContent, "newContent");
+		TK.Objects.assertNotNull(newContent, "newContent");
 		if (this.content == null) this.content = new ArrayList<T>(); 
 		
 		content.add(newContent);
@@ -101,7 +100,7 @@ public class ListDataContainer<T> extends Observable {
 	}
 	
 	public void removeContent(T contentToRemove) {
-		ObjectTK.enforceNotNull(contentToRemove, "contentToRemove");
+		TK.Objects.assertNotNull(contentToRemove, "contentToRemove");
 		if (this.content == null) return; 
 		
 		content.remove(contentToRemove);

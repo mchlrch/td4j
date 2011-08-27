@@ -19,14 +19,14 @@
 
 package org.td4j.core.internal.binding.model.converter;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 class ReverseConverter implements IConverter {
 
   private final IConverter delegate;
 
   ReverseConverter(IConverter delegate) {
-    this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
+    this.delegate = TK.Objects.assertNotNull(delegate, "delegate");
   }
 
   @Override

@@ -28,7 +28,7 @@ import org.td4j.core.internal.metamodel.StatefulJavaMetaClass.State;
 import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaClassProvider;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.service.SvcProvider;
 
 /**
@@ -57,8 +57,8 @@ public class JavaMetaClassBuilder {
 	
 	
 	public JavaMetaClassBuilder(JavaMetaModel metaModel, SvcProvider svcProvider) {
-		this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
-		this.svcProvider = ObjectTK.enforceNotNull(svcProvider, "svcProvider");
+		this.metaModel = TK.Objects.assertNotNull(metaModel, "metaModel");
+		this.svcProvider = TK.Objects.assertNotNull(svcProvider, "svcProvider");
 	}
 	
 	public <T> JavaMetaClass<T> buildMetaClass(Class<T> cls) {
@@ -138,8 +138,8 @@ public class JavaMetaClassBuilder {
 		private final JavaMetaClassBuilder mcBuilder;
 		
 		private BuilderContext(JavaMetaModel metaModel, JavaMetaClassBuilder metaClassBuilder) {
-			this.metaModel = ObjectTK.enforceNotNull(metaModel, "metaModel");
-			this.mcBuilder = ObjectTK.enforceNotNull(metaClassBuilder, "metaClassBuilder"); 
+			this.metaModel = TK.Objects.assertNotNull(metaModel, "metaModel");
+			this.mcBuilder = TK.Objects.assertNotNull(metaClassBuilder, "metaClassBuilder"); 
 		}
 
 		@Override

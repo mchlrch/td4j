@@ -20,20 +20,19 @@
 package org.td4j.core.reflect;
 
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public class IllegalConnectorTypeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	private static String prepareSinglePropertyMsg(Class<?> expectedType, Class<?> cls, String propertyName) {
-		StringTK.enforceNotEmpty(propertyName, "propertyName");
+		TK.Strings.assertNotEmpty(propertyName, "propertyName");
 		return String.format("Illegal connector type, %1$s expected: %2$s#%3$s", expectedType.getName(), cls.getName(), propertyName);
 	}
 	
 	private static String prepareMultiPropertiesMsg(Class<?> expectedType, Class<?> cls, String... propertyNames) {
-		ArrayTK.enforceNotEmpty(propertyNames, "propertyNames");
+		TK.Arrays.assertNotEmpty(propertyNames, "propertyNames");
 		final StringBuilder sb = new StringBuilder("Illegal connector type, ");
 		sb.append(expectedType.getName()).append(" expected: ");
 		boolean firstElement = true;

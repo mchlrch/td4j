@@ -26,7 +26,7 @@ import org.td4j.core.model.IObserver;
 import org.td4j.core.model.Observable;
 import org.td4j.core.model.ObservableTK;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class DataProxy extends Observable implements ContextSocket<Object>, IObserver {
@@ -56,7 +56,7 @@ public abstract class DataProxy extends Observable implements ContextSocket<Obje
 			throw new IllegalArgumentException("type mismatch: " + ctx.getClass().getName() + " != " + ctxType.getName());
 		}
 
-		if ( ! ObjectTK.equal(prevCtx, ctx)) {
+		if ( ! TK.Objects.equal(prevCtx, ctx)) {
 			if (prevCtx != null) {
 				ObservableTK.detachObserverFromModel(prevCtx, this);
 			}

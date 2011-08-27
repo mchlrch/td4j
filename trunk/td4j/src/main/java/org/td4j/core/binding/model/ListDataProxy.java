@@ -31,7 +31,7 @@ import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.metamodel.MetaModel;
 import org.td4j.core.reflect.IndividualProperty;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class ListDataProxy extends DataProxy implements NestedPropertiesProvider {
@@ -128,7 +128,7 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 		private final ListDataConnector connector;
 		
 		private ListDataAccessAdapter(ListDataConnector connector) {
-			this.connector = ObjectTK.enforceNotNull(connector, "connector");
+			this.connector = TK.Objects.assertNotNull(connector, "connector");
 		}
 		
 		public boolean canRead(Object ctx) {

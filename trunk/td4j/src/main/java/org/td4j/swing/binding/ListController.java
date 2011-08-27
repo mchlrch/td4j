@@ -27,7 +27,7 @@ import javax.swing.JList;
 
 import org.td4j.core.binding.model.ListDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -39,7 +39,7 @@ public class ListController extends ListSwingWidgetController<JList> {
 	public ListController(JList widget, ListDataProxy proxy) {
 		super(proxy);
 		
-		this.widget = ObjectTK.enforceNotNull(widget, "widget");
+		this.widget = TK.Objects.assertNotNull(widget, "widget");
 		this.model = new MyListModel();
 		widget.setModel(model);
 

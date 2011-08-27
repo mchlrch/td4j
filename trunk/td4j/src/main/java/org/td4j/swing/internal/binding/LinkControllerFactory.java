@@ -29,7 +29,7 @@ import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
 import org.td4j.swing.binding.LinkController;
 import org.td4j.swing.workbench.Navigator;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class LinkControllerFactory extends IndividualWidgetControllerFactory<LinkController, JLabel> {
@@ -37,7 +37,7 @@ public class LinkControllerFactory extends IndividualWidgetControllerFactory<Lin
 
 	public LinkControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JLabel widget, Caption caption, Navigator navigator) {
 		super(mediator, connectorFactory, widget, caption);
-		this.navigator = ObjectTK.enforceNotNull(navigator, "navigator");
+		this.navigator = TK.Objects.assertNotNull(navigator, "navigator");
 	}
 
 	@Override

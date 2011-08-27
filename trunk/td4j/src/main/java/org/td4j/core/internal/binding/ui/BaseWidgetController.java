@@ -25,7 +25,7 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
 
-import ch.miranet.commons.reflect.ReflectionTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class BaseWidgetController<W> implements IObserver {
@@ -59,7 +59,7 @@ public abstract class BaseWidgetController<W> implements IObserver {
 		
 	protected void updateCaption() {
 		if (caption != null) {
-			final String name = ReflectionTK.humanize(getDataProxy().getName());
+			final String name = TK.Strings.humanize(getDataProxy().getName());
 			caption.setText(name);
 		}
 	}

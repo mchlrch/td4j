@@ -26,7 +26,7 @@ import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.model.ListFieldConnector;
 import org.td4j.core.internal.binding.model.ListMethodConnector;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -35,12 +35,12 @@ public abstract class ListControllerFactory<T> {
 	private final DataConnectorFactory conFactory;
 
 	protected ListControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory) {
-		this.mediator = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");
+		this.mediator = TK.Objects.assertNotNull(mediator, "mediator");
+		this.conFactory = TK.Objects.assertNotNull(connectorFactory, "connectorFactory");
 	}
 
 	public T bind(ListDataProxy dataProxy) {
-		ObjectTK.enforceNotNull(dataProxy, "dataProxy");
+		TK.Objects.assertNotNull(dataProxy, "dataProxy");
 		final T controller = createController(dataProxy);
 		return controller;
 	}

@@ -29,7 +29,7 @@ import org.td4j.swing.binding.OrderedElementModel;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.SelectionWidget;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class SelectionControllerFactory extends IndividualControllerFactory<SelectionController> {
@@ -41,9 +41,9 @@ public class SelectionControllerFactory extends IndividualControllerFactory<Sele
 	public SelectionControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, ListSelectionModel selectionModel, OrderedElementModel dataModel, SelectionWidget selectionWidget) {
 		super(mediator, connectorFactory);
 
-		this.selectionModel = ObjectTK.enforceNotNull(selectionModel, "selectionModel");
-		this.dataModel = ObjectTK.enforceNotNull(dataModel, "dataModel");
-		this.selectionWidget = ObjectTK.enforceNotNull(selectionWidget, "selectionWidget");
+		this.selectionModel = TK.Objects.assertNotNull(selectionModel, "selectionModel");
+		this.dataModel = TK.Objects.assertNotNull(dataModel, "dataModel");
+		this.selectionWidget = TK.Objects.assertNotNull(selectionWidget, "selectionWidget");
 	}
 
 	@Override

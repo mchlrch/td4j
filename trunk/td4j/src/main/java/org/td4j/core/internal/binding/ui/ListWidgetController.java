@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.td4j.core.binding.model.ListDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class ListWidgetController<W> extends BaseWidgetController<W> {
@@ -33,7 +33,7 @@ public abstract class ListWidgetController<W> extends BaseWidgetController<W> {
 
 	
 	protected ListWidgetController(ListDataProxy proxy) {
-		this.dataProxy = ObjectTK.enforceNotNull(proxy, "proxy");
+		this.dataProxy = TK.Objects.assertNotNull(proxy, "proxy");
 		registerAsObserver(proxy);
 	}
 

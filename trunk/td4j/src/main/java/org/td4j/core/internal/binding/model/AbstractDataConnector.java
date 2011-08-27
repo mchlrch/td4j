@@ -21,7 +21,7 @@ package org.td4j.core.internal.binding.model;
 
 import org.td4j.core.reflect.DataConnector;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public abstract class AbstractDataConnector implements DataConnector {
 
@@ -29,8 +29,8 @@ public abstract class AbstractDataConnector implements DataConnector {
 	private final Class<?> valueType;
 
 	protected AbstractDataConnector(Class<?> ctxType, Class<?> valueType) {
-		this.ctxType = ObjectTK.enforceNotNull(ctxType, "ctxType");
-		this.valueType = ObjectTK.enforceNotNull(valueType, "valueType");
+		this.ctxType = TK.Objects.assertNotNull(ctxType, "ctxType");
+		this.valueType = TK.Objects.assertNotNull(valueType, "valueType");
 	}
 
 	public Class<?> getContextType() {

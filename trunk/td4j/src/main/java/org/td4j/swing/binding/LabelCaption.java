@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 
 import org.td4j.core.binding.model.Caption;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class LabelCaption implements Caption {
@@ -31,7 +31,7 @@ public class LabelCaption implements Caption {
 	private final JLabel label;
 
 	public LabelCaption(JLabel label) {
-		this.label = ObjectTK.enforceNotNull(label, "label");
+		this.label = TK.Objects.assertNotNull(label, "label");
 	}
 
 	public void setText(String caption) {

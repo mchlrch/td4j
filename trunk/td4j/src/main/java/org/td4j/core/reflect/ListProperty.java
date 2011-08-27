@@ -25,8 +25,7 @@ import java.util.List;
 import org.td4j.core.binding.model.ListDataConnector;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 public class ListProperty implements ListDataConnector, NestedPropertiesProvider, Property {
 	
@@ -35,14 +34,14 @@ public class ListProperty implements ListDataConnector, NestedPropertiesProvider
 	private IndividualProperty[] nestedProperties;
 	
 	public ListProperty(String name, ListDataConnector dataConnector, IndividualProperty[] nestedProperties) {
-		this.name = StringTK.enforceNotEmpty(name, "name");
-		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
+		this.name = TK.Strings.assertNotEmpty(name, "name");
+		this.dataConnector = TK.Objects.assertNotNull(dataConnector, "dataConnector");
 		setNestedProperties(nestedProperties);
 	}
 	
 	protected ListProperty(String name, ListDataConnector dataConnector) {
-		this.name = StringTK.enforceNotEmpty(name, "name");
-		this.dataConnector = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
+		this.name = TK.Strings.assertNotEmpty(name, "name");
+		this.dataConnector = TK.Objects.assertNotNull(dataConnector, "dataConnector");
 	}
 	
 	public String getName() {
@@ -58,7 +57,7 @@ public class ListProperty implements ListDataConnector, NestedPropertiesProvider
 	}
 	
 	public List<?> readValue(Object ctx) {
-		ObjectTK.enforceNotNull(ctx, "ctx");
+		TK.Objects.assertNotNull(ctx, "ctx");
 		final List<?> values = dataConnector.readValue(ctx);
 		
 		List<?> result = Collections.emptyList(); 
@@ -77,7 +76,7 @@ public class ListProperty implements ListDataConnector, NestedPropertiesProvider
 	}
 	
 	protected void setNestedProperties(IndividualProperty[] nestedProperties) {
-		this.nestedProperties = ObjectTK.enforceNotNull(nestedProperties, "nestedProperties");
+		this.nestedProperties = TK.Objects.assertNotNull(nestedProperties, "nestedProperties");
 	}
 	
 	public IndividualProperty[] getNestedProperties() {

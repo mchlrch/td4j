@@ -24,7 +24,7 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.ChangeEventFilter;
 import org.td4j.core.model.IObserver;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class IndividualDataRelay implements IObserver {
@@ -37,8 +37,8 @@ public class IndividualDataRelay implements IObserver {
 	}
 	
 	public IndividualDataRelay(IndividualDataProxy master, ContextSocket<Object> slave) {
-		this.master = ObjectTK.enforceNotNull(master, "master");
-		this.slave = ObjectTK.enforceNotNull(slave, "slave");
+		this.master = TK.Objects.assertNotNull(master, "master");
+		this.slave = TK.Objects.assertNotNull(slave, "slave");
 
 		final Class<?> slaveType = slave.getContextType();
 		if ( ! slaveType.isAssignableFrom(master.getValueType())) {

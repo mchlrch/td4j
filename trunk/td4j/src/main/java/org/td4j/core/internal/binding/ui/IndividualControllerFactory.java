@@ -24,7 +24,7 @@ import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataConnector;
 import org.td4j.core.binding.model.IndividualDataProxy;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public abstract class IndividualControllerFactory<T> {
@@ -32,12 +32,12 @@ public abstract class IndividualControllerFactory<T> {
 	private final DataConnectorFactory conFactory;
 
 	protected IndividualControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory) {
-		this.mediator   = ObjectTK.enforceNotNull(mediator, "mediator");
-		this.conFactory = ObjectTK.enforceNotNull(connectorFactory, "connectorFactory");			
+		this.mediator   = TK.Objects.assertNotNull(mediator, "mediator");
+		this.conFactory = TK.Objects.assertNotNull(connectorFactory, "connectorFactory");			
 	}
 
 	public T bind(IndividualDataProxy dataProxy) {
-		ObjectTK.enforceNotNull(dataProxy, "dataProxy");
+		TK.Objects.assertNotNull(dataProxy, "dataProxy");
 		final T controller = createController(dataProxy);
 		return controller;
 	}

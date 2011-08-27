@@ -31,7 +31,7 @@ import org.td4j.core.metamodel.MetaClass;
 import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.core.reflect.ListProperty;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.container.FeatureKey;
 import ch.miranet.commons.container.FeatureMap;
 
@@ -43,7 +43,7 @@ public class JavaMetaClass<T> extends MetaClass {
 	private final FeatureMap featRepo = new FeatureMap();
 
 	protected JavaMetaClass(Class<T> javaClass) {
-		this.javaClass = ObjectTK.enforceNotNull(javaClass, "javaClass");
+		this.javaClass = TK.Objects.assertNotNull(javaClass, "javaClass");
 		this.hashCode = javaClass.hashCode();
 	}
 
@@ -125,7 +125,7 @@ public class JavaMetaClass<T> extends MetaClass {
 		if (other instanceof JavaMetaClass<?>) {
 			final JavaMetaClass<?> that = (JavaMetaClass<?>) other;
 			return that.canEqual(this)
-					&& ObjectTK.equal(this.getJavaClass(), that.getJavaClass());
+					&& TK.Objects.equal(this.getJavaClass(), that.getJavaClass());
 
 		} else {
 			return false;

@@ -22,7 +22,7 @@ package org.td4j.core.binding.model;
 import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.converter.IConverter;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class IndividualDataProxy extends DataProxy {
@@ -36,7 +36,7 @@ public class IndividualDataProxy extends DataProxy {
 	
 	public IndividualDataProxy(IndividualDataConnector dataConnector, String name, IConverter converter) {
 		super(name);
-		this.dataAccess = ObjectTK.enforceNotNull(dataConnector, "dataConnector");
+		this.dataAccess = TK.Objects.assertNotNull(dataConnector, "dataConnector");
 		this.converter = converter;
 	}
 

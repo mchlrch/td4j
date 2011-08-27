@@ -38,8 +38,7 @@ import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.swing.workbench.Editor.EditorContent;
 import org.td4j.swing.workbench.Navigator;
 
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 public class TableController extends ListSwingWidgetController<JTable> {
@@ -49,7 +48,7 @@ public class TableController extends ListSwingWidgetController<JTable> {
 	
 	public TableController(final JTable table, final ListDataProxy proxy, final Navigator navigator) {
 		super(proxy);
-		this.table = ObjectTK.enforceNotNull(table, "table");
+		this.table = TK.Objects.assertNotNull(table, "table");
 		
 		proxy.ensureSensibleNestedProperties(null);
 		this.model = new MyTableModel(proxy.getNestedProperties());
@@ -106,7 +105,7 @@ public class TableController extends ListSwingWidgetController<JTable> {
 		private final RowObserver rowObserver = new RowObserver(this);
 
 		private MyTableModel(IndividualProperty[] columnProperties) {
-			this.columnProperties = ArrayTK.enforceNotEmpty(columnProperties, "columnProperties");
+			this.columnProperties = TK.Arrays.assertNotEmpty(columnProperties, "columnProperties");
 		}
 
 		@Override
@@ -176,7 +175,7 @@ public class TableController extends ListSwingWidgetController<JTable> {
 		private final Set<Object> observables = new HashSet<Object>();
 
 		private RowObserver(AbstractTableModel tableModel) {
-			this.tableModel = ObjectTK.enforceNotNull(tableModel, "tableModel");
+			this.tableModel = TK.Objects.assertNotNull(tableModel, "tableModel");
 		}
 
 		private void attachToTargets(List<?> targets) {
