@@ -21,9 +21,7 @@ package ch.miranet.vof;
 
 import java.lang.reflect.Method;
 
-
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 public class PropertySignature {
 	private final Class<?> type;
@@ -36,11 +34,11 @@ public class PropertySignature {
 	private volatile int hashCode = 0;
 
 	public PropertySignature(String propertyName, Class<?> type, Class<?>[] parameterTypes, Method getter, Method setter) {
-		this.type = ObjectTK.enforceNotNull(type, "type");
-		this.propertyName = StringTK.enforceNotEmpty(propertyName, "propertyName");
-		this.parameterTypes = ObjectTK.enforceNotNull(parameterTypes, "parameterTypes");
+		this.type = TK.Objects.assertNotNull(type, "type");
+		this.propertyName = TK.Strings.assertNotEmpty(propertyName, "propertyName");
+		this.parameterTypes = TK.Objects.assertNotNull(parameterTypes, "parameterTypes");
 		
-		this.getter = ObjectTK.enforceNotNull(getter, "getter");
+		this.getter = TK.Objects.assertNotNull(getter, "getter");
 		this.setter = setter;
 	}
 	

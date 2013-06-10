@@ -24,13 +24,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.td4j.core.model.Observable;
 
-import ch.miranet.commons.ObjectTK;
-import ch.miranet.commons.StringTK;
+import ch.miranet.commons.TK;
 
 
 public class OpenClass extends Observable {
@@ -51,8 +50,8 @@ public class OpenClass extends Observable {
 	private Map<Object, List<Object>> featuresByGroup;
 	
 	public OpenClass(String nameSpace, String name, boolean primitive) {
-		this.nameSpace = ObjectTK.enforceNotNull(nameSpace, "nameSpace");
-		this.name = StringTK.enforceNotEmpty(name, "name");
+		this.nameSpace = TK.Objects.assertNotNull(nameSpace, "nameSpace");
+		this.name = TK.Strings.assertNotEmpty(name, "name");
 		this.primitive = primitive;
 		
 		if ( ! primitive) {
@@ -140,9 +139,9 @@ public class OpenClass extends Observable {
 	}
 	
 	public void addFeature(Object featureGroup, Object featureIdent, Object feature) {
-		ObjectTK.enforceNotNull(featureGroup, "featureGroup");
-		ObjectTK.enforceNotNull(featureIdent, "featureIdent");
-		ObjectTK.enforceNotNull(feature, "feature");
+		TK.Objects.assertNotNull(featureGroup, "featureGroup");
+		TK.Objects.assertNotNull(featureIdent, "featureIdent");
+		TK.Objects.assertNotNull(feature, "feature");
 		
 		if (featuresByIdent.containsKey(featureIdent)) throw new IllegalStateException("featureIdent not unique: " + featureIdent);
 				
@@ -192,13 +191,13 @@ public class OpenClass extends Observable {
 		private final Object featureIdent;
 		private final Object feature;
 		private FeatureInfo(Object featureGroup, int indexInGroup, Object featureIdent, Object feature) {
-			this.featureGroup = ObjectTK.enforceNotNull(featureGroup, "featureGroup");
+			this.featureGroup = TK.Objects.assertNotNull(featureGroup, "featureGroup");
 			
 			if (indexInGroup < 0) throw new IllegalArgumentException("indexInGroup is negative: " + indexInGroup);
 			this.indexInGroup = indexInGroup;
 			
-			this.featureIdent = ObjectTK.enforceNotNull(featureIdent, "featureIdent");
-			this.feature = ObjectTK.enforceNotNull(feature, "feature");
+			this.featureIdent = TK.Objects.assertNotNull(featureIdent, "featureIdent");
+			this.feature = TK.Objects.assertNotNull(feature, "feature");
 		}		
 		@Override
 		public int compareTo(FeatureInfo that) {

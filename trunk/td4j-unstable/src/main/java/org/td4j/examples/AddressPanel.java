@@ -30,7 +30,7 @@ import org.td4j.swing.workbench.Editor;
 
 public class AddressPanel extends ControllerAwareGridBagPanel {
 
-	public AddressPanel(Editor<Address> editor, Mediator<Address> mediator) {
+	public AddressPanel(Editor editor, Mediator<Address> mediator) {
 		final WidgetBuilder<Address> wb = new WidgetBuilder<Address>(mediator, null, editor.getWorkbench().getNavigator());
 
 		final LinkController person = wb.link().bindField("person");

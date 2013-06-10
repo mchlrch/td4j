@@ -26,7 +26,7 @@ import org.td4j.core.model.Observable;
 import org.td4j.core.reflect.Operation;
 import org.td4j.core.reflect.ShowProperties;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 @ShowProperties
@@ -43,10 +43,10 @@ public class Address extends Observable {
 	}
 
 	Address(Person person, String street, String zip, String city) {
-		this.person = ObjectTK.enforceNotNull(person, "person");
-		this.street = ObjectTK.enforceNotNull(street, "street");
-		this.zip    = ObjectTK.enforceNotNull(zip, "zip");
-		this.city   = ObjectTK.enforceNotNull(city, "city");
+		this.person = TK.Objects.assertNotNull(person, "person");
+		this.street = TK.Objects.assertNotNull(street, "street");
+		this.zip    = TK.Objects.assertNotNull(zip, "zip");
+		this.city   = TK.Objects.assertNotNull(city, "city");
 	}
 
 	public String getStreet() {
