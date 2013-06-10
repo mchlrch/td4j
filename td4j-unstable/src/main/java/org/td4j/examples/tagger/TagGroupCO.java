@@ -6,14 +6,14 @@ import javax.persistence.EntityManager;
 
 import org.td4j.core.reflect.Operation;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class TagGroupCO {
 	
 	private final EntityManager em;
 	
 	public TagGroupCO(EntityManager em) {
-		this.em = ObjectTK.enforceNotNull(em, "em");
+		this.em = TK.Objects.assertNotNull(em, "em");
 	}
 	
 	@Operation

@@ -24,9 +24,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-
-import ch.miranet.commons.ArrayTK;
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 // PEND: wie kann equals() und hashCode() implementiert werden?
 
@@ -37,8 +35,8 @@ public class GenericVOInvocationHandler implements InvocationHandler {
 	private final Map<Method, PropertySignature> propertyMap = new HashMap<Method, PropertySignature>();
 	
 	GenericVOInvocationHandler(VOFactory voFactory, PropertySignature[] properties, Map<PropertySignature, Object> attributePresets) {
-		this.voFactory = ObjectTK.enforceNotNull(voFactory, "voFactory");
-		ArrayTK.enforceNotEmpty(properties, "properties");
+		this.voFactory = TK.Objects.assertNotNull(voFactory, "voFactory");
+		TK.Arrays.assertNotEmpty(properties, "properties");
 		for (PropertySignature property : properties) {
 			attributeMap.put(property, null);
 			propertyMap.put(property.getGetter(), property);

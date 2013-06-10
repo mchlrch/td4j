@@ -29,7 +29,7 @@ import org.td4j.core.reflect.Operation;
 import org.td4j.core.reflect.ShowProperties;
 import org.td4j.swing.workbench.Workbench;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -75,8 +75,8 @@ public class Person extends Observable {
 
 	@Operation(paramNames={"firstname", "lastName"})
 	public Person(String firstName, String lastName) {
-		this.firstName = ObjectTK.enforceNotNull(firstName, "firstName");
-		this.lastName = ObjectTK.enforceNotNull(lastName, "lastName");
+		this.firstName = TK.Objects.assertNotNull(firstName, "firstName");
+		this.lastName = TK.Objects.assertNotNull(lastName, "lastName");
 		this.active = true;
 	}
 

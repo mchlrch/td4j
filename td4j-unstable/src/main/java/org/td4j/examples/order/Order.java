@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.td4j.core.reflect.Operation;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class Order {
 
@@ -37,7 +37,7 @@ public class Order {
 	public final List<LineItem> lineItems = new ArrayList<LineItem>();
 
 	Order(Person person) {
-		this.person = ObjectTK.enforceNotNull(person, "person");
+		this.person = TK.Objects.assertNotNull(person, "person");
 		this.number = "" + System.currentTimeMillis();
 	}
 

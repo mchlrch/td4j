@@ -26,9 +26,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:svn:http://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</connection>
-		<developerConnection>scm:svn:https://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</developerConnection>
-		<url>http://td4j.svn.sourceforge.net/svnroot/td4j/trunk/td4j-examples/</url>
+		<connection>scm:svn:svn+ssh://svn.code.sf.net/p/td4j/code/trunk/td4j-examples/</connection>
+		<developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/td4j/code/trunk/td4j-examples/</developerConnection>
+		<url>svn+ssh://svn.code.sf.net/p/td4j/code/trunk/td4j-examples/</url>
 	</scm>
 
 	<developers>
@@ -54,8 +54,7 @@
 		<dependency>
 			<groupId>org.td4j</groupId>
 			<artifactId>td4j</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
+			<version>13.7-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

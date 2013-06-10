@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.td4j.swing.workbench.Workbench;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 // TODO: BigDecimal-String Converter
@@ -78,8 +78,8 @@ public class CurrencyConverterExample {
 		public final Currency currency;
 		
 		public Money(BigDecimal amount, Currency currency) {
-			this.amount = ObjectTK.enforceNotNull(amount, "amount");
-			this.currency = ObjectTK.enforceNotNull(currency, "currency");
+			this.amount = TK.Objects.assertNotNull(amount, "amount");
+			this.currency = TK.Objects.assertNotNull(currency, "currency");
 		}
 		
 		@Override
@@ -125,8 +125,8 @@ public class CurrencyConverterExample {
 		public final Currency toCurrency;
 	
 		public RateKey(Currency fromCurrency, Currency toCurrency) {
-			this.fromCurrency = ObjectTK.enforceNotNull(fromCurrency, "fromCurrency");
-			this.toCurrency = ObjectTK.enforceNotNull(toCurrency, "toCurrency");
+			this.fromCurrency = TK.Objects.assertNotNull(fromCurrency, "fromCurrency");
+			this.toCurrency = TK.Objects.assertNotNull(toCurrency, "toCurrency");
 		}
 		
 		@Override
@@ -158,7 +158,7 @@ public class CurrencyConverterExample {
 		}
 		
 		private Rate(RateKey key) {
-			this.key = ObjectTK.enforceNotNull(key, "key");
+			this.key = TK.Objects.assertNotNull(key, "key");
 		}
 		
 		public abstract BigDecimal exchange(BigDecimal amount);
@@ -172,7 +172,7 @@ public class CurrencyConverterExample {
 		
 		public SimpleRate(Currency fromCurrency, Currency toCurrency, BigDecimal conversionRate) {
 			super(fromCurrency, toCurrency);
-			this.conversionRate = ObjectTK.enforceNotNull(conversionRate, "conversionRate");
+			this.conversionRate = TK.Objects.assertNotNull(conversionRate, "conversionRate");
 		}
 
 		public BigDecimal exchange(BigDecimal amount) {

@@ -19,7 +19,7 @@
 
 package org.td4j.examples.order;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 public class LineItem {
 
@@ -28,8 +28,8 @@ public class LineItem {
 	public Article article;
 
 	LineItem(Order order, int quantity, Article article) {
-		this.order = ObjectTK.enforceNotNull(order, "order");
-		this.article = ObjectTK.enforceNotNull(article, "article");
+		this.order = TK.Objects.assertNotNull(order, "order");
+		this.article = TK.Objects.assertNotNull(article, "article");
 		
 		if (quantity <= 0) throw new IllegalArgumentException("quantity <= 0");
 		this.quantity = quantity;

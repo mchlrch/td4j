@@ -28,9 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import ch.miranet.commons.ArrayTK;
+import ch.miranet.commons.TK;
 import ch.miranet.commons.filter.Filter;
-import ch.miranet.commons.reflect.ReflectionTK;
 
 /**
  * Value Object Factory.
@@ -67,14 +66,14 @@ public class VOFactory {
 
 	// PEND: signatures pro Klasse cachen
 	private List<PropertySignature> getProperties(Class<?> cls) {
-		final List<Method> allMethods = ReflectionTK.getMethods(cls, defaultMethodFilter);
+		final List<Method> allMethods = TK.Reflection.getMethods(cls, defaultMethodFilter);
 		final List<PropertySignature> properties = new ArrayList<PropertySignature>();
 		final HashSet<String> propertyNames = new HashSet<String>();
 		for (Method m : allMethods) {
 			final String pName = getterToPropertyName(m);
 			if (pName != null && ! propertyNames.contains(pName)) {
 				
-				final Method setter = setterForProperty(allMethods, pName, ArrayTK.append(m.getParameterTypes(), m.getReturnType()));				
+				final Method setter = setterForProperty(allMethods, pName, TK.Arrays.append(m.getParameterTypes(), m.getReturnType()));				
 				final PropertySignature property = new PropertySignature(pName, m.getReturnType(), m.getParameterTypes(), m, setter);
 				properties.add(property);
 				propertyNames.add(pName);
@@ -98,11 +97,11 @@ public class VOFactory {
 		if (returnType != null && paramTypes.length == 0) {
 			final String name = m.getName();
 			if (name.startsWith("get") && name.length() > 3) {
-				return ReflectionTK.decapitalize(name.substring(3));
+				return TK.Strings.decapitalize(name.substring(3));
 
 			} else if (name.startsWith("is") && name.length() > 2) {
 				if (Boolean.class.isAssignableFrom(returnType) || boolean.class.isAssignableFrom(returnType)) {
-					return ReflectionTK.decapitalize(name.substring(2));
+					return TK.Strings.decapitalize(name.substring(2));
 				}
 			}
 		}
@@ -113,7 +112,7 @@ public class VOFactory {
 		for (Method m : allMethods) {
 			final String name = m.getName();
 			if (name.startsWith("set") && name.length() > 3) {
-				final String pName = ReflectionTK.decapitalize(name.substring(3));
+				final String pName = TK.Strings.decapitalize(name.substring(3));
 				if (propertyName.equals(pName) && m.getReturnType() == void.class) {
 					if (Arrays.equals(parameterTypes, m.getParameterTypes())) {
 						return m;

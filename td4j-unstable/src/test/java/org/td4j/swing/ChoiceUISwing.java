@@ -56,7 +56,7 @@ import org.td4j.examples.order.Person;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.TextController;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -185,7 +185,7 @@ public class ChoiceUISwing extends JPanel {
 		private final IPlugFilter filter;
 
 		FilteredListDataConnector(ListDataConnector delegate, IPlugFilter filter) {
-			this.delegate = ObjectTK.enforceNotNull(delegate, "delegate");
+			this.delegate = TK.Objects.assertNotNull(delegate, "delegate");
 			this.filter = filter;
 		}
 

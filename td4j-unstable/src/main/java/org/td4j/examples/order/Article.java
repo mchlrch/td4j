@@ -19,7 +19,7 @@
 
 package org.td4j.examples.order;
 
-import ch.miranet.commons.ObjectTK;
+import ch.miranet.commons.TK;
 
 
 
@@ -27,7 +27,7 @@ public class Article {
 	private String name;
 
 	public Article(String name) {
-		this.name = ObjectTK.enforceNotNull(name, "name");
+		this.name = TK.Objects.assertNotNull(name, "name");
 	}
 
 	@Override
