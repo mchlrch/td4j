@@ -8,7 +8,3 @@
 
 ::ODS-D -- Type-System
 - Type System: @PrimitiveType ersetzt ConverterRepo
-
-
-__INCOMING__
-- setup code coverage analysis (http://emma.sourceforge.net/intro.html)
