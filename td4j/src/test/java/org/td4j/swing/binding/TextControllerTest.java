@@ -21,7 +21,9 @@ package org.td4j.swing.binding;
 
 import java.lang.reflect.Method;
 
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 import org.td4j.core.internal.binding.model.IndividualMethodConnector;
@@ -38,12 +40,12 @@ public class TextControllerTest {
 	
 	
 	@Test(dataProvider = "harness")
-	public void testShowInitialModelValueInWidget(final TestHarness harness) {
+	public void testShowInitialModelValueInWidget(final TestHarness<?> harness) {
 		assertTextFieldContent(DataContainer.INITIAL_VALUE, harness);
 	}
 	
 	@Test(dataProvider = "harness")
-	public void testShowChangedModelValueInWidget(final TestHarness harness) {
+	public void testShowChangedModelValueInWidget(final TestHarness<?> harness) {
 		harness.dataContainer.setValue(DataContainer.ACCEPTED_VALUE);
 		harness.dataProxy.refreshFromContext();
 		
@@ -51,8 +53,8 @@ public class TextControllerTest {
 	}	
 	
 	@Test(dataProvider = "harness")
-	public void testWriteWidgetValueToModel(final TestHarness harness) {
-		harness.textField.setText(DataContainer.ACCEPTED_VALUE);
+	public void testWriteWidgetValueToModel(final TestHarness<?> harness) {
+		harness.textComponent.setText(DataContainer.ACCEPTED_VALUE);
 		harness.textController.doUpdateModel();
 		
 		assertTextFieldContent(DataContainer.ACCEPTED_VALUE, harness);
@@ -60,8 +62,8 @@ public class TextControllerTest {
 	}
 	
 	@Test(dataProvider = "harness", expectedExceptions = { IllegalArgumentException.class })
-	public void testWriteRejectedWidgetValueToModelAndRecover(final TestHarness harness) throws Throwable {
-		harness.textField.setText(DataContainer.REJECTED_VALUE);
+	public void testWriteRejectedWidgetValueToModelAndRecover(final TestHarness<?> harness) throws Throwable {
+		harness.textComponent.setText(DataContainer.REJECTED_VALUE);
 		
 		try {
 			harness.textController.doUpdateModel();
@@ -73,29 +75,46 @@ public class TextControllerTest {
 		}		
 	}
 
-	private void assertTextFieldContent(final String expectedContent, final TestHarness harness) {
-		assert harness.textField.getText().equals(expectedContent);
+	private void assertTextFieldContent(final String expectedContent, final TestHarness<?> harness) {
+		assert harness.textComponent.getText().equals(expectedContent);
 	}
 	
-	private void assertDataContainerContent(final String expectedContent, final TestHarness harness) {
+	private void assertDataContainerContent(final String expectedContent, final TestHarness<?> harness) {
 		assert harness.dataContainer.getValue().equals(expectedContent);
 	}
 	
 	
 	@DataProvider(name = "harness")
 	public Object[][] createHarness() {		
-		if (dataConnector == null) {
-			dataConnector = createDataConnector();
+		if (this.dataConnector == null) {
+			this.dataConnector = createDataConnector();
 		}			
-		final IndividualDataProxy dataProxy = new IndividualDataProxy(dataConnector, "value");
+		
+		final TestHarness<JTextField> harnessTF = createHarnessForJTextField(createDataProxy());
+		final TestHarness<JTextArea>  harnessTA = createHarnessForJTextArea(createDataProxy());
+		
+		return new Object[][] { { harnessTF }, { harnessTA } };
+	}
+	
+	private IndividualDataProxy createDataProxy() {
+		final IndividualDataProxy dataProxy = new IndividualDataProxy(this.dataConnector, "value");
 		final DataContainer dataContainer = new DataContainer(); 
 		dataProxy.setContext(dataContainer);
-		
+		return dataProxy;		
+	}
+	
+	private TestHarness<JTextField> createHarnessForJTextField(IndividualDataProxy dataProxy) {
 		final JTextField textField = new JTextField();
-		final TestTextController textController = new TestTextController(textField, dataProxy);
-		
-		final TestHarness harness = new TestHarness(dataContainer, dataProxy, textController, textField);
-		return new Object[][] { { harness } };
+		final TestTextController<JTextField> textController = new TestTextController<JTextField>(textField, dataProxy);		
+		final TestHarness<JTextField> harness = new TestHarness<JTextField>( (DataContainer)dataProxy.getContext(), dataProxy, textController, textField);
+		return harness;
+	}
+	
+	private TestHarness<JTextArea> createHarnessForJTextArea(IndividualDataProxy dataProxy) {
+		final JTextArea textArea = new JTextArea();
+		final TestTextController<JTextArea> textController = new TestTextController<JTextArea>(textArea, dataProxy);		
+		final TestHarness<JTextArea> harness = new TestHarness<JTextArea>( (DataContainer)dataProxy.getContext(), dataProxy, textController, textArea);
+		return harness;
 	}
 	
 	private IndividualMethodConnector createDataConnector() {
@@ -113,17 +132,17 @@ public class TextControllerTest {
 	
 	// -------------------------------------------
 	
-	public static class TestHarness {
-		public final DataContainer       dataContainer;
-		public final IndividualDataProxy dataProxy;
-		public final TestTextController  textController;
-		public final JTextField          textField;
+	public static class TestHarness<T extends JTextComponent> {
+		public final DataContainer         dataContainer;
+		public final IndividualDataProxy   dataProxy;
+		public final TestTextController<T> textController;
+		public final T                     textComponent;
 		
-		private TestHarness(DataContainer dataContainer, IndividualDataProxy dataProxy, TestTextController textController, JTextField textField) {
+		private TestHarness(DataContainer dataContainer, IndividualDataProxy dataProxy, TestTextController<T> textController, T textComponent) {
 			this.dataContainer  = TK.Objects.assertNotNull(dataContainer,  "dataContainer");
 			this.dataProxy      = TK.Objects.assertNotNull(dataProxy,      "dataProxy");
 			this.textController = TK.Objects.assertNotNull(textController, "textController");
-			this.textField      = TK.Objects.assertNotNull(textField,      "textField");
+			this.textComponent  = TK.Objects.assertNotNull(textComponent,  "textComponent");
 		}
 	}
 	
@@ -145,8 +164,8 @@ public class TextControllerTest {
 		}
 	}
 	
-	public static class TestTextController extends TextController {
-		private TestTextController(JTextField widget, IndividualDataProxy proxy) {
+	public static class TestTextController<T extends JTextComponent> extends TextController<T> {
+		private TestTextController(T widget, IndividualDataProxy proxy) {
 			super(widget, proxy);
 		}
 		

@@ -37,7 +37,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.IndividualDataContainer;
@@ -52,8 +51,6 @@ import org.td4j.core.reflect.IndividualProperty;
 import org.td4j.swing.binding.SelectionController;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.binding.WidgetBuilder;
-import org.td4j.swing.internal.binding.TableModelAdapter;
-import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
 import org.td4j.swing.workbench.Editor;
 import org.td4j.swing.workbench.Form;
 import org.td4j.swing.workbench.FormFactory;
@@ -140,7 +137,6 @@ public class GenericEditor extends Editor {
 		
 		listTableController = wb.table().bind(listProxy);
 		final JTable listTable = listTableController.getWidget();
-		listTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
 		
 		final JScrollPane listTableScrollPane = new JScrollPane(listTable);
 		listTableScrollPane.setPreferredSize(new Dimension(100, 120));
@@ -156,10 +152,8 @@ public class GenericEditor extends Editor {
 		// connect table selection to mediator
 		listSelectionContainer = new IndividualDataContainer<Object>(modelType, "listSelection");
 		final IndividualDataProxy listSelectionProxy = listSelectionContainer.createProxy();
-		final TableModelAdapter tableModelAdapter = new TableModelAdapter(listTableController.getModel());
-		final TableSelectionWidgetAdapter selectionWidget = new TableSelectionWidgetAdapter(listTable);
 		
-		SelectionController.createSelectionController(listTable.getSelectionModel(), tableModelAdapter, listSelectionProxy, selectionWidget);
+		SelectionController.createSelectionController(listTableController, listSelectionProxy);
 		IndividualDataRelay.createMasterSlaveRelay(listSelectionProxy, mediator);
 		IndividualDataRelay.createMasterSlaveRelay(listSelectionProxy, form);		
 

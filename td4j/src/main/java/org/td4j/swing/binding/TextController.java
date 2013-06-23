@@ -27,15 +27,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.td4j.core.binding.model.IndividualDataProxy;
 
 import ch.miranet.commons.TK;
 
 
-public class TextController extends IndividualSwingWidgetController<JTextField> {
+public class TextController<T extends JTextComponent> extends IndividualSwingWidgetController<T> {
 
-	private final JTextField widget;
+	private final T widget;
 
 	private final KeyListener enterListener = new KeyAdapter() {
 		@Override
@@ -53,18 +54,23 @@ public class TextController extends IndividualSwingWidgetController<JTextField> 
 	};
 	
 
-	public TextController(JTextField widget, IndividualDataProxy proxy) {
+	public TextController(T widget, IndividualDataProxy proxy) {
 		this(widget, proxy, true);
 	}
 
-	public TextController(JTextField widget, IndividualDataProxy proxy, boolean registerListeners) {
+	public TextController(T widget, IndividualDataProxy proxy, boolean registerListeners) {
 		super(proxy);
 
 		this.widget = TK.Objects.assertNotNull(widget, "widget");
 
 		// PEND: test mode only - ChoiceUI
 		if (registerListeners) {
-			widget.addKeyListener(enterListener);
+			
+			// enter listener ist problematisch mit JTextArea -> cursor springt ans Ende des Textfelds
+			if (widget instanceof JTextField) {
+				widget.addKeyListener(enterListener);
+			}
+			
 			widget.addFocusListener(focusListener);
 		}
 
@@ -72,7 +78,7 @@ public class TextController extends IndividualSwingWidgetController<JTextField> 
 		updateView();
 	}
 	
-	public JTextField getWidget() {
+	public T getWidget() {
 		return widget;
 	}
 

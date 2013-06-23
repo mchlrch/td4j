@@ -33,16 +33,20 @@ import ch.miranet.commons.TK;
 
 public class ListSelectionWidgetAdapter implements SelectionWidget {
 	
-	private final JList list;
+	private final JList<?> list;
 	private Boolean prevState;
 	
 	// listeners are removed when selection is disabled. they are kept by reference to be able to enable selection again afterwards
 	private final List<MouseListener> mouseListeners = new ArrayList<MouseListener>();
 	private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<MouseMotionListener>();
 	
-	public ListSelectionWidgetAdapter(JList list) {
+	public ListSelectionWidgetAdapter(JList<?> list) {
+		this(list, ListSelectionModel.SINGLE_SELECTION);
+	}
+	
+	public ListSelectionWidgetAdapter(JList<?> list, int selectionMode) {
 		this.list = TK.Objects.assertNotNull(list, "list");
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setSelectionMode(selectionMode);
 	}
 	
 	@Override

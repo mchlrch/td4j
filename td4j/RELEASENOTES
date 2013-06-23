@@ -1,3 +1,4 @@
+- Process nestedProperties when binding is done with WidgetBuilder
 - Easier handling of aggregate structures with new ContextSocketAdapter
 - Easier handling of custom selection propagation with SelectionContainer
 
