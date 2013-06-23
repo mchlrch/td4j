@@ -51,8 +51,6 @@ import org.td4j.core.model.ChangeEvent;
 import org.td4j.core.model.Observable;
 import org.td4j.swing.binding.ListController;
 import org.td4j.swing.binding.SelectionController;
-import org.td4j.swing.internal.binding.ListModelAdapter;
-import org.td4j.swing.internal.binding.ListSelectionWidgetAdapter;
 import org.td4j.swing.internal.workbench.ByClassNameFormFactory;
 import org.td4j.swing.internal.workbench.CompositeFormFactory;
 import org.td4j.swing.internal.workbench.GenericEditorFactory;
@@ -204,7 +202,7 @@ public class Workbench extends JFrame {
   }
 
   private Component createSidebar(final SidebarModel model) {
-    final JList classChooser = new JList();
+    final JList<Object> classChooser = new JList<Object>();
     classChooser.setCellRenderer(new ClassNameRenderer());
     
     final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
@@ -217,9 +215,7 @@ public class Workbench extends JFrame {
     // choice
     final IndividualDataConnector currentClassConnector = connectorFactory.createIndividualMethodConnector(SidebarModel.class, "currentClass");
     final IndividualDataProxy currentClassProxy = new IndividualDataProxy(currentClassConnector, "currentClass");
-    final ListModelAdapter listModelAdapter = new ListModelAdapter(classChooser.getModel());
-    final ListSelectionWidgetAdapter listWidgetAdapter = new ListSelectionWidgetAdapter(classChooser);
-    final SelectionController currentClassController = new SelectionController(classChooser.getSelectionModel(), listModelAdapter, currentClassProxy, listWidgetAdapter);
+    final SelectionController currentClassController = SelectionController.createSelectionController(classChooser, currentClassProxy);
 
     classOptionsController.getDataProxy().setContext(model);
     currentClassController.getDataProxy().setContext(model);
@@ -376,7 +372,7 @@ public class Workbench extends JFrame {
     private Class<?> currentClass;
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index,
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index,
         boolean isSelected, boolean cellHasFocus) {
       if (value instanceof Class) {
         currentClass = (Class<?>) value;
