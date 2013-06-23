@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2008, 2009, 2010, 2013 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -22,17 +22,20 @@ package org.td4j.swing.internal.binding;
 import javax.swing.JList;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
+import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.ui.ListWidgetControllerFactory;
+import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.swing.binding.ListController;
+
+import ch.miranet.commons.container.Option;
 
 
 public class ListControllerFactory extends ListWidgetControllerFactory<ListController, JList> {
 
-	public ListControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JList widget, Caption caption) {
-		super(mediator, connectorFactory, widget, caption);
+	public ListControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, Option<MetaClassProvider> metaClassProvider, JList widget, Caption caption) {
+		super(mediator, connectorFactory, metaClassProvider,  widget, caption);
 	}
 
 	@Override

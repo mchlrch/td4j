@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2008-2013 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,25 +19,28 @@
 
 package org.td4j.swing.internal.binding;
 
-import javax.swing.text.JTextComponent;
+import javax.swing.JList;
 
 import org.td4j.core.binding.Mediator;
-import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
-import org.td4j.swing.binding.TextController;
+import org.td4j.core.internal.binding.ui.IndividualControllerFactory;
+import org.td4j.swing.binding.SelectionController;
 
+import ch.miranet.commons.TK;
 
-public class TextControllerFactory<T extends JTextComponent> extends IndividualWidgetControllerFactory<TextController<T>, T> {
+public class ListSelectionControllerFactory extends IndividualControllerFactory<SelectionController> {
 
-	public TextControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, T widget, Caption caption) {
-		super(mediator, connectorFactory, widget, caption);
+	private final JList<?> list;
+
+	public ListSelectionControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, JList<?> list) {
+		super(mediator, connectorFactory);
+
+		this.list = TK.Objects.assertNotNull(list, "list");
 	}
 
 	@Override
-	protected TextController<T> createController(IndividualDataProxy dataProxy, T widget) {
-		return new TextController<T>(widget, dataProxy);
+	protected SelectionController createController(IndividualDataProxy dataProxy) {
+		return SelectionController.createSelectionController(this.list, dataProxy);
 	}
-
 }

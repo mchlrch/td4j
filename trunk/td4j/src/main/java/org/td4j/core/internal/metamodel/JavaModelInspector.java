@@ -292,8 +292,10 @@ public class JavaModelInspector {
 	// =======================================================================================================
 	
 	// nested properties are only supported for list connectors
-	private IndividualProperty[] findNestedProperties(final DataConnector connector, final MetaClassProvider metaClassProvider) {
+	public IndividualProperty[] findNestedProperties(final DataConnector connector, final MetaClassProvider metaClassProvider) {
 		final Class<?> valueType = connector.getValueType();
+		TK.Objects.assertNotNull(metaClassProvider, "metaClassProvider");
+		
 		if (connector instanceof AbstractListFieldConnector) {
 			final AbstractListFieldConnector cfConnector = (AbstractListFieldConnector) connector;
 			final ShowProperties exposeAnnotation = cfConnector.getField().getAnnotation(ShowProperties.class);

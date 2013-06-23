@@ -26,25 +26,25 @@ import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
 import org.td4j.core.internal.binding.ui.ListWidgetControllerFactory;
-import org.td4j.core.metamodel.MetaModel;
+import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.swing.binding.TableController;
 import org.td4j.swing.workbench.Navigator;
+
+import ch.miranet.commons.container.Option;
 
 
 public class TableControllerFactory extends ListWidgetControllerFactory<TableController, JTable> {
 
-	private final Navigator navigator;
-	private final MetaModel metaModel;
+	private final Option<Navigator> navigator;
 
-	public TableControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, MetaModel metaModel, JTable widget, Caption caption, Navigator navigator) {
-		super(mediator, connectorFactory, widget, caption);
-		this.metaModel = metaModel;
+	public TableControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, Option<MetaClassProvider> metaClassProvider, JTable widget, Caption caption, Option<Navigator> navigator) {
+		super(mediator, connectorFactory, metaClassProvider, widget, caption);
 		this.navigator = navigator;		
 	}
 
 	@Override
 	protected TableController createController(ListDataProxy dataProxy, JTable widget) {
-		dataProxy.ensureSensibleNestedProperties(metaModel);
+// should be obsolete by now !?		dataProxy.ensureSensibleNestedProperties(metaModel);
 		return new TableController(widget, dataProxy, navigator);
 	}	
 

@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2012 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -17,27 +17,29 @@
   along with td4j.  If not, see <http://www.gnu.org/licenses/>.
  *********************************************************************/
 
-package org.td4j.swing.internal.binding;
+package org.td4j.swing.binding;
 
-import javax.swing.text.JTextComponent;
+import javax.swing.AbstractButton;
 
-import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.Caption;
-import org.td4j.core.binding.model.DataConnectorFactory;
-import org.td4j.core.binding.model.IndividualDataProxy;
-import org.td4j.core.internal.binding.ui.IndividualWidgetControllerFactory;
-import org.td4j.swing.binding.TextController;
+
+import ch.miranet.commons.TK;
 
 
-public class TextControllerFactory<T extends JTextComponent> extends IndividualWidgetControllerFactory<TextController<T>, T> {
+public class ButtonCaption implements Caption {
 
-	public TextControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, T widget, Caption caption) {
-		super(mediator, connectorFactory, widget, caption);
+	private final AbstractButton button;
+
+	public ButtonCaption(AbstractButton button) {
+		this.button = TK.Objects.assertNotNull(button, "button");
 	}
 
-	@Override
-	protected TextController<T> createController(IndividualDataProxy dataProxy, T widget) {
-		return new TextController<T>(widget, dataProxy);
+	public void setText(String caption) {
+		button.setText(caption != null ? caption : "");
+	}
+
+	public AbstractButton getButton() {
+		return button;
 	}
 
 }

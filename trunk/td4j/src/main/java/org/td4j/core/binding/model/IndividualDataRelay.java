@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2008, 2009, 2010, 2013 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ import org.td4j.core.model.IObserver;
 import ch.miranet.commons.TK;
 
 
-public class IndividualDataRelay implements IObserver {
+public class IndividualDataRelay<T> implements IObserver {
 
 	private IndividualDataProxy master;
-	private ContextSocket<Object> slave;
+	private ContextSocket<T> slave;
 
-	public static IndividualDataRelay createMasterSlaveRelay(IndividualDataProxy master, ContextSocket<Object> slave) {
-		return new IndividualDataRelay(master, slave);
+	public static <A> IndividualDataRelay<A> createMasterSlaveRelay(IndividualDataProxy master, ContextSocket<A> slave) {
+		return new IndividualDataRelay<A>(master, slave);
 	}
 	
-	public IndividualDataRelay(IndividualDataProxy master, ContextSocket<Object> slave) {
+	public IndividualDataRelay(IndividualDataProxy master, ContextSocket<T> slave) {
 		this.master = TK.Objects.assertNotNull(master, "master");
 		this.slave = TK.Objects.assertNotNull(slave, "slave");
 
@@ -50,8 +50,9 @@ public class IndividualDataRelay implements IObserver {
 		updateSlave();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateSlave() {
-		slave.setContext(master.readValue());
+		slave.setContext((T)master.readValue());
 	}
 
 	public void dispose() {

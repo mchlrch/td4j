@@ -1,7 +1,7 @@
 /*********************************************************************
   This file is part of td4j, see <http://td4j.org/>
 
-  Copyright (C) 2008, 2009, 2010 Michael Rauch
+  Copyright (C) 2008-2013 Michael Rauch
 
   td4j is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,32 +30,27 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
+import javax.swing.text.JTextComponent;
 
 import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.internal.binding.model.JavaDataConnectorFactory;
-import org.td4j.core.metamodel.MetaModel;
+import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.swing.internal.binding.ButtonControllerFactory;
 import org.td4j.swing.internal.binding.LabelControllerFactory;
 import org.td4j.swing.internal.binding.LinkControllerFactory;
 import org.td4j.swing.internal.binding.ListControllerFactory;
-import org.td4j.swing.internal.binding.ListModelAdapter;
-import org.td4j.swing.internal.binding.ListSelectionWidgetAdapter;
-import org.td4j.swing.internal.binding.SelectionControllerFactory;
+import org.td4j.swing.internal.binding.ListSelectionControllerFactory;
 import org.td4j.swing.internal.binding.TableControllerFactory;
-import org.td4j.swing.internal.binding.TableModelAdapter;
-import org.td4j.swing.internal.binding.TableSelectionWidgetAdapter;
+import org.td4j.swing.internal.binding.TableSelectionControllerFactory;
 import org.td4j.swing.internal.binding.TextControllerFactory;
 import org.td4j.swing.workbench.Navigator;
 
 import ch.miranet.commons.TK;
-
-
+import ch.miranet.commons.container.Option;
 
 // stateful builder for widgets
 // PEND: refactor common superclass swt.WidgetBuilder
@@ -63,33 +58,47 @@ public class WidgetBuilder<T> {
 
 	private final Mediator<T> mediator;
 	private final DataConnectorFactory connectorFactory = new JavaDataConnectorFactory();
-	private final Navigator navigator;
+
+	private final Option<Navigator> navigator;
 
 	private boolean autoCaptions = true;
 	private Caption currentCaption;
-	
-	// working with the metaModel is optional, metaModel is only used for nestedProperties in table widget
-	private final MetaModel metaModel;
+
+	// working with the metaModel is optional, metaModel is only used for
+	// nestedProperties in table widget
+	private final Option<MetaClassProvider> metaModel;
 
 	public WidgetBuilder(Class<T> observableType) {
 		this(observableType, null, null);
 	}
 
-	public WidgetBuilder(Class<T> observableType, MetaModel metaModel, Navigator navigator) {
+	public WidgetBuilder(Mediator<T> mediator) {
+		this(mediator, null, null);
+	}
+
+	public WidgetBuilder(Class<T> observableType, MetaClassProvider metaModel) {
+		this(new Mediator<T>(observableType), metaModel, null);
+	}
+
+	public WidgetBuilder(Class<T> observableType, MetaClassProvider metaModel, Navigator navigator) {
 		this(new Mediator<T>(observableType), metaModel, navigator);
 	}
-	
-	public WidgetBuilder(Mediator<T> mediator, MetaModel metaModel, Navigator navigator) {
+
+	public WidgetBuilder(Mediator<T> mediator, MetaClassProvider metaModel) {
+		this(mediator, metaModel, null);
+	}
+
+	public WidgetBuilder(Mediator<T> mediator, MetaClassProvider metaModel, Navigator navigator) {
 		this.mediator = TK.Objects.assertNotNull(mediator, "mediator");
-		this.metaModel = metaModel;
-		this.navigator = navigator;
+		this.metaModel = new Option<MetaClassProvider>(metaModel);
+		this.navigator = new Option<Navigator>(navigator);
 	}
 
 	public Mediator<T> getMediator() {
 		return mediator;
 	}
-	
-	public Navigator getNavigator() {
+
+	public Option<Navigator> getNavigator() {
 		return navigator;
 	}
 
@@ -101,25 +110,29 @@ public class WidgetBuilder<T> {
 		this.autoCaptions = autoCaptions;
 	}
 
+	public Option<MetaClassProvider> getMetaModel() {
+		return metaModel;
+	}
+
 	// ========================================
 	// ==== Text ==============================
-	public TextControllerFactory text() {
+	public TextControllerFactory<JTextField> text() {
 		widgetPreCreate();
 		final JTextField widget = new JTextField();
-		
+
 		final FocusAdapter selectTextOnFocusGained = new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				widget.selectAll();				
+				widget.selectAll();
 			}
 		};
 		widget.addFocusListener(selectTextOnFocusGained);
-		
+
 		return text(widget);
 	}
 
-	public TextControllerFactory text(JTextField widget) {
-		final TextControllerFactory factory = new TextControllerFactory(mediator, connectorFactory, widget, useCurrentCaption());
+	public <W extends JTextComponent> TextControllerFactory<W> text(W widget) {
+		final TextControllerFactory<W> factory = new TextControllerFactory<W>(mediator, connectorFactory, widget, useCurrentCaption());
 		return factory;
 	}
 
@@ -134,7 +147,10 @@ public class WidgetBuilder<T> {
 	}
 
 	public LinkControllerFactory link(JLabel widget) {
-		final LinkControllerFactory factory = new LinkControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), navigator);
+		if (this.navigator.isNone()) {
+			throw new IllegalStateException("WidgetBuilder does not have a navigator, therefore links are not supported.");
+		}
+		final LinkControllerFactory factory = new LinkControllerFactory(mediator, connectorFactory, widget, useCurrentCaption(), this.navigator.get());
 		return factory;
 	}
 
@@ -160,13 +176,22 @@ public class WidgetBuilder<T> {
 	}
 
 	public WidgetBuilder<T> caption(JLabel widget) {
-		if (currentCaption != null) throw new IllegalStateException("caption pending");
+		if (currentCaption != null)
+			throw new IllegalStateException("caption pending");
 		this.currentCaption = new LabelCaption(widget);
 		return this;
 	}
 
+	public WidgetBuilder<T> caption(AbstractButton widget) {
+		if (currentCaption != null)
+			throw new IllegalStateException("caption pending");
+		this.currentCaption = new ButtonCaption(widget);
+		return this;
+	}
+
 	public WidgetBuilder<T> caption(Caption widget) {
-		if (currentCaption != null) throw new IllegalStateException("caption pending");
+		if (currentCaption != null)
+			throw new IllegalStateException("caption pending");
 		this.currentCaption = TK.Objects.assertNotNull(widget, "widget");
 		return this;
 	}
@@ -189,23 +214,20 @@ public class WidgetBuilder<T> {
 	// ==== List ==============================
 	public ListControllerFactory list() {
 		widgetPreCreate();
-		final JList widget = new JList();
+		final JList<Object> widget = new JList<Object>();
 		return list(widget);
 	}
 
-	public ListControllerFactory list(JList widget) {
-		final ListControllerFactory factory = new ListControllerFactory(mediator, connectorFactory, widget, useCurrentCaption());
+	public ListControllerFactory list(JList<?> widget) {
+		final ListControllerFactory factory = new ListControllerFactory(mediator, connectorFactory, metaModel, widget, useCurrentCaption());
 		return factory;
 	}
 
-	public SelectionControllerFactory selection(JList list) {
-		final ListModelAdapter modelAdapter = new ListModelAdapter(list.getModel());
-		final ListSelectionWidgetAdapter selectionAdapter = new ListSelectionWidgetAdapter(list);
-		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, list.getSelectionModel(), modelAdapter, selectionAdapter);
+	public ListSelectionControllerFactory selection(JList<?> list) {
+		final ListSelectionControllerFactory factory = new ListSelectionControllerFactory(mediator, connectorFactory, list);
 		return factory;
 	}
-	
-	
+
 	// ========================================
 	// ==== Table =============================
 
@@ -213,35 +235,25 @@ public class WidgetBuilder<T> {
 		widgetPreCreate();
 		final JTable widget = new JTable();
 		widget.setRowHeight(22);
-		
+
 		final TableCellRenderer headerRenderer = widget.getTableHeader().getDefaultRenderer();
 		if (headerRenderer instanceof DefaultTableCellRenderer) {
-			((DefaultTableCellRenderer)headerRenderer).setHorizontalAlignment(JLabel.LEFT);
+			((DefaultTableCellRenderer) headerRenderer).setHorizontalAlignment(JLabel.LEFT);
 		}
-        
+
 		return table(widget);
 	}
-	
-	public TableControllerFactory table(JTable widget) {
-	  final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, metaModel, widget, useCurrentCaption(), navigator);
-	  return factory;
-	}	
 
-	public SelectionControllerFactory selection(JTable table) {
-		final TableModel tableModel = table.getModel();
-		if ( ! (tableModel instanceof TableController.MyTableModel)) {
-			throw new IllegalStateException("tableModel must be " + TableController.MyTableModel.class.getName());
-		}
-		
-		final TableModelAdapter modelAdapter = new TableModelAdapter( (TableController.MyTableModel) tableModel );		
-		final TableSelectionWidgetAdapter selectionWidget = new TableSelectionWidgetAdapter(table);
-		final SelectionControllerFactory factory = new SelectionControllerFactory(mediator, connectorFactory, table.getSelectionModel(), modelAdapter, selectionWidget);
-		
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	public TableControllerFactory table(JTable widget) {
+		final TableControllerFactory factory = new TableControllerFactory(mediator, connectorFactory, metaModel, widget, useCurrentCaption(), navigator);
 		return factory;
 	}
-	
-	
+
+	public TableSelectionControllerFactory selection(TableController tableController) {
+		final TableSelectionControllerFactory factory = new TableSelectionControllerFactory(mediator, connectorFactory, tableController);
+		return factory;
+	}
+
 	// ========================================
 	protected void widgetPreCreate() {
 		if (autoCaptions && currentCaption == null) {
@@ -254,13 +266,15 @@ public class WidgetBuilder<T> {
 		currentCaption = null;
 		return result;
 	}
-	
+
 	private static Font plainLabelFont;
+
 	protected JLabel adjustLabelFont(JLabel label) {
-	  if (plainLabelFont == null) plainLabelFont = label.getFont().deriveFont(Font.PLAIN);
-	  
-	  label.setFont(plainLabelFont);
-	  return label;
+		if (plainLabelFont == null)
+			plainLabelFont = label.getFont().deriveFont(Font.PLAIN);
+
+		label.setFont(plainLabelFont);
+		return label;
 	}
 
 }

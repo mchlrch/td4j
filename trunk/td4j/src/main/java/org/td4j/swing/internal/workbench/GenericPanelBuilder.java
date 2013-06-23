@@ -85,7 +85,7 @@ public class GenericPanelBuilder {
 				addLabelWidget(label, proxy);
 			}
 			
-		} else if (wBuilder.getNavigator().isTypeNavigatable(valueType)) {
+		} else if (wBuilder.getNavigator().isSet() && wBuilder.getNavigator().get().isTypeNavigatable(valueType)) {
 			addLinkWidget(label, proxy);
 			
 		} else {
@@ -162,7 +162,7 @@ public class GenericPanelBuilder {
 	
 	
 	private void addTextWidget(JLabel label, IndividualDataProxy proxy) {
-		final TextController textController = wBuilder.caption(label).text().bind(proxy);
+		final TextController<JTextField> textController = wBuilder.caption(label).text().bind(proxy);
 		final JTextField text = textController.getWidget();
 		panel.add(text, new GridBagConstraints(1, - 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
 		postAddWidget(text);

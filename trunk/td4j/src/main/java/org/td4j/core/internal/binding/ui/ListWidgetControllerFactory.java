@@ -23,8 +23,10 @@ import org.td4j.core.binding.Mediator;
 import org.td4j.core.binding.model.Caption;
 import org.td4j.core.binding.model.DataConnectorFactory;
 import org.td4j.core.binding.model.ListDataProxy;
+import org.td4j.core.metamodel.MetaClassProvider;
 
 import ch.miranet.commons.TK;
+import ch.miranet.commons.container.Option;
 
 
 
@@ -32,8 +34,8 @@ public abstract class ListWidgetControllerFactory<T extends ListWidgetController
 	private final W widget;
 	private final Caption caption;
 
-	protected ListWidgetControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, W widget, Caption caption) {
-		super(mediator, connectorFactory);
+	protected ListWidgetControllerFactory(Mediator<?> mediator, DataConnectorFactory connectorFactory, Option<MetaClassProvider> metaClassProvider, W widget, Caption caption) {
+		super(mediator, connectorFactory, metaClassProvider);
 
 		this.widget = TK.Objects.assertNotNull(widget, "widget");
 		this.caption = caption;

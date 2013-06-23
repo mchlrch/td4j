@@ -28,10 +28,11 @@ import org.td4j.core.internal.binding.model.DataProxy;
 import org.td4j.core.internal.binding.model.ToStringConnector;
 import org.td4j.core.internal.capability.NestedPropertiesProvider;
 import org.td4j.core.metamodel.MetaClass;
-import org.td4j.core.metamodel.MetaModel;
+import org.td4j.core.metamodel.MetaClassProvider;
 import org.td4j.core.reflect.IndividualProperty;
 
 import ch.miranet.commons.TK;
+import ch.miranet.commons.container.Option;
 
 
 public class ListDataProxy extends DataProxy implements NestedPropertiesProvider {
@@ -84,14 +85,13 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 		}
 	}
 	
-	
-	public void ensureSensibleNestedProperties(MetaModel metaModel) {
+	public void ensureSensibleNestedProperties(Option<MetaClassProvider> metaModel) {
 
 		// if proxy already defines nestedProperties, we are done
 		if (isNestedPropertiesDefined()) return;
 			
-		// otherwise use all individual properties		
-		final List<IndividualProperty> individualProperties = individualPropertiesFromMetaModel(metaModel, getValueType());			
+		// otherwise, in case we have a metaModel, use all individual properties
+		final List<IndividualProperty> individualProperties = individualPropertiesFromMetaModel(metaModel, getValueType());
 			
 		if ( ! individualProperties.isEmpty()) {
 			setNestedProperties(individualProperties.toArray(new IndividualProperty[individualProperties.size()]));			
@@ -104,15 +104,16 @@ public class ListDataProxy extends DataProxy implements NestedPropertiesProvider
 		}		
 	}	
 	
-	private List<IndividualProperty> individualPropertiesFromMetaModel(MetaModel metaModel, Class<?> cls) {
-		
-		// it's possible to use the ListDataProxy (or WidgetBuilder) without having a MetaModel
-		if (metaModel != null) {
-			final MetaClass metaClass = metaModel.getMetaClass(cls);
+	private List<IndividualProperty> individualPropertiesFromMetaModel(Option<MetaClassProvider> metaModel, Class<?> cls) {
+		if (metaModel.isSet()) {
+			final MetaClass metaClass = metaModel.get().getMetaClass(cls);
 			return metaClass.getIndividualProperties();
+			
 		} else {
+			
+			// it's possible to use the ListDataProxy (or WidgetBuilder) without having a MetaModel
 			return Collections.emptyList();
-		}		
+		}
 	}
 	
 
