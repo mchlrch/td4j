@@ -1,4 +1,4 @@
-- 
+- Easier handling of aggregate structures with new ContextSocketAdapter
 
 :: 10.10
 - Avoid navigation to <null> values
