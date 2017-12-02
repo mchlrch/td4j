@@ -94,7 +94,7 @@ public class ListControllerFactoryTest {
 
 	// ----------------------------------------------------------------------
 	private static <T> MockListControllerFactory createFactory(Class<T> ctxType, Option<MetaClassProvider> metaClassProvider) {
-		final Mediator<T> mediator = new Mediator<>(ctxType);
+		final Mediator<T> mediator = new Mediator<T>(ctxType);
 		final MockListControllerFactory result = new MockListControllerFactory(mediator, metaClassProvider);
 		return result;
 	}
